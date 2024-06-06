@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 17:04:43 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:20:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ class FieldInterface
 {
     public:
         virtual ~FieldInterface( ) { return ; }
-        virtual void printValue() const = 0;
+        virtual void printValue( ) const = 0;
 };
 
 // Template class for different types
-template <typename T>
+template < typename T >
 class Field : public FieldInterface
 {
     public:
-        Field(const T &value) : _value(value) {}
-        T getValue() const { return _value; }
-        void printValue() const { std::cout << _value; }
+        Field( const T &value ) : _value( value ) { }
+        T getValue( ) const { return _value; }
+        void printValue( ) const { std::cout << _value; }
     private:
         T _value;
 };
