@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 15:30:45 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/06 16:23:56 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,22 @@ bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
         // For string values, check if it's empty
         Field<std::string> *strField = dynamic_cast<Field<std::string> *>(config[key]);
         if (strField && strField->getValue().empty())
-        {
             return ( false );
+    }
+
+    // Check if there are any unexpected keys in the config map
+    for ( std::map<std::string, FieldInterface *>::const_iterator it = config.begin(); it != config.end(); ++it ) {
+        bool isExpectedKey = false;
+        for ( size_t i = 0; i < sizeof(requiredKeys) / sizeof(requiredKeys[0]); ++i )
+        {
+            if ( it->first == requiredKeys[i] )
+            {
+                isExpectedKey = true;
+                break ;
+            }
         }
+        if ( !isExpectedKey )
+            return ( false );
     }
 
     return ( true );
@@ -74,21 +87,15 @@ bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 
 std::fstream * LoadConfig::openConfig( std::string configPath )
 {
-    try
-    {
-        std::fstream * configFile = new std::fstream;
+    std::fstream * configFile = new std::fstream;
 
-        configFile->open( static_cast<const char *>(configPath.c_str()), std::ios::in );
-        if (!configFile->is_open())
-            throw FileNotOpenException( "Error: " + configPath + " not found" );
+    configFile->open( static_cast<const char *>(configPath.c_str()), std::ios::in );
+    if (configFile->fail())
+        throw FileNotOpenException( "Error: " + configPath + " could not be opened" );
+    if (!configFile->is_open())
+        throw FileNotOpenException( "Error: " + configPath + " not found" );
         
-        return ( configFile );
-    }
-    catch (std::exception & e)
-    {
-        std::cerr << e.what() << std::endl;
-        return ( NULL );
-    }
+    return ( configFile );
 }
 
 std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *configFile) {
@@ -98,7 +105,7 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
     while (std::getline(*configFile, line))
     {
 
-        if (line[0] == '#' || line.empty())
+        if (line[0] == ';' || line.empty() || (line[0] == '[' && line[line.size() - 1] == ']'))
             continue;
 
         std::string key = line.substr(0, line.find('='));
@@ -122,14 +129,15 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
         }
         else
         {
-           if (value.size() >= 2 && value[0] == '"' && value[value.size() - 1] == '"')
-           {
+            if (value.size() >= 2 && value[0] == '"' && value[value.size() - 1] == '"')
+            {
                 std::string strippedValue = value.substr(1, value.size() - 2);
                 config[key] = new Field<std::string>(strippedValue);
             }
             else
             {
-                config[key] = new Field<std::string>(value);
+                // config[key] = new Field<std::string>(value);
+                ; // TODO: Handle other types
             }
         }
     }
@@ -147,7 +155,7 @@ void LoadConfig::closeConfig( std::fstream * configFile )
     }
     catch (std::exception & e)
     {
-        std::cerr << e.what() << std::endl;
+        throw std::runtime_error( e.what() );
     }
 }
 
