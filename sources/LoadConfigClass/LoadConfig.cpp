@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 12:34:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/06 15:30:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ LoadConfig & LoadConfig::operator=( LoadConfig const & rhs ) { UNUSED(rhs); retu
 // MEMBER FUNCTIONS
 // ================
 
-std::map<std::string, std::string> LoadConfig::loadConfig( int ac, char **av )
+std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **av )
 {
     std::string configPath;
-    std::map<std::string, std::string> config;
+    std::map<std::string, FieldInterface *> config;
     std::fstream * configFile;
 
     if (ac == 1)
@@ -45,6 +45,30 @@ std::map<std::string, std::string> LoadConfig::loadConfig( int ac, char **av )
     return ( config );
 }
 
+bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
+{
+    static const std::string requiredKeys[] = {"port", "host"};
+
+    // Check if all required keys are present and have values
+    for (size_t i = 0; i < sizeof(requiredKeys) / sizeof(requiredKeys[0]); ++i)
+    {
+        const std::string &key = requiredKeys[i];
+        if (config.find(key) == config.end() || config[key] == NULL) {
+            // Key not found or associated value is NULL
+            return ( false );
+        }
+
+        // For string values, check if it's empty
+        Field<std::string> *strField = dynamic_cast<Field<std::string> *>(config[key]);
+        if (strField && strField->getValue().empty())
+        {
+            return ( false );
+        }
+    }
+
+    return ( true );
+}
+
 // PRIVATE MEMBER FUNCTIONS
 // ========================
 
@@ -54,7 +78,7 @@ std::fstream * LoadConfig::openConfig( std::string configPath )
     {
         std::fstream * configFile = new std::fstream;
 
-        configFile->open( configPath, std::ios::in );
+        configFile->open( static_cast<const char *>(configPath.c_str()), std::ios::in );
         if (!configFile->is_open())
             throw FileNotOpenException( "Error: " + configPath + " not found" );
         
@@ -63,27 +87,54 @@ std::fstream * LoadConfig::openConfig( std::string configPath )
     catch (std::exception & e)
     {
         std::cerr << e.what() << std::endl;
-        return ( nullptr );
+        return ( NULL );
     }
 }
 
-std::map<std::string, std::string> LoadConfig::parseConfig( std::fstream * configFile )
-{
-    std::map<std::string, std::string> config;
+std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *configFile) {
+    std::map<std::string, FieldInterface *> config;
     std::string line;
-    std::string key;
-    std::string value;
 
-    while (std::getline( *configFile, line ))
+    while (std::getline(*configFile, line))
     {
+
         if (line[0] == '#' || line.empty())
-            continue ;
-        key = line.substr( 0, line.find( '=' ));
-        value = line.substr( line.find( '=' ) + 1 );
-        config[key] = value;
+            continue;
+
+        std::string key = line.substr(0, line.find('='));
+        std::string value = line.substr(line.find('=') + 1);
+
+        bool isNumber = true;
+        for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
+        {
+            if (!std::isdigit(*it))
+            {
+                isNumber = false;
+                break;
+            }
+        }
+
+        if (isNumber)
+        {
+            int intValue;
+            std::istringstream(value) >> intValue;
+            config[key] = new Field<int>(intValue);
+        }
+        else
+        {
+           if (value.size() >= 2 && value[0] == '"' && value[value.size() - 1] == '"')
+           {
+                std::string strippedValue = value.substr(1, value.size() - 2);
+                config[key] = new Field<std::string>(strippedValue);
+            }
+            else
+            {
+                config[key] = new Field<std::string>(value);
+            }
+        }
     }
 
-    return ( config );
+    return config;
 }
 
 void LoadConfig::closeConfig( std::fstream * configFile )
@@ -103,5 +154,5 @@ void LoadConfig::closeConfig( std::fstream * configFile )
 // EXCEPTIONS
 // ==========
 
-LoadConfig::FileNotOpenException::FileNotOpenException( std::string const & message )\
+LoadConfig::FileNotOpenException::FileNotOpenException( std::string const & message )
     : std::runtime_error( message ) { return ; }

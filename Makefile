@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/06 10:53:30 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/06 14:34:48 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,6 +75,9 @@ CP		= cp -f
 OBJ_DIR	:= .objs/
 DEP_DIR	:= .deps/
 
+# LoadConfigClass
+LCC_DIR	:= ./sources/LoadConfigClass/
+
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
 ifeq ($(LANG), C)
@@ -84,9 +87,14 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
+INCLUDE	:= -I./includes -I$(LCC_DIR)
+
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
+SRCS	+= $(LCC_DIR)LoadConfig.cpp
+ 
 # -----------------------------  MAIN FILES  ---------------------------------- #
+
 SRCS	+= ./sources/main.cpp
 
 OBJS	= $(addprefix $(OBJ_DIR), $(SRCS:$(EXT)=.o))
