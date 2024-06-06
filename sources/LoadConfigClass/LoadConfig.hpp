@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 15:32:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/06 17:04:43 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,9 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
 
-        static std::fstream *                           openConfig( std::string configPath );
-        static std::map<std::string, FieldInterface *>  parseConfig( std::fstream * configFile );
-        static void                                     closeConfig( std::fstream * configFile );
+        static std::fstream *                           openConfig( std::string config_path );
+        static std::map<std::string, FieldInterface *>  parseConfig( std::fstream * config_file );
+        static void                                     closeConfig( std::fstream * config_file );
 
         // ATTRIBUTES
         // ==========
@@ -98,6 +98,12 @@ class LoadConfig
         {
             public:
                 FileNotOpenException( std::string const & message );
+        };
+
+        class FileParseException : public std::runtime_error
+        {
+            public:
+                FileParseException( std::string const & message );
         };
 };
 
