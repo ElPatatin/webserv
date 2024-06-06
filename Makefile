@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/03 18:29:54 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/06 10:53:30 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -99,25 +99,25 @@ all: $(NAME)
 
 $(NAME):: $(OBJS)
 	@$(CC) $(CFLAGS) $(XFLAGS) $(OBJS) -o $(NAME)
-	@printf "\n\t$(WHITE)Program \033[1;31m$(NAME) $(WHITE)has been compiled!$(DEF_COLOR)\n"
+	@printf "\n\t$(WHITE)Program \033[1;31m$(NAME) $(WHITE)has been compiled!$(DEF_CLR)\n"
 
 $(NAME)::
-	@printf "\t$(WHITE)Nothing more to be done for program \033[1;31m$(NAME)$(DEF_COLOR)\n"
+	@printf "\t$(WHITE)Nothing more to be done for program \033[1;31m$(NAME)$(DEF_CLR)\n"
 
 -include $(DEPS)
 
 clean:
 	@$(RM) -r $(OBJ_DIR) $(DEP_DIR)
-	@echo "$(BLUE)	Cub3D object and dependencies files cleaned.$(DEF_COLOR)"
+	@echo "$(BLUE)	Cub3D object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
 	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME)
-	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_COLOR)"
+	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:
 	@$(MAKE) fclean
 	@$(MAKE)
-	@echo "$(GREEN)	Cleaned and rebuilt everything for $(NAME) project.$(DEF_COLOR)"
+	@echo "$(GREEN)	Cleaned and rebuilt everything for $(NAME) project.$(DEF_CLR)"
 
 $(OBJ_DIR)%.o: %$(EXT) $(MKFL)
 	@$(MK) $(dir $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
