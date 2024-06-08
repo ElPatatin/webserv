@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 17:11:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/08 15:33:31 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,14 @@ bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 
 std::fstream * LoadConfig::openConfig( std::string config_path )
 {
+    if (config_path.length() < 5)
+        throw FileParseException("Error: " + config_path + " is not a .ini file");
+    if (".ini" != config_path.substr(config_path.find_last_of('.')))
+        throw FileParseException("Error: " + config_path + " is not a .ini file");
+
     std::fstream * config_file = new std::fstream;
+    if (config_file == NULL)
+        throw std::runtime_error( "Error: could not allocate memory for config file" );\
 
     config_file->open( static_cast<const char *>(config_path.c_str()), std::ios::in );
     if (config_file->fail())
@@ -98,7 +105,8 @@ std::fstream * LoadConfig::openConfig( std::string config_path )
     return ( config_file );
 }
 
-std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *config_file) {
+std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *config_file)
+{
     std::map<std::string, FieldInterface *> config;
     std::string line;
 
@@ -139,7 +147,7 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
         }
     }
 
-    return config;
+    return ( config );
 }
 
 void LoadConfig::closeConfig( std::fstream * config_file )
@@ -152,7 +160,7 @@ void LoadConfig::closeConfig( std::fstream * config_file )
     }
     catch (std::exception & e)
     {
-        throw std::runtime_error( e.what() );
+        throw FileNotCloseException( "Error: could not close config file" );
     }
 }
 
@@ -160,6 +168,9 @@ void LoadConfig::closeConfig( std::fstream * config_file )
 // ==========
 
 LoadConfig::FileNotOpenException::FileNotOpenException( std::string const & message )
+    : std::runtime_error( message ) { return ; }
+
+LoadConfig::FileNotCloseException::FileNotCloseException( std::string const & message )
     : std::runtime_error( message ) { return ; }
 
 LoadConfig::FileParseException::FileParseException( std::string const & message )

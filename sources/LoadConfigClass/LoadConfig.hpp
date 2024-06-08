@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/06 17:20:17 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/08 15:32:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,12 @@ class LoadConfig
         {
             public:
                 FileNotOpenException( std::string const & message );
+        };
+
+        class FileNotCloseException : public std::runtime_error
+        {
+            public:
+                FileNotCloseException( std::string const & message );
         };
 
         class FileParseException : public std::runtime_error
