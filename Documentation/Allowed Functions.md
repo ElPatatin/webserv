@@ -23,6 +23,12 @@
 
 - [errno](https://www.man7.org/linux/man-pages/man3/errno.3.html)
 - [stat](https://www.man7.org/linux/man-pages/man2/stat.2.html)
+- [poll](https://www.man7.org/linux/man-pages/man2/poll.2.html) (surpassed by epoll)
+- [epoll](https://www.man7.org/linux/man-pages/man7/epoll.7.html) 
+- [getaddrinfo](https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html)
+- [freeaddrinfo](https://www.man7.org/linux/man-pages/man3/freeaddrinfo.3p.html)
+- [gai_strerror](https://www.man7.org/linux/man-pages/man3/gai_strerror.3p.html) (getaddressinfo_strerror)
+- [getprotobyname](https://www.man7.org/linux/man-pages/man3/getprotent.3p.html)
 
 ### [Sockets](https://en.wikipedia.org/wiki/Berkeley_sockets)
 - [socket](https://www.man7.org/linux/man-pages/man2/socket.2.html)
@@ -41,13 +47,6 @@
 - htonl
 - ntohs
 - ntohl
-
-- [poll](https://www.man7.org/linux/man-pages/man2/poll.2.html) (surpassed by epoll)
-- [epoll](https://www.man7.org/linux/man-pages/man7/epoll.7.html) 
-- [getaddrinfo](https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html)
-- [freeaddrinfo](https://www.man7.org/linux/man-pages/man3/freeaddrinfo.3p.html)
-- [gai_strerror](https://www.man7.org/linux/man-pages/man3/gai_strerror.3p.html) (getaddressinfo_strerror)
-- [getprotobyname](https://www.man7.org/linux/man-pages/man3/getprotent.3p.html)
 
 ### Deprecated
 - [select](https://www.man7.org/linux/man-pages/man2/select.2.html)
