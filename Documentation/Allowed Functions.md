@@ -42,7 +42,7 @@
 - [bind](https://www.man7.org/linux/man-pages/man2/bind.2.html)
 - [connect](https://www.man7.org/linux/man-pages/man2/connect.2.html)
 
-### [Host and Network Value Manip]((https://www.man7.org/linux/man-pages/man3/htons.3p.html))
+### [Host and Network Value Manip](https://www.man7.org/linux/man-pages/man3/htons.3p.html)
 - htons
 - htonl
 - ntohs
