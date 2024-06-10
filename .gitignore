@@ -2,6 +2,7 @@
 .vscode
 .obsidian
 *.DSYM
+*.sw[a-p]
 
 # Prerequisites
 *.d
