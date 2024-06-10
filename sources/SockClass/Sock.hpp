@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/10 12:57:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:30:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <cstring>
 #include <exception>
 #include <sys/socket.h>
+#include <unistd.h>
 // #include <netinet/in.h>
 #include <arpa/inet.h>
 
@@ -28,6 +29,7 @@ class Sock
         // ==========================
 
         Sock( int domain, int service, int protocol, int port );
+        ~Sock( );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR
@@ -35,12 +37,16 @@ class Sock
 
         Sock( );
         Sock( Sock const & src );
-        ~Sock( );
 
         // OPERATORS OVERLOAD
         // ==================
 
         Sock & operator=( Sock const & rhs );
+
+        // ACCESSORS
+        // =========
+
+        struct sockaddr_in getAddr( void ) const;
 
         // EXCEPTIONS
         // ==========
@@ -57,11 +63,31 @@ class Sock
                 SocketBindFailed( std::string const & msg );
         };
 
+        class SocketListenFailed : public std::runtime_error
+        {
+            public:
+                SocketListenFailed( std::string const & msg );
+        };
+
+        class SocketAcceptFailed : public std::runtime_error
+        {
+            public:
+                SocketAcceptFailed( std::string const & msg );
+        };
+
+        class SocketCloseFailed : public std::runtime_error
+        {
+            public:
+                SocketCloseFailed( std::string const & msg );
+        };
+
         // ATTRIBUTES
         // ==========
 
         int _conn_fd;
+        int _new_conn_fd;
         struct sockaddr_in _addr;
+        int _addr_len;
 };
 
 #endif

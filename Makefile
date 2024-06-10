@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/08 18:03:42 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/10 15:33:58 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,7 @@ DEP_DIR	:= .deps/
 
 # LoadConfigClass
 LCC_DIR	:= ./sources/LoadConfigClass/
+SOC_DIR	:= ./sources/SockClass/
 
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -87,13 +88,17 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I./includes -I$(LCC_DIR)
+INCLUDE	:= -I./includes -I$(LCC_DIR) -I$(SOC_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
+
+SRCS	+= $(SOC_DIR)Sock.cpp \
+			$(SOC_DIR)SockException.cpp
+
 SRCS	+= ./sources/test.cpp
- 
+
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
 SRCS	+= ./sources/main.cpp

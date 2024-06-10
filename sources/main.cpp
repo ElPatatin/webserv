@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/08 18:08:20 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/10 15:20:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 #include <cerrno>
 #include <exception>
 #include "LoadConfig.hpp"
-
-void test(std::map<std::string, FieldInterface *> config);
-
+#include "Sock.hpp"
 
 int main(int ac, char **av)
 {
@@ -30,5 +28,6 @@ int main(int ac, char **av)
     if (!LoadConfig::checkConfig(config))
         throw std::runtime_error("Missing required keys in configuration file");
 
-    test(config);
+    Sock sock( AF_INET, SOCK_STREAM, 0, 8080 );
+    return 0;
 }
