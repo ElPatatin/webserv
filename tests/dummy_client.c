@@ -9,9 +9,9 @@
 
 #define PORT 8080
 
-int main(int argc, char const *argv[])
+int main(void)
 {
-    int sock = 0; long valread;
+    int sock = 0;
     struct sockaddr_in serv_addr;
     char *hello = "Hello from client";
     char buffer[1024] = {0};
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
     }
     send(sock , hello , strlen(hello) , 0 );
     printf("Hello message sent\n");
-    valread = read( sock , buffer, 1024);
+    read( sock , buffer, 1024);
     printf("%s\n",buffer );
     return 0;
 }

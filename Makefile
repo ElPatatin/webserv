@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/10 15:33:58 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/10 21:00:35 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -121,11 +121,11 @@ $(NAME)::
 -include $(DEPS)
 
 clean:
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR)
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) ./tests/dummy_client.o
 	@echo "$(BLUE)	Cub3D object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME)
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o
 	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:
@@ -139,4 +139,8 @@ $(OBJ_DIR)%.o: %$(EXT) $(MKFL)
 	@$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -c $< -o $@
 	@mv $(patsubst %.o, %.d, $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
 
-.PHONY: all clean fclean re
+dummy:
+	@gcc -Wall -Werror -Wextra ./tests/dummy_client.c -o ./tests/dummy_client.o -c
+	@gcc -Wall -Werror -Wextra ./tests/dummy_client.o -o dummy
+
+.PHONY: all clean fclean re dummy
