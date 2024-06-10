@@ -24,7 +24,10 @@
 - [errno](https://www.man7.org/linux/man-pages/man3/errno.3.html)
 - [stat](https://www.man7.org/linux/man-pages/man2/stat.2.html)
 - [poll](https://www.man7.org/linux/man-pages/man2/poll.2.html) (surpassed by epoll)
-- [epoll](https://www.man7.org/linux/man-pages/man7/epoll.7.html) 
+- [epoll](https://www.man7.org/linux/man-pages/man7/epoll.7.html) (API)
+    - [epoll_create](https://www.man7.org/linux/man-pages/man2/epoll_create.2.html)
+    - [epoll_ctl](https://www.man7.org/linux/man-pages/man2/epoll_ctl.2.html)
+    - [epoll_wait](https://www.man7.org/linux/man-pages/man2/epoll_wait.2.html)
 - [getaddrinfo](https://www.man7.org/linux/man-pages/man3/getaddrinfo.3.html)
 - [freeaddrinfo](https://www.man7.org/linux/man-pages/man3/freeaddrinfo.3p.html)
 - [gai_strerror](https://www.man7.org/linux/man-pages/man3/gai_strerror.3p.html) (getaddressinfo_strerror)
@@ -54,3 +57,25 @@
 ### Only for MacOS
 - fcntl
 - kqueue
+
+#### Man Pages
+``man man too see everything about man pages``
+
+The table below shows the section numbers of the manual followed by the types of pages they contain.
+
+|   |   |
+|---|---|
+|1   |Executable programs or shell commands   |
+|2   |System calls (functions provided by the kernel)   |
+|3   |Library calls (functions within program libraries)   |
+|4   |Special files (usually found in /dev)   |
+|5   |File formats and conventions, e.g. /etc/passwd   |
+|6   |Games   |
+|7   |Miscellaneous (including macro packages and conventions), e.g. man(7), groff(7), man-pages(7)   |
+|8   |System administration commands (usually only for root)   |
+|9   |Kernel routines [Non standard]   |
+
+A manual page consists of several sections.
+
+Conventional  section  names  include NAME, SYNOPSIS, CONFIGURATION, DESCRIPTION, OPTIONS, EXIT STATUS, RETURN VALUE, ERRORS, ENVIRONMENT, FILES, VERSIONS, CONFORMING TO, NOTES, BUGS, EXAMPLE, AUTHORS, and SEE ALSO.
+

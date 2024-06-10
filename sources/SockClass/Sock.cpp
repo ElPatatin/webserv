@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/10 18:15:58 by alajara-         ###   ########.fr       */
+/*   Updated: 2024/06/10 18:40:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ Sock::Sock( int domain, int service, int protocol, int port )
     this->_addr.sin_addr.s_addr = INADDR_ANY;
     std::memset( this->_addr.sin_zero, '\0', sizeof( this->_addr.sin_zero ) );
 
-    if ( bind( this->_conn_fd, (struct sockaddr *)(& _addr ), _addr_len) < 0 )
+    if ( bind( this->_conn_fd, reinterpret_cast< struct sockaddr * >( & this->_addr ), sizeof( this->_addr ) ) < 0 )
         throw Sock::SocketBindFailed( "Socket bind failed" );
 
     if ( listen( this->_conn_fd, 10 ) < 0 )
