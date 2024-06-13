@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/13 18:46:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:50:55 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **a
     std::fstream * config_file;
 
     if (ac == 1)
-        config_path = DEF_CONF_PATH;
+        config_path = DEFAULT_CONF_PATH;
     else
         config_path = av[1];
     config_file = openConfig( config_path );
@@ -111,25 +111,25 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
     std::map<std::string, FieldInterface *> config;
     std::string line;
 
-    while ( std::getline(*config_file, line) )
+    while ( std::getline( *config_file, line ) )
     {
         if ( line[0] == '#' || line.empty() )
             continue;
 
-        std::string key = line.substr(0, line.find('='));
-        std::string value = line.substr(line.find('=') + 1);
+        std::string key = line.substr( 0, line.find( '=' ) );
+        std::string value = line.substr( line.find( '=' ) + 1 );
 
         bool is_number = true;
         for ( std::string::const_iterator it = value.begin(); it != value.end(); ++it )
         {
-            if (!std::isdigit(*it))
+            if ( !std::isdigit( *it ) )
             {
                 is_number = false;
                 break;
             }
         }
 
-        if (is_number)
+        if ( is_number )
         {
             int int_value;
             std::istringstream( value ) >> int_value;

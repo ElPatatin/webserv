@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/13 18:12:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:50:44 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <map>
 
 # define UNUSED(x) (void)(x)
-# define DEF_CONF_PATH "./Configuration/default.ini"
+# define DEFAULT_CONF_PATH "./Configuration/default.ini"
 
 // Interface class
 class FieldInterface
