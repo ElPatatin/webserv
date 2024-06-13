@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/08 15:33:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:46:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **a
     std::fstream * config_file;
 
     if (ac == 1)
-        config_path = DEFCONFPATH;
+        config_path = DEF_CONF_PATH;
     else
         config_path = av[1];
     config_file = openConfig( config_path );
@@ -47,36 +47,37 @@ std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **a
 
 bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 {
-    static const std::string requiredKeys[] = { "port", "host" };
+    static const std::string required_keys[] = { "port", "host" };
 
-    // Check if all required keys are present and have values
-    for (size_t i = 0; i < sizeof(requiredKeys) / sizeof(requiredKeys[0]); ++i)
+    for ( size_t i = 0; i < sizeof( required_keys ) / sizeof( required_keys[0] ); ++i )
     {
-        const std::string &key = requiredKeys[i];
-        if (config.find(key) == config.end() || config[key] == NULL) {
-            // Key not found or associated value is NULL
+        // Check if the key is present in the config map
+        const std::string &key = required_keys[i];
+        if ( config.find( key ) == config.end() || config[key] == NULL )
             return ( false );
-        }
 
         // For string values, check if it's empty
-        Field<std::string> *strField = dynamic_cast<Field<std::string> *>(config[key]);
-        if (strField && strField->getValue().empty())
+        Field<std::string> *field = dynamic_cast<Field<std::string> *>( config[key] );
+        if ( field && field->getValue().empty() )
             return ( false );
     }
 
     // Check if there are any unexpected keys in the config map
-    for ( std::map<std::string, FieldInterface *>::const_iterator it = config.begin(); it != config.end(); ++it ) {
-        bool isExpectedKey = false;
-        for ( size_t i = 0; i < sizeof(requiredKeys) / sizeof(requiredKeys[0]); ++i )
+    std::map<std::string, FieldInterface *>::const_iterator it = config.begin();
+    std::map<std::string, FieldInterface *>::const_iterator ite = config.end();
+    while ( it != ite ) {
+        bool is_expected_key = false;
+        for ( size_t i = 0; i < sizeof(required_keys) / sizeof(required_keys[0]); ++i )
         {
-            if ( it->first == requiredKeys[i] )
+            if ( it->first == required_keys[i] )
             {
-                isExpectedKey = true;
+                is_expected_key = true;
                 break ;
             }
         }
-        if ( !isExpectedKey )
+        if ( !is_expected_key )
             return ( false );
+        ++it;
     }
 
     return ( true );
@@ -87,19 +88,19 @@ bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 
 std::fstream * LoadConfig::openConfig( std::string config_path )
 {
-    if (config_path.length() < 5)
-        throw FileParseException("Error: " + config_path + " is not a .ini file");
-    if (".ini" != config_path.substr(config_path.find_last_of('.')))
-        throw FileParseException("Error: " + config_path + " is not a .ini file");
+    if ( config_path.length() < 6 )
+        throw FileParseException( "Error: " + config_path + " is not a .conf file" );
+    if ( ".conf" != config_path.substr( config_path.find_last_of( '.' ) ) )
+        throw FileParseException( "Error: " + config_path + " is not a .conf file" );
 
     std::fstream * config_file = new std::fstream;
-    if (config_file == NULL)
-        throw std::runtime_error( "Error: could not allocate memory for config file" );\
+    if ( config_file == NULL )
+        throw std::runtime_error( "Error: could not allocate memory for config file" );
 
-    config_file->open( static_cast<const char *>(config_path.c_str()), std::ios::in );
-    if (config_file->fail())
+    config_file->open( static_cast<const char *>( config_path.c_str() ), std::ios::in );
+    if ( config_file->fail() )
         throw FileNotOpenException( "Error: " + config_path + " could not be opened" );
-    if (!config_file->is_open())
+    if ( !config_file->is_open() )
         throw FileNotOpenException( "Error: " + config_path + " not found" );
         
     return ( config_file );
@@ -110,17 +111,16 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
     std::map<std::string, FieldInterface *> config;
     std::string line;
 
-    while (std::getline(*config_file, line))
+    while ( std::getline(*config_file, line) )
     {
-
-        if (line[0] == ';' || line.empty() || (line[0] == '[' && line[line.size() - 1] == ']'))
+        if ( line[0] == '#' || line.empty() )
             continue;
 
         std::string key = line.substr(0, line.find('='));
         std::string value = line.substr(line.find('=') + 1);
 
         bool is_number = true;
-        for (std::string::const_iterator it = value.begin(); it != value.end(); ++it)
+        for ( std::string::const_iterator it = value.begin(); it != value.end(); ++it )
         {
             if (!std::isdigit(*it))
             {
@@ -132,18 +132,13 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
         if (is_number)
         {
             int int_value;
-            std::istringstream(value) >> int_value;
-            config[key] = new Field<int>(int_value);
+            std::istringstream( value ) >> int_value;
+            config[key] = new Field<int>( int_value );
         }
         else
         {
-            if (value.size() >= 2 && value[0] == '"' && value[value.size() - 1] == '"')
-            {
-                std::string stripped_value = value.substr(1, value.size() - 2);
-                config[key] = new Field<std::string>(stripped_value);
-            }
-            else
-                throw FileParseException("Error: value for key " + key + " is not a number or a string");
+            std::string stripped_value = value.substr( 1, value.size() - 2 );
+            config[key] = new Field<std::string>( stripped_value );
         }
     }
 
@@ -158,7 +153,7 @@ void LoadConfig::closeConfig( std::fstream * config_file )
         delete config_file;
         return ;
     }
-    catch (std::exception & e)
+    catch ( std::exception & e )
     {
         throw FileNotCloseException( "Error: could not close config file" );
     }

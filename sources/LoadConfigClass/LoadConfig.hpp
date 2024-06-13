@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/08 15:32:07 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/13 18:12:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <map>
 
 # define UNUSED(x) (void)(x)
-# define DEFCONFPATH "./Configuration/default.ini"
+# define DEF_CONF_PATH "./Configuration/default.ini"
 
 // Interface class
 class FieldInterface
@@ -40,8 +40,8 @@ class Field : public FieldInterface
 {
     public:
         Field( const T &value ) : _value( value ) { }
-        T getValue( ) const { return _value; }
-        void printValue( ) const { std::cout << _value; }
+        T getValue() const { return _value; }
+        void printValue() const { std::cout << _value; }
     private:
         T _value;
 };
