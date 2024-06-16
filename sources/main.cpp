@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/10 15:20:58 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/16 13:39:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@ int main(int ac, char **av)
     if (!LoadConfig::checkConfig(config))
         throw std::runtime_error("Missing required keys in configuration file");
 
+    std::signal( SIGINT, Sock::handleSignal );
+    std::signal( SIGTERM, Sock::handleSignal );
+    std::signal( SIGQUIT, Sock::handleSignal );
+    
     Sock sock( AF_INET, SOCK_STREAM, 0, 8080 );
     return 0;
 }

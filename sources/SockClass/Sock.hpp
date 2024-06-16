@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/10 15:30:07 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/16 14:00:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <cerrno>
+#include <csignal>
 #include <exception>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -29,6 +31,7 @@ class Sock
         // ==========================
 
         Sock( int domain, int service, int protocol, int port );
+        static void handleSignal( int signal );
         ~Sock( );
 
     private:
@@ -42,6 +45,10 @@ class Sock
         // ==================
 
         Sock & operator=( Sock const & rhs );
+
+        // METHODS
+        // =======
+
 
         // ACCESSORS
         // =========
@@ -81,13 +88,22 @@ class Sock
                 SocketCloseFailed( std::string const & msg );
         };
 
+        class SocketSetOptionFailed : public std::runtime_error
+        {
+            public:
+                SocketSetOptionFailed( std::string const & msg );
+        };
+
         // ATTRIBUTES
         // ==========
 
         int _conn_fd;
         int _new_conn_fd;
-        struct sockaddr_in _addr;
         int _addr_len;
+        struct sockaddr_in _addr;
+        int _buffer[1024];
+
+        static volatile bool _keep_running;
 };
 
 #endif
