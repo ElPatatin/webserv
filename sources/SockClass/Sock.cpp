@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Sock.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 14:07:37 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/17 00:00:05 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ Sock::Sock( int domain, int service, int protocol, int port )
 {
     // Create a socket
     if ((this->_conn_fd = socket( domain, service, protocol )) < 0)
-        throw Sock::SocketCreationFailed( "Socket creation failed" );
-    
+        throw SocketCreationFailed( "Socket creation failed" );
+
     static_conn_fd = this->_conn_fd;
 
     // Bind the socket
@@ -43,48 +43,100 @@ Sock::Sock( int domain, int service, int protocol, int port )
 
     int opt = 1;
     if (setsockopt(this->_conn_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-        throw Sock::SocketSetOptionFailed("Setsockopt SO_REUSEADDR failed");
+        throw SocketSetOptionFailed("Setsockopt SO_REUSEADDR failed");
 
 
     if ( bind( this->_conn_fd, reinterpret_cast< struct sockaddr * >( & this->_addr ), sizeof( this->_addr ) ) < 0 )
-        throw Sock::SocketBindFailed( "Socket bind failed" );
+        throw SocketBindFailed( "Socket bind failed" );
 
     // Listen for connections
     if ( listen( this->_conn_fd, 10 ) < 0 )
-        throw Sock::SocketListenFailed( "Socket listen failed" );
+        throw SocketListenFailed( "Socket listen failed" );
+
+    // Create epoll instance
+    int epoll_fd = epoll_create( 1 );
+    if ( epoll_fd == -1 )
+        throw SocketEpollFailed( "Failed to create epoll instance" );
+
+    struct epoll_event event;
+    event.events = EPOLLIN;
+    event.data.fd = this->_conn_fd;
+
+    // Add the socket to the epoll instance
+    if ( epoll_ctl( epoll_fd, EPOLL_CTL_ADD, this->_conn_fd, &event ) == -1 )
+    {
+        if ( close( epoll_fd ) < 0 )
+            throw SocketEpollCloseFailed( "Failed to close epoll file descriptor" );
+        throw SocketEpollCtlFailed( "Failed to add file descriptor to epoll" );
+    }
+
+    struct epoll_event events[MAX_EVENTS];
 
     // Accept connections
     while ( this->_keep_running )
     {
         std::cout << ORANGE << "Waiting for connection..." << RESET << std::endl;
 
-        // Accept a connection
-        if ( ( this->_new_conn_fd = accept( this->_conn_fd, \
-            reinterpret_cast<struct sockaddr *>( &this->_addr ), \
-            reinterpret_cast<socklen_t *>( &this->_addr_len ) ) ) < 0 )
+        // Wait for events on the epoll instance
+        int nfds = epoll_wait( epoll_fd, events, MAX_EVENTS, TIMEOUT_MS );
+        if ( nfds == -1 )
         {
-            if ( this->_keep_running )
-                throw Sock::SocketAcceptFailed( "Socket accept failed" );
+            if ( errno == EINTR )
+                continue ;
             else
-                break ;
+            {
+                if ( close( epoll_fd ) < 0 )
+                    throw SocketEpollCloseFailed( "Failed to close epoll file descriptor" );
+                throw SocketEpollWaitFailed( "epoll_wait failed" );
+            }
         }
 
-        std::cout << GREEN << "Connection accepted" << RESET << std::endl;
+        // Timeout occurred
+        if ( nfds == 0 )
+        {
+            std::cout << "Timeout occurred! No connection requests." << std::endl;
 
-        // Receive data
-        std::memset( this->_buffer, '\0', sizeof( this->_buffer ) );
-        recv( this->_new_conn_fd, this->_buffer, 1024, 0 );
+            if ( close( epoll_fd ) < 0 )
+                throw SocketEpollCloseFailed( "Failed to close epoll file descriptor" );
+            if ( close( this->_conn_fd ) < 0 )
+                throw SocketCloseFailed( "Failed to close socket" );
 
-        std::cout << "Received: " << this->_buffer << std::endl;
+            std::cout << GREEN << "Socket closed" << RESET << std::endl;
+            return ;
+        }
+        
+        for ( int n = 0; n < nfds; ++n )
+        {
+            if ( events[n].data.fd == this->_conn_fd )
+            {
+                // Accept a connection
+                if ( ( this->_new_conn_fd = accept( this->_conn_fd, \
+                    reinterpret_cast<struct sockaddr *>( &this->_addr ), \
+                    reinterpret_cast<socklen_t *>( &this->_addr_len ) ) ) < 0 )
+                {
+                    if ( this->_keep_running )
+                        throw SocketAcceptFailed( "Socket accept failed" );
+                    break ;
+                }
 
-        // Send data
-        send( this->_new_conn_fd, this->_buffer, 1024, 0 );
+                std::cout << GREEN << "Connection accepted" << RESET << std::endl;
 
-        // Close the connection
-        if ( close( this->_new_conn_fd ) < 0 )
-            throw Sock::SocketCloseFailed( "Socket close failed" );
+                // Receive data
+                std::memset( this->_buffer, '\0', sizeof( this->_buffer ) );
+                if ( recv( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
+                    throw SocketRecieveFailed( "Failed to receive data" );
+
+                std::cout << "Received: " << this->_buffer << std::endl;
+
+                // Send data
+                if ( send( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
+                    throw SocketSendFailed( "Failed to send data" );
+            }
+        }
     }
 
+    if ( close( epoll_fd ) < 0 )
+        throw SocketEpollCloseFailed( "Failed to close epoll file descriptor" );
     std::cout << ORANGE << "Shutting down..." << RESET << std::endl;
 
     return ;
@@ -104,12 +156,9 @@ void Sock::handleSignal( int signal )
         std::cout << ORANGE << "SIGQUIT received" << RESET << std::endl;
 
     if ( close( static_conn_fd ) < 0 )
-        std::cerr << RED << "Socket close failed" << RESET << std::endl;
-    else
-        std::cout << GREEN << "Socket closed" << RESET << std::endl;
-
-   
-
+        throw Sock::SocketCloseFailed( "Socket close failed" );
+    std::cout << GREEN << "Socket closed" << RESET << std::endl;
+    return ;
 }
 
 struct sockaddr_in Sock::getAddr( void ) const { return this->_addr; }

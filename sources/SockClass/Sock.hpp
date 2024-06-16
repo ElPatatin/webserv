@@ -3,26 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   Sock.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 14:00:37 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/16 23:54:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOCK_HPP
 # define SOCK_HPP
 
-#include <iostream>
-#include <string>
-#include <cstring>
-#include <cerrno>
-#include <csignal>
-#include <exception>
-#include <sys/socket.h>
-#include <unistd.h>
-// #include <netinet/in.h>
-#include <arpa/inet.h>
+# include <iostream>
+# include <string>
+# include <cstring>
+# include <cerrno>
+# include <csignal>
+# include <exception>
+# include <sys/socket.h>
+# include <unistd.h>
+# include <netinet/in.h>
+# include <arpa/inet.h>
+# include <sys/epoll.h>
+
+# define MAX_EVENTS 10
+# define TIMEOUT_MS 10000
 
 class Sock
 {
@@ -92,6 +96,42 @@ class Sock
         {
             public:
                 SocketSetOptionFailed( std::string const & msg );
+        };
+
+        class SocketEpollFailed : public std::runtime_error
+        {
+            public:
+                SocketEpollFailed( std::string const & msg );
+        };
+
+        class SocketEpollCtlFailed : public std::runtime_error
+        {
+            public:
+                SocketEpollCtlFailed( std::string const & msg );
+        };
+
+        class SocketEpollWaitFailed : public std::runtime_error
+        {
+            public:
+                SocketEpollWaitFailed( std::string const & msg );
+        };
+
+        class SocketEpollCloseFailed : public std::runtime_error
+        {
+            public:
+                SocketEpollCloseFailed( std::string const & msg );
+        };
+
+        class SocketRecieveFailed : public std::runtime_error
+        {
+            public:
+                SocketRecieveFailed( std::string const & msg );
+        };
+
+        class SocketSendFailed : public std::runtime_error
+        {
+            public:
+                SocketSendFailed( std::string const & msg );
         };
 
         // ATTRIBUTES
