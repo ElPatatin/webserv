@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 14:03:57 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/16 14:07:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ Sock::Sock( int domain, int service, int protocol, int port )
 
     // Accept connections
     while ( this->_keep_running )
-    <%
+    {
         std::cout << ORANGE << "Waiting for connection..." << RESET << std::endl;
 
         // Accept a connection
@@ -83,7 +83,7 @@ Sock::Sock( int domain, int service, int protocol, int port )
         // Close the connection
         if ( close( this->_new_conn_fd ) < 0 )
             throw Sock::SocketCloseFailed( "Socket close failed" );
-    %>
+    }
 
     std::cout << ORANGE << "Shutting down..." << RESET << std::endl;
 
