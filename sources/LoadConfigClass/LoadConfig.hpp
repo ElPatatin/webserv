@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 12:19:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:58:24 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,29 +22,52 @@
 #include <sstream>
 #include <algorithm>
 #include <map>
+#include <vector>
+#include <stdexcept>
+#include <typeinfo>
 
 # define UNUSED(x) (void)(x)
 # define DEFAULT_CONF_PATH "./Configuration/default.conf"
 
-// Interface class
+
+// Forward declaration of Field template class
+template <typename T>
+class Field;
+
 class FieldInterface
 {
     public:
-        virtual ~FieldInterface( ) { return ; }
-        virtual void printValue( ) const = 0;
+        virtual ~FieldInterface() { return; }
+        virtual void printValue() const = 0;
+
+        template<typename T>
+        T getValue() const
+        {
+            const Field<T>* derived = dynamic_cast<const Field<T>*>(this);
+            if (!derived)
+                throw std::bad_cast();
+            return derived->getValue();
+        }
 };
 
-// Template class for different types
-template < typename T >
+template <typename T>
 class Field : public FieldInterface
 {
     public:
-        Field( const T &value ) : _value( value ) { }
-        T getValue() const { return _value; }
+        Field(const T &value) : _value(value) { }
+        T getValue() const { return _value; }        
+
         void printValue() const { std::cout << _value; }
+
     private:
         T _value;
 };
+
+typedef std::vector<std::string> t_vecstr;
+
+// Specialization of printValue for t_vecstr
+template <>
+void Field< t_vecstr >::printValue() const;
 
 /**
  * @brief LoadConfig class

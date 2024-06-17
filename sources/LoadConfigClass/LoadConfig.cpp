@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 12:19:55 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:58:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,37 +47,30 @@ std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **a
 
 bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 {
-    static const std::string required_keys[] = { "port", "host" };
+    static const std::string required_keys[] = { "host", "port" };
+    static const std::string optional_keys[] = { "server_name", "location" };
+    const size_t required_keys_count = sizeof( required_keys ) / sizeof( required_keys[0] );
 
-    for ( size_t i = 0; i < sizeof( required_keys ) / sizeof( required_keys[0] ); ++i )
+    // Check for presence and validity of required keys
+    for ( size_t i = 0; i < required_keys_count; ++i )
     {
-        // Check if the key is present in the config map
+        // Check if key is present
         const std::string &key = required_keys[i];
-        if ( config.find( key ) == config.end() || config[key] == NULL )
+        std::map<std::string, FieldInterface *>::const_iterator it = config.find( key );
+        if ( it == config.end() || it->second == NULL )
             return ( false );
 
-        // For string values, check if it's empty
-        Field<std::string> *field = dynamic_cast<Field<std::string> *>( config[key] );
+        // Check if key is not empty
+        Field<std::string> *field = dynamic_cast<Field<std::string> *>(it->second);
         if ( field && field->getValue().empty() )
             return ( false );
     }
 
-    // Check if there are any unexpected keys in the config map
-    std::map<std::string, FieldInterface *>::const_iterator it = config.begin();
-    std::map<std::string, FieldInterface *>::const_iterator ite = config.end();
-    while ( it != ite ) {
-        bool is_expected_key = false;
-        for ( size_t i = 0; i < sizeof(required_keys) / sizeof(required_keys[0]); ++i )
-        {
-            if ( it->first == required_keys[i] )
-            {
-                is_expected_key = true;
-                break ;
-            }
-        }
-        if ( !is_expected_key )
+    // Check if ALL required keys are present
+    for ( size_t i = 0; i < required_keys_count; ++i )
+    {
+        if ( config.find( required_keys[i] ) == config.end() )
             return ( false );
-        ++it;
     }
 
     return ( true );
@@ -133,11 +126,28 @@ std::map<std::string, FieldInterface *> LoadConfig::parseConfig(std::fstream *co
         {
             int int_value;
             std::istringstream( value ) >> int_value;
-            config[key] = new Field<int>( int_value );
+            if ( key == "port" )
+                config[key] = new Field<u_int16_t>( int_value );
+            else
+                config[key] = new Field<int>( int_value );
+        }
+        else if ( value[0] == '[' && value[value.length() - 1] == ']' )
+        {
+            std::string array = value.substr( 1, value.length() - 2 );
+            t_vecstr array_values;
+            size_t start = 0;
+            size_t end = 0;
+            while ( ( end = array.find( ',', start ) ) != std::string::npos )
+            {
+                array_values.push_back( array.substr( start, end - start ) );
+                start = end + 1;
+            }
+            array_values.push_back( array.substr( start ) );
+            config[key] = new Field<t_vecstr >( array_values );
         }
         else
         {
-            std::string stripped_value = value.substr( 1, value.size() - 2 );
+            std::string stripped_value = value;
             config[key] = new Field<std::string>( stripped_value );
         }
     }
@@ -170,3 +180,17 @@ LoadConfig::FileNotCloseException::FileNotCloseException( std::string const & me
 
 LoadConfig::FileParseException::FileParseException( std::string const & message )
     : std::runtime_error( message ) { return ; }
+
+// Specialization of printValue for t_vecstr
+template <>
+void Field<t_vecstr >::printValue() const
+{
+    std::cout << "[";
+    for (size_t i = 0; i < _value.size(); ++i)
+    {
+        std::cout << _value[i];
+        if (i != _value.size() - 1)
+            std::cout << ", ";
+    }
+    std::cout << "]";
+}

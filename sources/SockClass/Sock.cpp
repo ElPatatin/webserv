@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Sock.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/17 00:00:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/17 17:56:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Sock::~Sock( void ) { return ; }
 
 Sock & Sock::operator=( Sock const & rhs ) { (void)rhs; return *this; }
 
-Sock::Sock( int domain, int service, int protocol, int port )
+Sock::Sock( int domain, int service, int protocol, u_int16_t port )
 {
     // Create a socket
     if ((this->_conn_fd = socket( domain, service, protocol )) < 0)
@@ -131,6 +131,9 @@ Sock::Sock( int domain, int service, int protocol, int port )
                 // Send data
                 if ( send( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
                     throw SocketSendFailed( "Failed to send data" );
+
+                if ( close( this->_new_conn_fd ) < 0 )
+                    throw SocketCloseFailed( "Failed to close socket" );
             }
         }
     }

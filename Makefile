@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/10 21:00:35 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/17 16:43:40 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -96,8 +96,6 @@ SRCS	+= $(LCC_DIR)LoadConfig.cpp
 
 SRCS	+= $(SOC_DIR)Sock.cpp \
 			$(SOC_DIR)SockException.cpp
-
-SRCS	+= ./sources/test.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 

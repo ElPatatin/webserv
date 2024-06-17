@@ -13,3 +13,5 @@ AF_INET = address family, internet
 
 # [[Requirements]]
 
+# [Demultiplexing](https://www.geeksforgeeks.org/multiplexing-and-demultiplexing-in-transport-layer/)
+Delivering received segments at the receiver side to the correct app layer processes is called demultiplexing. 

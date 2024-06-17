@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Sock.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/16 23:54:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/17 15:58:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ class Sock
         // CONSTRUCTORS AND DESTRUCTOR
         // ==========================
 
-        Sock( int domain, int service, int protocol, int port );
+        Sock( int domain, int service, int protocol, u_int16_t port );
         static void handleSignal( int signal );
         ~Sock( );
 
