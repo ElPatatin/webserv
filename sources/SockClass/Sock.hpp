@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/17 15:58:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:55:44 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,11 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <sys/epoll.h>
+# include <fcntl.h>
+# include <sys/types.h>
 
 # define MAX_EVENTS 10
-# define TIMEOUT_MS 10000
+# define TIMEOUT_MS 60000
 
 class Sock
 {
@@ -34,7 +36,7 @@ class Sock
         // CONSTRUCTORS AND DESTRUCTOR
         // ==========================
 
-        Sock( int domain, int service, int protocol, u_int16_t port );
+        Sock( int domain, int service, int protocol, u_int16_t port, std::string host );
         static void handleSignal( int signal );
         ~Sock( );
 
@@ -141,7 +143,7 @@ class Sock
         int _new_conn_fd;
         int _addr_len;
         struct sockaddr_in _addr;
-        int _buffer[1024];
+        char _buffer[1024];
 
         static volatile bool _keep_running;
 };

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/17 17:56:58 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/18 18:02:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,9 @@ Sock::~Sock( void ) { return ; }
 
 Sock & Sock::operator=( Sock const & rhs ) { (void)rhs; return *this; }
 
-Sock::Sock( int domain, int service, int protocol, u_int16_t port )
+Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string host )
 {
+    (void)host;
     // Create a socket
     if ((this->_conn_fd = socket( domain, service, protocol )) < 0)
         throw SocketCreationFailed( "Socket creation failed" );
@@ -37,14 +38,14 @@ Sock::Sock( int domain, int service, int protocol, u_int16_t port )
 
     this->_addr.sin_family = domain;
     this->_addr.sin_port = htons( port );
-    this->_addr.sin_addr.s_addr = INADDR_ANY;
+    this->_addr.sin_addr.s_addr = htonl( INADDR_ANY );
     std::memset( this->_addr.sin_zero, '\0', sizeof( this->_addr.sin_zero ) );
 
 
     int opt = 1;
     if (setsockopt(this->_conn_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
         throw SocketSetOptionFailed("Setsockopt SO_REUSEADDR failed");
-
+    
 
     if ( bind( this->_conn_fd, reinterpret_cast< struct sockaddr * >( & this->_addr ), sizeof( this->_addr ) ) < 0 )
         throw SocketBindFailed( "Socket bind failed" );
@@ -126,7 +127,8 @@ Sock::Sock( int domain, int service, int protocol, u_int16_t port )
                 if ( recv( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
                     throw SocketRecieveFailed( "Failed to receive data" );
 
-                std::cout << "Received: " << this->_buffer << std::endl;
+                int fd = open("data.txt", O_CREAT | O_WRONLY, 0644);
+                write(fd, this->_buffer, strlen(this->_buffer));
 
                 // Send data
                 if ( send( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
