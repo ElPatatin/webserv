@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/18 18:02:47 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/20 20:43:29 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string h
 
     // Bind the socket
     this->_addr_len = sizeof( this->_addr );
-
     this->_addr.sin_family = domain;
     this->_addr.sin_port = htons( port );
     this->_addr.sin_addr.s_addr = htonl( INADDR_ANY );
@@ -122,17 +121,7 @@ Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string h
 
                 std::cout << GREEN << "Connection accepted" << RESET << std::endl;
 
-                // Receive data
-                std::memset( this->_buffer, '\0', sizeof( this->_buffer ) );
-                if ( recv( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
-                    throw SocketRecieveFailed( "Failed to receive data" );
-
-                int fd = open("data.txt", O_CREAT | O_WRONLY, 0644);
-                write(fd, this->_buffer, strlen(this->_buffer));
-
-                // Send data
-                if ( send( this->_new_conn_fd, this->_buffer, 1024, 0 ) < 0 )
-                    throw SocketSendFailed( "Failed to send data" );
+                this->handleRequest( this->_new_conn_fd );
 
                 if ( close( this->_new_conn_fd ) < 0 )
                     throw SocketCloseFailed( "Failed to close socket" );
@@ -145,6 +134,96 @@ Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string h
     std::cout << ORANGE << "Shutting down..." << RESET << std::endl;
 
     return ;
+}
+
+
+void Sock::handleRequest(int client_fd)
+{
+    // Receive HTTP request
+    std::memset(this->_buffer, '\0', sizeof(this->_buffer));
+    if (recv(client_fd, this->_buffer, sizeof(this->_buffer) - 1, 0) < 0)
+        throw SocketRecieveFailed("Failed to receive data");
+
+    // Parse HTTP request (very basic parsing)
+    std::string request(this->_buffer);
+    std::istringstream request_stream(request);
+    std::string method, path, version;
+    request_stream >> method >> path >> version;
+
+    if (method == "GET" && path == "/")
+    {
+        // Serve the index.html file
+        std::fstream file;
+
+        file.open( "./web/index.html", std::ios::in );
+        
+        if (!file.is_open())
+            return this->serveErrorNotFound( client_fd );
+            
+
+        std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        file.close();
+
+        std::ostringstream response_stream;
+        response_stream << "HTTP/1.1 200 OK\r\n"
+                        << "Content-Length: " << content.length() << "\r\n"
+                        << "Content-Type: text/html\r\n"
+                        << "\r\n"
+                        << content;
+
+        std::string response = response_stream.str();
+        send(client_fd, response.c_str(), response.length(), 0);
+    }
+    else if ( method == "GET" && path == "/favicon.ico" )
+    {
+         // Serve the favicon.ico file
+        std::ifstream file("./web/favicon.ico", std::ios::in | std::ios::binary);
+        
+        if (!file.is_open())
+            return this->serveErrorNotFound( client_fd );
+
+        std::vector<char> content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+        file.close();
+
+        std::ostringstream response_stream;
+        response_stream << "HTTP/1.1 200 OK\r\n"
+                        << "Content-Length: " << content.size() << "\r\n"
+                        << "Content-Type: image/x-icon\r\n"
+                        << "\r\n";
+
+        std::string header = response_stream.str();
+        send(client_fd, header.c_str(), header.length(), 0);
+        send(client_fd, content.data(), content.size(), 0);
+    }
+    else if ( method == "GET" )
+    {
+        return this->serveErrorNotFound( client_fd );
+    }
+    else
+    {
+        // Method not supported or not found
+        std::string response = "HTTP/1.1 405 Method Not Allowed\r\nContent-Length: 0\r\n\r\n";
+        send(client_fd, response.c_str(), response.length(), 0);
+    }
+}
+
+void Sock::serveErrorNotFound( int client_fd )
+{
+    std::fstream file_not_foun; 
+    file_not_foun.open( "./web/errors/404.html", std::ios::in );
+    std::string content( ( std::istreambuf_iterator<char>( file_not_foun ) ), std::istreambuf_iterator<char>() );
+    file_not_foun.close();
+
+    std::ostringstream response_stream;
+    response_stream << "HTTP/1.1 404 Not Found\r\n"
+                    << "Content-Length: " << content.length() << "\r\n"
+                    << "Content-Type: text/html\r\n"
+                    << "\r\n"
+                    << content;
+    
+    std::string response = response_stream.str();
+    send(client_fd, response.c_str(), response.length(), 0);
+    return;
 }
 
 // Signal handler to set the flag to false

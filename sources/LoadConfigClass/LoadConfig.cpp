@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/17 17:58:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:52:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ std::map<std::string, FieldInterface *> LoadConfig::loadConfig( int ac, char **a
 bool LoadConfig::checkConfig( std::map<std::string, FieldInterface *> config )
 {
     static const std::string required_keys[] = { "host", "port" };
-    static const std::string optional_keys[] = { "server_name", "location" };
+    static const std::string optional_keys[] = { "server_names", "location" };
     const size_t required_keys_count = sizeof( required_keys ) / sizeof( required_keys[0] );
 
     // Check for presence and validity of required keys

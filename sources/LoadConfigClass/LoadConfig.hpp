@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/17 17:58:24 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/20 19:52:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define UNUSED(x) (void)(x)
 # define DEFAULT_CONF_PATH "./Configuration/default.conf"
 
+typedef std::vector<std::string> t_vecstr;
 
 // Forward declaration of Field template class
 template <typename T>
@@ -63,7 +64,6 @@ class Field : public FieldInterface
         T _value;
 };
 
-typedef std::vector<std::string> t_vecstr;
 
 // Specialization of printValue for t_vecstr
 template <>

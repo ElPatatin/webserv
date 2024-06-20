@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/18 17:55:44 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/20 17:42:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # include <sys/epoll.h>
 # include <fcntl.h>
 # include <sys/types.h>
+# include <sstream>
+# include <fstream>
+# include <vector>
 
 # define MAX_EVENTS 10
 # define TIMEOUT_MS 60000
@@ -54,6 +57,9 @@ class Sock
 
         // METHODS
         // =======
+        
+        void handleRequest( int conn_fd );
+        void serveErrorNotFound( int conn_fd );
 
 
         // ACCESSORS
