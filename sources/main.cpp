@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/20 20:44:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:36:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@
 
 int main(int ac, char **av)
 {
-    std::map<std::string, FieldInterface *> config;
+    std::vector< std::string > config;
     
     if (ac < 1 || ac > 2)
         throw std::runtime_error("Usage: ./webserv [config_path - optional]");
 
-    (void)av;
-    // config = LoadConfig::loadConfig(ac, av);
+    config = LoadConfig::loadConfig(ac, av);
     // if (!LoadConfig::checkConfig(config))
     //     throw std::runtime_error("Missing required keys in configuration file");
     
+    return 0;
+
     std::signal( SIGINT, Sock::handleSignal );
     std::signal( SIGTERM, Sock::handleSignal );
     std::signal( SIGQUIT, Sock::handleSignal );
