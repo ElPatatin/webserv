@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:20:10 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:48:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,8 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
 
-        static std::fstream *                           openConfig( std::string config_path );
-        static std::fstream *                           deleteOpenFile( std::fstream * config_file );
         static std::vector< std::string >               parseConfig( std::fstream * config_file );
         static void                                     trim( std::string & str );
-        static void                                     closeConfig( std::fstream * config_file );
 };
 
 #endif
