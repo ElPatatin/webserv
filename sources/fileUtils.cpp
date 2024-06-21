@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filesUtils.cpp                                     :+:      :+:    :+:   */
+/*   fileUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:16:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:50:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 23:01:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "filesUtils.hpp"
+#include "fileUtils.hpp"
 #include "Exceptions.hpp"
 
 std::fstream *  openFile( std::string config_path )

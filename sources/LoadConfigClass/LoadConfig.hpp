@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:51:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 23:29:48 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "webserv.hpp"
 # include "Exceptions.hpp"
 # include "fileUtils.hpp"
+# include "ConfigData.hpp"
 
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
 
@@ -37,28 +38,24 @@ class LoadConfig
     public:
         // MEMBER FUNCTIONS
         // ================
-
-        static std::vector< std::string >               loadConfig( int ac, char **av );
-        static bool                                     checkConfig( std::vector< std::string > config );
+        static void loadConfig( int ac, char **av, ConfigData *config );
+        static bool checkConfig( ConfigData config );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR
         // ==========================
-
         LoadConfig( );
         LoadConfig( LoadConfig const & src );
         ~LoadConfig( );
 
         // OPERATORS OVERLOAD
         // ==================
-
         LoadConfig & operator=( LoadConfig const & rhs );
 
         // MEMBER FUNCTIONS
         // ================
-
-        static std::vector< std::string >               parseConfig( std::fstream * config_file );
-        static void                                     trim( std::string & str );
+        static void readConfig( std::fstream * config_file, ConfigData * config );
+        static void trim( std::string & str );
 };
 
 #endif

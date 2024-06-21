@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 17:06:47 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 23:40:40 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,10 @@ LoadConfig & LoadConfig::operator=( LoadConfig const & rhs ) { UNUSED(rhs); retu
 // MEMBER FUNCTIONS
 // ================
 
-std::vector< std::string > LoadConfig::loadConfig( int ac, char **av )
+void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 {
-    std::string config_path;
-    std::vector< std::string > config;
-    std::fstream * config_file;
+    std::string     config_path;
+    std::fstream *  config_file;
 
     if (ac == 1)
         config_path = DEFAULT_CONF_PATH;
@@ -42,14 +41,14 @@ std::vector< std::string > LoadConfig::loadConfig( int ac, char **av )
 
     config_file = openFile( config_path );
     if ( !config_file )
-        return ( config );
-    config = parseConfig( config_file );
+        throw ConfigFileException( strerror( errno ) );
+    readConfig( config_file, config );
     closeFile( config_file );
 
-    return ( config );
+    return ;
 }
 
-bool LoadConfig::checkConfig( std::vector< std::string > config )
+bool LoadConfig::checkConfig( ConfigData config )
 {
     UNUSED(config);
     return ( true );
@@ -58,16 +57,16 @@ bool LoadConfig::checkConfig( std::vector< std::string > config )
 // PRIVATE MEMBER FUNCTIONS
 // ========================
 
-std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
+void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
 {
-    std::vector< std::string > config;
     std::string line;
+    UNUSED(config);
 
     while ( std::getline( *config_file, line ) )
     {
         trim( line );   
         if ( line[0] == '#' || line.empty() )
-            continue;
+            continue ;
 
         
 
@@ -75,7 +74,7 @@ std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
         std::cout << line << std::endl;
     }
 
-    return ( config );
+    return ;
 }
 
 void LoadConfig::trim(std::string& str)
@@ -87,7 +86,7 @@ void LoadConfig::trim(std::string& str)
     if ( std::string::npos == startpos )
     {
         str = "";
-        return;
+        return ;
     }
 
     // Find the first non-space character from the end
@@ -97,6 +96,8 @@ void LoadConfig::trim(std::string& str)
     str.erase( endpos + 1 );
     // Erase everything from the beginning not found
     str.erase( 0, startpos );
+
+    return ;
 }
 
 

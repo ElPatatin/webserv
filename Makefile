@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/21 16:51:39 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/21 23:17:33 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,6 +81,8 @@ INC_DIR	:= ./includes/
 # LoadConfigClass
 LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
 SOC_DIR	:= $(SRC_DIR)SockClass/
+CNF_DIR	:= $(SRC_DIR)ConfigDataClass/
+LOG_DIR	:= $(SRC_DIR)LogClass/
 
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -91,14 +93,23 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I./includes -I$(LCC_DIR) -I$(SOC_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(LCC_DIR) -I$(SOC_DIR) -I$(CNF_DIR) -I$(LOG_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
+# FileUtils
 SRCS	+= $(SRC_DIR)fileUtils.cpp
 
+# LoadConfigClass
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
 
+# ConfigDataClass
+SRCS	+= $(CNF_DIR)ConfigData.cpp
+
+# LogClass
+SRCS	+= $(LOG_DIR)Log.cpp
+
+# SockClass
 SRCS	+= $(SOC_DIR)Sock.cpp \
 			$(SOC_DIR)SockException.cpp
 
@@ -108,7 +119,6 @@ SRCS	+= $(SRC_DIR)main.cpp
 
 OBJS	= $(addprefix $(OBJ_DIR), $(SRCS:$(EXT)=.o))
 DEPS	= $(addprefix $(DEP_DIR), $(addsuffix .d, $(basename $(SRCS))))
-
 
 # -=-=-=-=-	RULE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=s-=-=-=-=-=-=-=-=-=-=-=-=- #
 

@@ -3,30 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 15:36:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 23:34:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
-#include <cstring>
-#include <cerrno>
-#include <exception>
 #include "LoadConfig.hpp"
+#include "ConfigData.hpp"
 #include "Sock.hpp"
 
 int main(int ac, char **av)
 {
-    std::vector< std::string > config;
+    ConfigData  config;
     
     if (ac < 1 || ac > 2)
-        throw std::runtime_error("Usage: ./webserv [config_path - optional]");
+        throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
-    config = LoadConfig::loadConfig(ac, av);
-    // if (!LoadConfig::checkConfig(config))
-    //     throw std::runtime_error("Missing required keys in configuration file");
+    LoadConfig::loadConfig( ac, av, &config );
+    if ( !LoadConfig::checkConfig( config ) )
+        return ( 1 );
     
     return 0;
 
@@ -36,5 +33,5 @@ int main(int ac, char **av)
 
     Sock sock( AF_INET, SOCK_STREAM, 0, 8080, "localhost" );
     
-    return 0;
+    return ( 0 );
 }
