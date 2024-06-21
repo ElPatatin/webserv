@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 15:35:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:45:14 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,10 @@ std::fstream * LoadConfig::openConfig( std::string config_path )
 std::fstream * LoadConfig::deleteOpenFile( std::fstream * config_file )
 {
     if ( config_file )
+    {
         delete config_file;
+        config_file = NULL;
+    }
     return ( NULL );
 }
 
@@ -123,7 +126,28 @@ std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
 
 void LoadConfig::closeConfig( std::fstream * config_file )
 {
-    config_file->close();
-    delete config_file;
+    if ( config_file )
+    {
+        try
+        {
+            if ( config_file->is_open() )
+            {
+                config_file->clear();
+                config_file->close();
+            }
+            delete config_file;
+        }
+        catch( const std::exception & e )
+        {
+            std::cerr << e.what() << std::endl;
+            delete config_file;
+        }
+        catch( ... )
+        {
+            std::cerr << "Error: unknown exception" << std::endl;
+            delete config_file;
+        }
+        
+    }
     return ;
 }
