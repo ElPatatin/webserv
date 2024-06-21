@@ -6,28 +6,17 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 15:35:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:20:10 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LOADCONFIG_HPP
 # define LOADCONFIG_HPP
 
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <cstring>
-#include <cerrno>
-#include <exception>
-#include <sstream>
-#include <algorithm>
-#include <vector>
-#include <stdexcept>
-#include <typeinfo>
+# include "webserv.hpp"
+# include "Exceptions.hpp"
+# include "filesUtils.hpp"
 
-#include "LoadConfigExceptions.hpp"
-
-# define UNUSED(x) (void)(x)
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
 
 /**
@@ -49,7 +38,7 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
 
-        static std::vector< std::string >  loadConfig( int ac, char **av );
+        static std::vector< std::string >               loadConfig( int ac, char **av );
         static bool                                     checkConfig( std::vector< std::string > config );
 
     private:
@@ -70,7 +59,8 @@ class LoadConfig
 
         static std::fstream *                           openConfig( std::string config_path );
         static std::fstream *                           deleteOpenFile( std::fstream * config_file );
-        static std::vector< std::string >  parseConfig( std::fstream * config_file );
+        static std::vector< std::string >               parseConfig( std::fstream * config_file );
+        static void                                     trim( std::string & str );
         static void                                     closeConfig( std::fstream * config_file );
 };
 

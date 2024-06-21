@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/06 18:08:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/10 14:43:23 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:45:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,11 @@
 # define PURPLE "\033[0;35m"
 # define CYAN "\033[0;36m"
 # define WHITE "\033[0;37m"
+
 # define ORANGE "\033[38;5;208m"
+# define PINK "\033[38;5;13m"
+# define GREY "\033[38;5;8m"
+# define LIGHT_BLUE "\033[38;5;39m"
 
 // Bold Colors
 # define BOLD_BLACK "\033[1;30m"

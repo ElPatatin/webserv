@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   LoadConfigExceptions.hpp                           :+:      :+:    :+:   */
+/*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 15:37:20 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:10:30 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LOADCONFIGEXCEPTIONS_HPP
-# define LOADCONFIGEXCEPTIONS_HPP
+#ifndef EXCEPTIONS_HPP
+# define EXCEPTIONS_HPP
 
 #include <stdexcept>
 #include <exception>

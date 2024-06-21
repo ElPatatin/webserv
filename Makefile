@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/17 16:43:40 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/21 16:43:24 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,9 +75,12 @@ CP		= cp -f
 OBJ_DIR	:= .objs/
 DEP_DIR	:= .deps/
 
+SRC_DIR	:= ./sources/
+INC_DIR	:= ./includes/
+
 # LoadConfigClass
-LCC_DIR	:= ./sources/LoadConfigClass/
-SOC_DIR	:= ./sources/SockClass/
+LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
+SOC_DIR	:= $(SRC_DIR)SockClass/
 
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -92,6 +95,8 @@ INCLUDE	:= -I./includes -I$(LCC_DIR) -I$(SOC_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
+SRCS	+= $(SRC_DIR)filesUtils.cpp
+
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
 
 SRCS	+= $(SOC_DIR)Sock.cpp \
@@ -99,7 +104,7 @@ SRCS	+= $(SOC_DIR)Sock.cpp \
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
-SRCS	+= ./sources/main.cpp
+SRCS	+= $(SRC_DIR)main.cpp
 
 OBJS	= $(addprefix $(OBJ_DIR), $(SRCS:$(EXT)=.o))
 DEPS	= $(addprefix $(DEP_DIR), $(addsuffix .d, $(basename $(SRCS))))

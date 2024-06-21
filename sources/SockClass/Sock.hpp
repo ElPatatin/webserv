@@ -6,29 +6,23 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/20 17:42:39 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:14:16 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOCK_HPP
 # define SOCK_HPP
 
-# include <iostream>
-# include <string>
-# include <cstring>
-# include <cerrno>
 # include <csignal>
-# include <exception>
 # include <sys/socket.h>
-# include <unistd.h>
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <sys/epoll.h>
 # include <fcntl.h>
 # include <sys/types.h>
-# include <sstream>
-# include <fstream>
-# include <vector>
+
+# include "webserv.hpp"
+# include "Exceptions.hpp"
 
 # define MAX_EVENTS 10
 # define TIMEOUT_MS 60000

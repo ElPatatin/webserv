@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 15:45:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:41:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,15 @@ std::vector< std::string > LoadConfig::loadConfig( int ac, char **av )
         config_path = DEFAULT_CONF_PATH;
     else
         config_path = av[1];
-    config_file = openConfig( config_path );
+
+    config_file = openFile( config_path );
+    if ( !config_file )
+        return ( config );
+
     config = parseConfig( config_file );
-    closeConfig( config_file );
+
+    closeFile( config_file );
+
     return ( config );
 }
 
@@ -54,60 +60,6 @@ bool LoadConfig::checkConfig( std::vector< std::string > config )
 // PRIVATE MEMBER FUNCTIONS
 // ========================
 
-std::fstream * LoadConfig::openConfig( std::string config_path )
-{
-    std::fstream * config_file;
-    try
-    {
-        if ( config_path.length() < 6 )
-            throw FileNotConfigException( "Error: " + config_path + " is not a .conf file" );
-        if ( ".conf" != config_path.substr( config_path.find_last_of( '.' ) ) )
-            throw FileNotConfigException( "Error: " + config_path + " is not a .conf file" );
-
-        config_file = new std::fstream;
-        if ( config_file == NULL )
-            throw MemoryAllocationException( "Error: memory allocation failed" );
-
-        config_file->open( static_cast<const char *>( config_path.c_str() ), std::ios::in );
-        if ( config_file->fail() )
-            throw FileNotOpenException( "Error: " + config_path + " could not be opened" );
-        if ( !config_file->is_open() )
-            throw FileNotOpenException( "Error: " + config_path + " not found" );
-            
-        return ( config_file );
-    }
-    catch ( FileNotConfigException & e )
-    {
-        std::cerr << e.what() << std::endl;
-        return ( deleteOpenFile( config_file ) );
-    }
-    catch ( MemoryAllocationException & e )
-    {
-        std::cerr << e.what() << std::endl;
-        return ( deleteOpenFile( config_file ) );
-    }
-    catch ( FileNotOpenException & e )
-    {
-        std::cerr << e.what() << std::endl;
-        return ( deleteOpenFile( config_file ) );
-    }
-    catch ( ... )
-    {
-        std::cerr << "Error: unknown exception" << std::endl;
-        return ( deleteOpenFile( config_file ) );
-    }
-}
-
-std::fstream * LoadConfig::deleteOpenFile( std::fstream * config_file )
-{
-    if ( config_file )
-    {
-        delete config_file;
-        config_file = NULL;
-    }
-    return ( NULL );
-}
-
 std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
 {
     std::vector< std::string > config;
@@ -115,8 +67,12 @@ std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
 
     while ( std::getline( *config_file, line ) )
     {
+        trim( line );   
+
         if ( line[0] == '#' || line.empty() )
             continue;
+
+        std::cout << line << std::endl;
 
        
     }
@@ -124,30 +80,25 @@ std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
     return ( config );
 }
 
-void LoadConfig::closeConfig( std::fstream * config_file )
+void LoadConfig::trim(std::string& str)
 {
-    if ( config_file )
+    // Find the first non-space character from the beginning
+    size_t startpos = str.find_first_not_of( " \t\r\n" );
+
+    // If all characters are spaces, str is empty or spaces only
+    if ( std::string::npos == startpos )
     {
-        try
-        {
-            if ( config_file->is_open() )
-            {
-                config_file->clear();
-                config_file->close();
-            }
-            delete config_file;
-        }
-        catch( const std::exception & e )
-        {
-            std::cerr << e.what() << std::endl;
-            delete config_file;
-        }
-        catch( ... )
-        {
-            std::cerr << "Error: unknown exception" << std::endl;
-            delete config_file;
-        }
-        
+        str = "";
+        return;
     }
-    return ;
+
+    // Find the first non-space character from the end
+    size_t endpos = str.find_last_not_of( " \t\r\n" );
+
+    // Erase everything from the end not found
+    str.erase( endpos + 1 );
+    // Erase everything from the beginning not found
+    str.erase( 0, startpos );
 }
+
+
