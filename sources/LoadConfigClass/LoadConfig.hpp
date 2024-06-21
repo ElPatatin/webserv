@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/20 19:52:46 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 15:02:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <typeinfo>
 
 # define UNUSED(x) (void)(x)
-# define DEFAULT_CONF_PATH "./Configuration/default.conf"
+# define DEFAULT_CONF_PATH "./configuration/default.conf"
 
 typedef std::vector<std::string> t_vecstr;
 
