@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:48:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:51:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "webserv.hpp"
 # include "Exceptions.hpp"
-# include "filesUtils.hpp"
+# include "fileUtils.hpp"
 
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
 

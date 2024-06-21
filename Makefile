@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/21 16:43:24 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/21 16:51:39 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -95,7 +95,7 @@ INCLUDE	:= -I./includes -I$(LCC_DIR) -I$(SOC_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
-SRCS	+= $(SRC_DIR)filesUtils.cpp
+SRCS	+= $(SRC_DIR)fileUtils.cpp
 
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
 

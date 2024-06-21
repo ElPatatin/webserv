@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:41:46 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 17:06:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ std::vector< std::string > LoadConfig::loadConfig( int ac, char **av )
     config_file = openFile( config_path );
     if ( !config_file )
         return ( config );
-
     config = parseConfig( config_file );
-
     closeFile( config_file );
 
     return ( config );
@@ -68,13 +66,13 @@ std::vector< std::string > LoadConfig::parseConfig(std::fstream *config_file)
     while ( std::getline( *config_file, line ) )
     {
         trim( line );   
-
         if ( line[0] == '#' || line.empty() )
             continue;
 
-        std::cout << line << std::endl;
+        
 
        
+        std::cout << line << std::endl;
     }
 
     return ( config );

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:16:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:19:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/21 16:50:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,6 @@ std::fstream *  openFile( std::string config_path )
     }
 }
 
-std::fstream *  deleteOpenFile( std::fstream * config_file )
-{
-    if ( config_file )
-    {
-        delete config_file;
-        config_file = NULL;
-    }
-    return ( NULL );
-}
-
 void    closeFile( std::fstream * config_file )
 {
     if ( config_file )
@@ -78,19 +68,31 @@ void    closeFile( std::fstream * config_file )
                 config_file->clear();
                 config_file->close();
             }
-            delete config_file;
+            if ( config_file->fail() )
+                throw FileNotCloseException( "Error: file could not be closed" );
+            deleteOpenFile( config_file );
         }
-        catch( const std::exception & e )
+        catch( FileNotCloseException & e )
         {
             std::cerr << e.what() << std::endl;
-            delete config_file;
+            deleteOpenFile( config_file );
         }
         catch( ... )
         {
             std::cerr << "Error: unknown exception" << std::endl;
-            delete config_file;
+            deleteOpenFile( config_file );
         }
         
     }
     return ;
+}
+
+std::fstream *  deleteOpenFile( std::fstream * config_file )
+{
+    if ( config_file )
+    {
+        delete config_file;
+        config_file = NULL;
+    }
+    return ( NULL );
 }
