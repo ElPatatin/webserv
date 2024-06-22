@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   filesUtils.hpp                                     :+:      :+:    :+:   */
+/*   fileUtils.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:50:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 18:37:04 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,5 +18,8 @@
 std::fstream *  openFile( std::string config_path );
 void            closeFile( std::fstream * config_file );
 std::fstream *  deleteOpenFile( std::fstream * config_file );
+void            trim( std::string& str );
+std::string&    rtrim( std::string & str );
+std::vector< std::string > split( const std::string & str, char delimiter );
 
 #endif

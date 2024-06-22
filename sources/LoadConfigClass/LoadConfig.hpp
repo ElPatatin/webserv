@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:29:48 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 17:31:33 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "Exceptions.hpp"
 # include "fileUtils.hpp"
 # include "ConfigData.hpp"
+# include "ConfigParser.hpp"
 
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
 
@@ -55,7 +56,6 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
         static void readConfig( std::fstream * config_file, ConfigData * config );
-        static void trim( std::string & str );
 };
 
 #endif

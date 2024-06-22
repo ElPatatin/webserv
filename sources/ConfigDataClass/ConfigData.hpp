@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:15:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 19:54:08 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,29 @@ class ConfigData
         // ================
         void                            print( void ) const;
         void                            clear( void );
+
+        // ACCESSORS
+        // =========
+        unsigned short                  getPort( void ) const;
+        void                            setPort( unsigned short port );
+
+        std::string                     getHost( void ) const;
+        void                            setHost( std::string host );
+
+        std::vector< std::string >      getServerNames( void ) const;
+        void                            setServerNames( std::vector< std::string > server_names );
+
+        std::map< int, std::string >    getErrorPages( void ) const;
+        void                            setErrorPages( std::map< int, std::string > error_pages );
+
+        std::string                     getClientMaxBodySize( void ) const;
+        void                            setClientMaxBodySize( std::string client_max_body_size );
+
+        std::vector< Location >         getLocations( void ) const;
+        void                            setLocations( std::vector< Location > locations );
+
+        std::vector< ConfigData >       getNestedServers( void ) const;
+        void                            setNestedServers( std::vector< ConfigData > nested_servers );
 };
 
 #endif

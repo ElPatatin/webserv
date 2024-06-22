@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:16:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:01:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 18:36:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,58 @@ std::fstream *  deleteOpenFile( std::fstream * config_file )
         config_file = NULL;
     }
     return ( NULL );
+}
+
+/**
+ * @brief Remove leading and trailing spaces from a string
+ * 
+ * @param str The string to trim
+ * @return void
+ * 
+ * @details
+ * First, find the first non-space character from the beginning of the string.
+ * If all characters are spaces, the string is empty or spaces only.
+ * Then, find the first non-space character from the end of the string.
+ * Erase everything from the end not found.
+ * Erase everything from the beginning not found.
+ * 
+ * @see https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+ */
+void trim( std::string& str )
+{
+    size_t startpos = str.find_first_not_of( " \t\r\n" );
+
+    if ( std::string::npos == startpos )
+    {
+        str = "";
+        return ;
+    }
+
+    size_t endpos = str.find_last_not_of( " \t\r\n" );
+
+    str.erase( endpos + 1 );
+    str.erase( 0, startpos );
+
+    return ;
+}
+
+std::string& rtrim( std::string & str )
+{
+    size_t endpos = str.find_last_not_of( " \t" );
+    if ( std::string::npos != endpos )
+        str = str.substr( 0, endpos + 1 );
+
+    return ( str );
+}
+
+std::vector< std::string > split( const std::string & str, char delimiter )
+{
+    std::vector< std::string > tokens;
+    std::istringstream iss( str );
+    std::string token;
+
+    while ( std::getline( iss, token, delimiter ) )
+        tokens.push_back( token );
+
+    return ( tokens );
 }

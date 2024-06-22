@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/21 23:17:33 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/22 17:27:51 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,6 +80,7 @@ INC_DIR	:= ./includes/
 
 # LoadConfigClass
 LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
+CNP_DIR	:= $(LCC_DIR)ConfigParserClass/
 SOC_DIR	:= $(SRC_DIR)SockClass/
 CNF_DIR	:= $(SRC_DIR)ConfigDataClass/
 LOG_DIR	:= $(SRC_DIR)LogClass/
@@ -93,7 +94,7 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I$(INC_DIR) -I$(LCC_DIR) -I$(SOC_DIR) -I$(CNF_DIR) -I$(LOG_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(LCC_DIR) -I$(SOC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
@@ -102,6 +103,8 @@ SRCS	+= $(SRC_DIR)fileUtils.cpp
 
 # LoadConfigClass
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
+# ConfigParserClass
+SRCS	+= $(CNP_DIR)ConfigParser.cpp
 
 # ConfigDataClass
 SRCS	+= $(CNF_DIR)ConfigData.cpp

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:40:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 19:58:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,44 +60,28 @@ bool LoadConfig::checkConfig( ConfigData config )
 void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
 {
     std::string line;
-    UNUSED(config);
 
     while ( std::getline( *config_file, line ) )
     {
-        trim( line );   
+        trim( line );
         if ( line[0] == '#' || line.empty() )
             continue ;
+        ConfigParser::parseComment( &line );
 
+        if ( line.find( "listen" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parsePort( line, config ) )
+                continue ;
+        }
         
+        if ( line.find( "server_name" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseServerName( line, config ) )
+                continue ;
+        }
 
-       
-        std::cout << line << std::endl;
     }
 
+    config->print();
     return ;
 }
-
-void LoadConfig::trim(std::string& str)
-{
-    // Find the first non-space character from the beginning
-    size_t startpos = str.find_first_not_of( " \t\r\n" );
-
-    // If all characters are spaces, str is empty or spaces only
-    if ( std::string::npos == startpos )
-    {
-        str = "";
-        return ;
-    }
-
-    // Find the first non-space character from the end
-    size_t endpos = str.find_last_not_of( " \t\r\n" );
-
-    // Erase everything from the end not found
-    str.erase( endpos + 1 );
-    // Erase everything from the beginning not found
-    str.erase( 0, startpos );
-
-    return ;
-}
-
-

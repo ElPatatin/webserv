@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:17:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/22 18:13:35 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,3 +98,15 @@ void ConfigData::clear()
     this->locations.clear();
     this->nested_servers.clear();
 }
+
+// ACCESSORS
+// =========
+
+unsigned short ConfigData::getPort( void ) const { return ( this->port ); }
+void ConfigData::setPort( unsigned short port ) { this->port = port; return ; }
+
+std::string ConfigData::getHost( void ) const { return ( this->host ); }
+void ConfigData::setHost( std::string host ) { this->host = host; return ; }
+
+std::vector< std::string > ConfigData::getServerNames( void ) const { return ( this->server_names ); }
+void ConfigData::setServerNames( std::vector< std::string > server_names ) { this->server_names = server_names; return ; }
