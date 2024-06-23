@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 18:13:35 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 13:45:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,11 +102,30 @@ void ConfigData::clear()
 // ACCESSORS
 // =========
 
-unsigned short ConfigData::getPort( void ) const { return ( this->port ); }
-void ConfigData::setPort( unsigned short port ) { this->port = port; return ; }
+Port ConfigData::getPort( void ) const { return ( this->port ); }
+void ConfigData::setPort( Port port ) { this->port = port; return ; }
 
 std::string ConfigData::getHost( void ) const { return ( this->host ); }
-void ConfigData::setHost( std::string host ) { this->host = host; return ; }
+void ConfigData::setHost( std::string host )
+{
+    if ( this->getServerNames().empty() )
+        this->host = host;
+    return ;
+}
 
-std::vector< std::string > ConfigData::getServerNames( void ) const { return ( this->server_names ); }
-void ConfigData::setServerNames( std::vector< std::string > server_names ) { this->server_names = server_names; return ; }
+ServerNames ConfigData::getServerNames( void ) const { return ( this->server_names ); }
+void ConfigData::setServerNames( ServerNames server_names )
+{
+    this->server_names.insert( this->server_names.end(), server_names.begin(), server_names.end() );
+    return ;
+}
+
+ErrorPages ConfigData::getErrorPages( void ) const { return ( this->error_pages ); }
+void ConfigData::setErrorPages( ErrorPages error_pages )
+{
+    this->error_pages.insert( error_pages.begin(), error_pages.end() );
+    return ;
+}
+
+std::string ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
+void ConfigData::setClientMaxBodySize( std::string client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }

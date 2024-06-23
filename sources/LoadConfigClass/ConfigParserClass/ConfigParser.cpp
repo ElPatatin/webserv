@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 19:57:28 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 13:47:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,60 @@ bool ConfigParser::parseServerName( std::string line, ConfigData *config )
 
     std::vector< std::string > server_names = split( line, ' ' );
 
-    config->setServerNames( server_names );
     config->setHost( server_names[0] );
+    config->setServerNames( server_names );
+    return ( true );
+}
+
+bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
+{
+    UNUSED(config);
+    size_t pos = line.find( " " );
+    if ( pos == std::string::npos )
+    {
+        std::cerr << "Error: 'error_page' directive without error code" << std::endl;
+        return ( false );
+    }
+
+    line = line.substr( pos + 1 );
+    while ( !line.empty() && line[line.size() - 1] == ';')
+        line.erase(line.size() - 1);
+
+    ErrorPages error_pages;
+
+    std::vector< std::string > error_page = split( line, ' ' );
+    if ( error_page.size() != 2 )
+    {
+        std::cerr << "Error: 'error_page' directive with invalid number of arguments" << std::endl;
+        return ( false );
+    }
+
+    int error_code = std::atoi( error_page[0].c_str() );
+    if ( error_code <= 0 )
+    {
+        std::cerr << "Error: Invalid error code: " << error_page[0] << std::endl;
+        return ( false );
+    }
+
+    error_pages[error_code] = error_page[1];
+    config->setErrorPages( error_pages );
+
+    return ( true );
+}
+
+bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config )
+{
+    size_t pos = line.find( " " );
+    if ( pos == std::string::npos )
+    {
+        std::cerr << "Error: 'client_max_body_size' directive without size" << std::endl;
+        return ( false );
+    }
+
+    line = line.substr( pos + 1 );
+    while ( !line.empty() && line[line.size() - 1] == ';')
+        line.erase(line.size() - 1);
+
+    config->setClientMaxBodySize( line );
     return ( true );
 }

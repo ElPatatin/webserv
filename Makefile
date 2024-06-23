@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/22 17:27:51 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/23 13:47:30 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -151,7 +151,7 @@ re:
 
 $(OBJ_DIR)%.o: %$(EXT) $(MKFL)
 	@$(MK) $(dir $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
-	@printf "\r$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)                   \r"
+	@printf "\r$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)                                                                                      \r"
 	@$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -c $< -o $@
 	@mv $(patsubst %.o, %.d, $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
 

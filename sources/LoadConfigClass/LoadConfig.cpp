@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 19:58:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 13:47:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,18 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
         if ( line.find( "server_name" ) != std::string::npos )
         {
             if ( !ConfigParser::parseServerName( line, config ) )
+                continue ;
+        }
+
+        if ( line.find( "error_page" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseErrorPage( line, config ) )
+                continue ;
+        }
+
+        if ( line.find( "client_max_body_size" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseClientMaxBodySize( line, config ) )
                 continue ;
         }
 

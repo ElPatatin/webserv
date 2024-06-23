@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 19:54:08 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 13:45:02 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,15 @@
 
 # define UNUSED(x) (void)(x)
 
-typedef std::map< std::string, std::string > Location;
+// Forward declaration of ConfigData class for the typedef
+class ConfigData;
+
+typedef unsigned short Port;
+typedef std::vector< std::string > ServerNames;
+typedef std::map< int, std::string > ErrorPages;
+typedef std::vector< std::map< std::string, std::string > > Locations;
+typedef std::vector< ConfigData > NestedServers;
+
 
 /**
  * @brief ConfigData class
@@ -35,6 +43,7 @@ class ConfigData
 {
     public:
         // CONSTRUCTORS AND DESTRUCTOR
+        // ==========================
         ConfigData( );
         ~ConfigData( );
         ConfigData( ConfigData const & src );
@@ -45,41 +54,41 @@ class ConfigData
 
         // ATTRIBUTES
         // ==========
-        unsigned short                  port;
-        std::string                     host;
-        std::vector< std::string >      server_names;
-        std::map< int, std::string >    error_pages;
-        std::string                     client_max_body_size;
-        std::vector< Location >         locations;              // Each location is a map of settings
-        std::vector< ConfigData >       nested_servers;         // Nested servers if any
+        Port            port;
+        std::string     host;
+        ServerNames     server_names;
+        ErrorPages      error_pages;
+        std::string     client_max_body_size;
+        Locations       locations;              // Each location is a map of settings
+        NestedServers   nested_servers;         // Nested servers if any
 
         // MEMBER FUNCTIONS
         // ================
-        void                            print( void ) const;
-        void                            clear( void );
+        void            print( void ) const;
+        void            clear( void );
 
         // ACCESSORS
         // =========
-        unsigned short                  getPort( void ) const;
-        void                            setPort( unsigned short port );
+        Port            getPort( void ) const;
+        void            setPort( Port port );
 
-        std::string                     getHost( void ) const;
-        void                            setHost( std::string host );
+        std::string     getHost( void ) const;
+        void            setHost( std::string host );
 
-        std::vector< std::string >      getServerNames( void ) const;
-        void                            setServerNames( std::vector< std::string > server_names );
+        ServerNames     getServerNames( void ) const;
+        void            setServerNames( ServerNames server_names );
 
-        std::map< int, std::string >    getErrorPages( void ) const;
-        void                            setErrorPages( std::map< int, std::string > error_pages );
+        ErrorPages      getErrorPages( void ) const;
+        void            setErrorPages( ErrorPages error_pages );
 
-        std::string                     getClientMaxBodySize( void ) const;
-        void                            setClientMaxBodySize( std::string client_max_body_size );
+        std::string     getClientMaxBodySize( void ) const;
+        void            setClientMaxBodySize( std::string client_max_body_size );
 
-        std::vector< Location >         getLocations( void ) const;
-        void                            setLocations( std::vector< Location > locations );
+        Locations       getLocations( void ) const;
+        void            setLocations( Locations );
 
-        std::vector< ConfigData >       getNestedServers( void ) const;
-        void                            setNestedServers( std::vector< ConfigData > nested_servers );
+        NestedServers   getNestedServers( void ) const;
+        void            setNestedServers( NestedServers nested_servers );
 };
 
 #endif
