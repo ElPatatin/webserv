@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:45:02 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:05:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CONFIGDATA_HPP
 
 # include <iostream>
+# include <sstream>
 # include <string>
 # include <vector>
 # include <map>
@@ -66,6 +67,7 @@ class ConfigData
         // ================
         void            print( void ) const;
         void            clear( void );
+        std::string     toString( void ) const;
 
         // ACCESSORS
         // =========

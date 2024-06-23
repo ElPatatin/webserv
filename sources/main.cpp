@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:34:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:17:23 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 int main(int ac, char **av)
 {
     ConfigData  config;
+
+    LOG(INFO) << "Starting server";
     
     if (ac < 1 || ac > 2)
         throw BadArrgumentsException( "Usage: ./webserv [config_file]" );

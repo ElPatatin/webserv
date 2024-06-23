@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:47:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:17:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
 {
     std::string line;
 
+    LOG(INFO) << "Reading config file";
     while ( std::getline( *config_file, line ) )
     {
         trim( line );
@@ -71,29 +72,29 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
         if ( line.find( "listen" ) != std::string::npos )
         {
             if ( !ConfigParser::parsePort( line, config ) )
-                continue ;
+                { LOG(ERROR) << "Error parsing port"; continue ; }
         }
         
         if ( line.find( "server_name" ) != std::string::npos )
         {
             if ( !ConfigParser::parseServerName( line, config ) )
-                continue ;
+                { LOG(ERROR) << "Error parsing server name"; continue ; }
         }
 
         if ( line.find( "error_page" ) != std::string::npos )
         {
             if ( !ConfigParser::parseErrorPage( line, config ) )
-                continue ;
+                { LOG(ERROR) << "Error parsing error page"; continue ; }
         }
 
         if ( line.find( "client_max_body_size" ) != std::string::npos )
         {
             if ( !ConfigParser::parseClientMaxBodySize( line, config ) )
-                continue ;
+                { LOG(ERROR) << "Error parsing client max body size"; continue ; }
         }
 
     }
 
-    config->print();
+    LOG(INFO) << config->toString();
     return ;
 }

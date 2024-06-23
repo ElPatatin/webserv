@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:47:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:16:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ bool ConfigParser::parsePort( std::string line, ConfigData *config )
     }
 
     config->setPort( static_cast< unsigned short >( port ));
+    LOG( INFO ) << "Successfully parsed port: " << port;
     return ( true );
 }
 
@@ -74,6 +75,10 @@ bool ConfigParser::parseServerName( std::string line, ConfigData *config )
 
     config->setHost( server_names[0] );
     config->setServerNames( server_names );
+    LOG( INFO ) << "Successfully parsed host: " << server_names[0];
+    LOG( INFO ) << "Successfully parsed server names: ";
+    for ( size_t i = 0; i < server_names.size(); ++i )
+        LOG(INFO) << "    " << server_names[i];
     return ( true );
 }
 
@@ -109,7 +114,9 @@ bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
 
     error_pages[error_code] = error_page[1];
     config->setErrorPages( error_pages );
-
+    LOG( INFO ) << "Successfully parsed error page: ";
+    for ( std::map<int, std::string>::const_iterator it = error_pages.begin(); it != error_pages.end(); ++it )
+        LOG(INFO) << "    " << it->first << " -> " << it->second;
     return ( true );
 }
 
@@ -127,5 +134,6 @@ bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config 
         line.erase(line.size() - 1);
 
     config->setClientMaxBodySize( line );
+    LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();
     return ( true );
 }

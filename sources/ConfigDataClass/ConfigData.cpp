@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:45:17 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:09:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,41 +54,11 @@ ConfigData & ConfigData::operator=( ConfigData const & rhs )
 
 void ConfigData::print( void ) const
 {
-    std::cout << "Port: " << this->port << std::endl;
-    std::cout << "Host: " << this->host << std::endl;
-
-    std::cout << "Server Names: ";
-    for (size_t i = 0; i < this->server_names.size(); ++i)
-        std::cout << this->server_names[i] << " ";
-    std::cout << std::endl;
-
-    std::cout << "Error Pages: ";
-    for (std::map<int, std::string>::const_iterator it = this->error_pages.begin(); it != this->error_pages.end(); ++it)
-        std::cout << it->first << " -> " << it->second << " ";
-    std::cout << std::endl;
-
-    std::cout << "Client Max Body Size: " << this->client_max_body_size << std::endl;
-    std::cout << "Locations: " << std::endl;
-    for (size_t i = 0; i < this->locations.size(); ++i)
-    {
-        for (std::map<std::string, std::string>::const_iterator it = this->locations[i].begin(); it != this->locations[i].end(); ++it)
-        {
-            std::cout << "    " << it->first << " -> " << it->second << std::endl;
-        }
-    }
-
-    if (!this->nested_servers.empty())
-    {
-        std::cout << "Nested Servers: " << std::endl;
-        for (size_t i = 0; i < this->nested_servers.size(); ++i)
-        {
-            std::cout << "  Nested Server " << i + 1 << ": " << std::endl;
-            this->nested_servers[i].print();
-        }
-    }
+    std::cout << this->toString() << std::endl;
+    return ;
 }
 
-void ConfigData::clear()
+void ConfigData::clear( void )
 {
     this->port = 0;
     this->host.clear();
@@ -97,6 +67,46 @@ void ConfigData::clear()
     this->client_max_body_size.clear();
     this->locations.clear();
     this->nested_servers.clear();
+}
+
+std::string ConfigData::toString( void ) const
+{
+    std::ostringstream oss;
+
+    oss << "Configuration Data:" << std::endl;
+    oss << "Port: " << this->port << std::endl;
+    oss << "Host: " << this->host << std::endl;
+
+    oss << "Server Names: ";
+    for (size_t i = 0; i < this->server_names.size(); ++i)
+        oss << this->server_names[i] << " ";
+    oss << std::endl;
+
+    oss << "Error Pages: ";
+    for (std::map<int, std::string>::const_iterator it = this->error_pages.begin(); it != this->error_pages.end(); ++it)
+        oss << it->first << " -> " << it->second << " ";
+    oss << std::endl;
+
+    oss << "Client Max Body Size: " << this->client_max_body_size << std::endl;
+    oss << "Locations: " << std::endl;
+    for ( size_t i = 0; i < this->locations.size(); ++i )
+    {
+        for ( std::map<std::string, std::string>::const_iterator it = this->locations[i].begin(); it != this->locations[i].end(); ++it )
+            oss << "    " << it->first << " -> " << it->second << std::endl;
+    }
+
+    if ( !this->nested_servers.empty() )
+    {
+        oss << "Nested Servers: " << std::endl;
+        for (size_t i = 0; i < this->nested_servers.size(); ++i)
+        {
+            oss << "  Nested Server " << i + 1 << ": " << std::endl;
+            oss << this->nested_servers[i].toString();
+        }
+    }
+
+    return ( oss.str() );
+
 }
 
 // ACCESSORS

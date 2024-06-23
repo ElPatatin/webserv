@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fileUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:16:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 18:36:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 14:46:57 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ std::fstream *  openFile( std::string config_path )
         if ( config_file == NULL )
             throw MemoryAllocationException( "Error: memory allocation failed" );
 
-        config_file->open( static_cast<const char *>( config_path.c_str() ), std::ios::in );
+        config_file->open( static_cast< const char * >( config_path.c_str() ), std::ios::in | std::ios::out );
         if ( config_file->fail() )
             throw FileNotOpenException( "Error: " + config_path + " could not be opened" );
         if ( !config_file->is_open() )

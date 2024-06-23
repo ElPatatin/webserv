@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/23 13:47:30 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/23 16:11:52 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -138,10 +138,10 @@ $(NAME)::
 
 clean:
 	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) ./tests/dummy_client.o
-	@echo "$(BLUE)	Cub3D object and dependencies files cleaned.$(DEF_CLR)"
+	@echo "$(BLUE)	$(NAME) object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o webserver.log
 	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:

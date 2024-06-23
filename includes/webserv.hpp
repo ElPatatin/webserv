@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:13:51 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:01:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sstream>
 # include <exception>
 # include <vector>
+
+# include "Log.hpp"
 
 # define UNUSED(x) (void)(x)
 

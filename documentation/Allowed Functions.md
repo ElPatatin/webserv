@@ -15,7 +15,7 @@
 - kill
 - access
 - open
-- opndir
+- opendir
 - readdir
 - closedir
 
