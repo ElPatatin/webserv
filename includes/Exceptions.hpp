@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 23:34:08 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:06:43 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,33 +65,33 @@ class FileNotCloseException : public std::exception
         std::string msg;
 };
 
-class MemoryAllocationException : public std::runtime_error
+class MemoryAllocationException : public std::exception
 {
     public:
         MemoryAllocationException( std::string const & message )
-            : std::runtime_error( message ) { return ; }
+            : msg( message ) { return ; }
         ~MemoryAllocationException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;
 };
 
-class ConfigFileException : public std::runtime_error
+class ConfigFileException : public std::exception
 {
     public:
         ConfigFileException( std::string const & message )
-            : std::runtime_error( message ) { return ; }
+            : msg( message ) { return ; }
         ~ConfigFileException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;
 };
 
-class FileParseException : public std::runtime_error
+class FileParseException : public std::exception
 {
     public:
         FileParseException( std::string const & message )
-            : std::runtime_error( message ) { return ; }
+            : msg( message ) { return ; }
         ~FileParseException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:17:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:05:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 
     config_file = openFile( config_path );
     if ( !config_file )
-        throw ConfigFileException( strerror( errno ) );
+        throw ConfigFileException( "Error: could not open config file" );
     readConfig( config_file, config );
     closeFile( config_file );
 

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:16:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 14:46:57 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 17:02:25 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 std::fstream *  openFile( std::string config_path )
 {
-    std::fstream * config_file;
+    std::fstream * config_file = NULL;
     try
     {
         if ( config_path.length() < 6 )
@@ -37,6 +37,7 @@ std::fstream *  openFile( std::string config_path )
     }
     catch ( FileNotConfigException & e )
     {
+
         std::cerr << e.what() << std::endl;
         return ( deleteOpenFile( config_file ) );
     }

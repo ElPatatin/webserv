@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:09:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 16:59:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,3 +139,17 @@ void ConfigData::setErrorPages( ErrorPages error_pages )
 
 std::string ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
 void ConfigData::setClientMaxBodySize( std::string client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }
+
+Locations ConfigData::getLocations( void ) const { return ( this->locations ); }
+void ConfigData::setLocations( Locations locations )
+{
+    this->locations.insert( this->locations.end(), locations.begin(), locations.end() );
+    return ;
+}
+
+NestedServers ConfigData::getNestedServers( void ) const { return ( this->nested_servers ); }
+void ConfigData::setNestedServers( NestedServers nested_servers )
+{
+    this->nested_servers.insert( this->nested_servers.end(), nested_servers.begin(), nested_servers.end() );
+    return ;
+}

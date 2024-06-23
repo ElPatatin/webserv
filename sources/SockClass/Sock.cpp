@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/20 20:43:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 18:09:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,49 @@ Sock & Sock::operator=( Sock const & rhs ) { (void)rhs; return *this; }
 
 Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string host )
 {
-    (void)host;
-    // Create a socket
-    if ((this->_conn_fd = socket( domain, service, protocol )) < 0)
-        throw SocketCreationFailed( "Socket creation failed" );
+    // Resolve host to IP address
+    struct addrinfo hints, *servinfo, *p;
+    std::memset(&hints, 0, sizeof hints);
+    hints.ai_family = domain;
+    hints.ai_socktype = service;
 
-    static_conn_fd = this->_conn_fd;
+    UNUSED(protocol);
 
-    // Bind the socket
-    this->_addr_len = sizeof( this->_addr );
-    this->_addr.sin_family = domain;
-    this->_addr.sin_port = htons( port );
-    this->_addr.sin_addr.s_addr = htonl( INADDR_ANY );
-    std::memset( this->_addr.sin_zero, '\0', sizeof( this->_addr.sin_zero ) );
+    int rv;
+    if ( (rv = getaddrinfo( host.c_str(), NULL, &hints, &servinfo ) ) != 0 )
+        throw std::runtime_error( gai_strerror( rv ) );
+
+    // Loop through all the results and bind to the first we can
+    for ( p = servinfo; p != NULL; p = p->ai_next )
+    {
+        if ( ( this->_conn_fd = socket( p->ai_family, p->ai_socktype, p->ai_protocol) ) == -1 )
+                throw SocketCreationFailed( "Socket creation failed" );
+
+        static_conn_fd = this->_conn_fd;
+
+        // Bind the socket
+        this->_addr_len = sizeof( this->_addr );
+        this->_addr.sin_family = domain;
+        this->_addr.sin_port = htons( port );
+        this->_addr.sin_addr.s_addr = htonl( INADDR_ANY );
+        std::memset( this->_addr.sin_zero, '\0', sizeof( this->_addr.sin_zero ) );
 
 
-    int opt = 1;
-    if (setsockopt(this->_conn_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
-        throw SocketSetOptionFailed("Setsockopt SO_REUSEADDR failed");
+        int opt = 1;
+        if (setsockopt(this->_conn_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+            throw SocketSetOptionFailed("Setsockopt SO_REUSEADDR failed");
+        
+        if ( bind( this->_conn_fd, reinterpret_cast< struct sockaddr * >( & this->_addr ), sizeof( this->_addr ) ) < 0 )
+            throw SocketBindFailed( "Socket bind failed" );
+
+        break;
+    }
+
+    if ( p == NULL )
+        throw SocketBindFailed( "Failed to bind socket" );
+
+    freeaddrinfo( servinfo );
     
-
-    if ( bind( this->_conn_fd, reinterpret_cast< struct sockaddr * >( & this->_addr ), sizeof( this->_addr ) ) < 0 )
-        throw SocketBindFailed( "Socket bind failed" );
-
     // Listen for connections
     if ( listen( this->_conn_fd, 10 ) < 0 )
         throw SocketListenFailed( "Socket listen failed" );
@@ -143,6 +163,10 @@ void Sock::handleRequest(int client_fd)
     std::memset(this->_buffer, '\0', sizeof(this->_buffer));
     if (recv(client_fd, this->_buffer, sizeof(this->_buffer) - 1, 0) < 0)
         throw SocketRecieveFailed("Failed to receive data");
+        
+    // Print received request to standard output
+    LOG( DEBUG3 ) << "Received HTTP request:";
+    LOG( DEBUG3 ) << this->_buffer;
 
     // Parse HTTP request (very basic parsing)
     std::string request(this->_buffer);
@@ -155,7 +179,7 @@ void Sock::handleRequest(int client_fd)
         // Serve the index.html file
         std::fstream file;
 
-        file.open( "./web/index.html", std::ios::in );
+        file.open( "./html/index.html", std::ios::in );
         
         if (!file.is_open())
             return this->serveErrorNotFound( client_fd );
@@ -177,7 +201,7 @@ void Sock::handleRequest(int client_fd)
     else if ( method == "GET" && path == "/favicon.ico" )
     {
          // Serve the favicon.ico file
-        std::ifstream file("./web/favicon.ico", std::ios::in | std::ios::binary);
+        std::ifstream file("./html/favicon.ico", std::ios::in | std::ios::binary);
         
         if (!file.is_open())
             return this->serveErrorNotFound( client_fd );
@@ -210,7 +234,7 @@ void Sock::handleRequest(int client_fd)
 void Sock::serveErrorNotFound( int client_fd )
 {
     std::fstream file_not_foun; 
-    file_not_foun.open( "./web/errors/404.html", std::ios::in );
+    file_not_foun.open( "./html/errors/404.html", std::ios::in );
     std::string content( ( std::istreambuf_iterator<char>( file_not_foun ) ), std::istreambuf_iterator<char>() );
     file_not_foun.close();
 
@@ -234,8 +258,6 @@ void Sock::handleSignal( int signal )
     std::cout << "\n\033[A\033[K";
     if ( signal == SIGINT )
         std::cout << ORANGE << "SIGINT received" << RESET << std::endl;
-    else if ( signal == SIGTERM )
-        std::cout << ORANGE << "SIGTERM received" << RESET << std::endl;
     else if ( signal == SIGQUIT )
         std::cout << ORANGE << "SIGQUIT received" << RESET << std::endl;
 

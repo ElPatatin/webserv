@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:37:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/21 16:14:16 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/23 18:02:06 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 # include <sys/epoll.h>
 # include <fcntl.h>
 # include <sys/types.h>
+# include <netdb.h>
 
 # include "webserv.hpp"
 # include "Exceptions.hpp"
+# include "ConfigData.hpp"
 
 # define MAX_EVENTS 10
 # define TIMEOUT_MS 60000
