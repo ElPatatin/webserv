@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/22 17:31:33 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:29:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "webserv.hpp"
 # include "Exceptions.hpp"
-# include "fileUtils.hpp"
+# include "utils.hpp"
 # include "ConfigData.hpp"
 # include "ConfigParser.hpp"
 

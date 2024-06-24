@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:16:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:59:05 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,38 @@ ConfigParser::~ConfigParser( ) { return ; }
 
 ConfigParser & ConfigParser::operator=( ConfigParser const & rhs ) { UNUSED(rhs); return *this; }
 
+std::string ConfigParser::parseLine( std::string * line, std::string error_message )
+{
+    size_t pos = line->find( " " );
+    if ( pos == std::string::npos )
+    {
+        std::cerr << "Error: " << error_message << std::endl;
+        LOG( ERROR ) << error_message;
+        return ( "" );
+    }
+
+    *line = line->substr( pos + 1 );
+    while ( !line->empty() && (*line)[line->size() - 1] == ';')
+        line->erase(line->size() - 1);
+    
+    return ( *line );
+}
+
 void ConfigParser::parseComment( std::string * line )
 {
     size_t pos = line->find( "#" );
     if ( pos != std::string::npos )
         *line = line->substr( 0, pos );
-    rtrim( *line );
+    ft::rtrim( *line );
 
     return ;
 }
 
 bool ConfigParser::parsePort( std::string line, ConfigData *config )
 {
-    size_t pos = line.find( " " );
-    if ( pos == std::string::npos )
-    {
-        std::cerr << "Error: 'listen' directive without port number" << std::endl;
+    parseLine( &line, "'port' directive without port number" );
+    if ( line.empty() )
         return ( false );
-    }
-
-    line = line.substr( pos + 1 );
-    while ( !line.empty() && line[line.size() - 1] == ';')
-        line.erase(line.size() - 1);
 
     unsigned short port = std::atoi( line.c_str() );
 
@@ -50,6 +60,7 @@ bool ConfigParser::parsePort( std::string line, ConfigData *config )
     if ( ss.str() != line  || ( port <= 0 || port > USHRT_MAX ) )
     {
         std::cerr << "Error: Invalid port number: " << port << std::endl;
+        LOG( ERROR ) << "Invalid port number: " << port;
         return ( false );
     }
 
@@ -60,18 +71,12 @@ bool ConfigParser::parsePort( std::string line, ConfigData *config )
 
 bool ConfigParser::parseServerName( std::string line, ConfigData *config )
 {
-    size_t pos = line.find( " " );
-    if ( pos == std::string::npos )
-    {
-        std::cerr << "Error: 'server_name' directive without server name" << std::endl;
+
+    parseLine( &line, "'server_name' directive without server name" );
+    if ( line.empty() )
         return ( false );
-    }
 
-    line = line.substr( pos + 1 );
-    while ( !line.empty() && line[line.size() - 1] == ';')
-        line.erase(line.size() - 1);
-
-    std::vector< std::string > server_names = split( line, ' ' );
+    std::vector< std::string > server_names = ft::split( line, ' ' );
 
     config->setHost( server_names[0] );
     config->setServerNames( server_names );
@@ -84,24 +89,17 @@ bool ConfigParser::parseServerName( std::string line, ConfigData *config )
 
 bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
 {
-    UNUSED(config);
-    size_t pos = line.find( " " );
-    if ( pos == std::string::npos )
-    {
-        std::cerr << "Error: 'error_page' directive without error code" << std::endl;
+    parseLine( &line, "'error_page' directive without error code and/or path" );
+    if ( line.empty() )
         return ( false );
-    }
-
-    line = line.substr( pos + 1 );
-    while ( !line.empty() && line[line.size() - 1] == ';')
-        line.erase(line.size() - 1);
 
     ErrorPages error_pages;
 
-    std::vector< std::string > error_page = split( line, ' ' );
+    std::vector< std::string > error_page = ft::split( line, ' ' );
     if ( error_page.size() != 2 )
     {
         std::cerr << "Error: 'error_page' directive with invalid number of arguments" << std::endl;
+        LOG( ERROR ) << "'error_page' directive with invalid number of arguments";
         return ( false );
     }
 
@@ -109,6 +107,7 @@ bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
     if ( error_code <= 0 )
     {
         std::cerr << "Error: Invalid error code: " << error_page[0] << std::endl;
+        LOG( ERROR ) << "Invalid error code: " << error_page[0];
         return ( false );
     }
 
@@ -122,16 +121,9 @@ bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
 
 bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config )
 {
-    size_t pos = line.find( " " );
-    if ( pos == std::string::npos )
-    {
-        std::cerr << "Error: 'client_max_body_size' directive without size" << std::endl;
+    parseLine( &line, "'client_max_body_size' directive without size" );
+    if ( line.empty() )
         return ( false );
-    }
-
-    line = line.substr( pos + 1 );
-    while ( !line.empty() && line[line.size() - 1] == ';')
-        line.erase(line.size() - 1);
 
     config->setClientMaxBodySize( line );
     LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();

@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/23 16:11:52 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/24 15:17:29 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -98,8 +98,8 @@ INCLUDE	:= -I$(INC_DIR) -I$(LCC_DIR) -I$(SOC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
-# FileUtils
-SRCS	+= $(SRC_DIR)fileUtils.cpp
+# utils
+SRCS	+= $(SRC_DIR)utils.cpp
 
 # LoadConfigClass
 SRCS	+= $(LCC_DIR)LoadConfig.cpp
@@ -128,6 +128,7 @@ DEPS	= $(addprefix $(DEP_DIR), $(addsuffix .d, $(basename $(SRCS))))
 all: $(NAME)
 
 $(NAME):: $(OBJS)
+	@$(MK) logs
 	@$(CC) $(CFLAGS) $(XFLAGS) $(OBJS) -o $(NAME)
 	@printf "\n\t$(WHITE)Program \033[1;31m$(NAME) $(WHITE)has been compiled!$(DEF_CLR)\n"
 
@@ -137,11 +138,11 @@ $(NAME)::
 -include $(DEPS)
 
 clean:
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) ./tests/dummy_client.o
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) ./tests/dummy_client.o 
 	@echo "$(BLUE)	$(NAME) object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o webserver.log
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o ./logs
 	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:
@@ -151,7 +152,7 @@ re:
 
 $(OBJ_DIR)%.o: %$(EXT) $(MKFL)
 	@$(MK) $(dir $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
-	@printf "\r$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)                                                                                      \r"
+	@printf "\r$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)                                                                                                            \r"
 	@$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -c $< -o $@
 	@mv $(patsubst %.o, %.d, $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
 

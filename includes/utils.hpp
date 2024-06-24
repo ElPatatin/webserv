@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileUtils.hpp                                      :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 14:44:47 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:27:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,14 @@
 
 # include "webserv.hpp"
 
-std::fstream *  openFile( std::string config_path );
-void            closeFile( std::fstream * config_file );
-std::fstream *  deleteOpenFile( std::fstream * config_file );
-void            trim( std::string& str );
-std::string&    rtrim( std::string & str );
-std::vector< std::string > split( const std::string & str, char delimiter );
+namespace ft
+{
+    std::fstream *  openFile( std::string file_path, std::ios::openmode _mode );
+    void            closeFile( std::fstream * _file );
+    std::fstream *  deleteOpenFile( std::fstream * _file );
+    void            trim( std::string& str );
+    std::string&    rtrim( std::string & str );
+    std::vector< std::string > split( const std::string & str, char delimiter );
+}
 
 #endif

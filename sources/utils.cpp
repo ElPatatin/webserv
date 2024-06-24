@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fileUtils.cpp                                      :+:      :+:    :+:   */
+/*   utils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,28 +10,23 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fileUtils.hpp"
+#include "utils.hpp"
 #include "Exceptions.hpp"
 
-std::fstream *  openFile( std::string config_path )
+std::fstream *  ft::openFile( std::string file_path, std::ios::openmode _mode )
 {
     std::fstream * config_file = NULL;
     try
     {
-        if ( config_path.length() < 6 )
-            throw FileNotConfigException( "Error: " + config_path + " is not a .conf file" );
-        if ( ".conf" != config_path.substr( config_path.find_last_of( '.' ) ) )
-            throw FileNotConfigException( "Error: " + config_path + " is not a .conf file" );
-
         config_file = new std::fstream;
         if ( config_file == NULL )
             throw MemoryAllocationException( "Error: memory allocation failed" );
 
-        config_file->open( static_cast< const char * >( config_path.c_str() ), std::ios::in | std::ios::out );
+        config_file->open( file_path.c_str(), _mode );
         if ( config_file->fail() )
-            throw FileNotOpenException( "Error: " + config_path + " could not be opened" );
+            throw FileNotOpenException( "Error: " + file_path + " could not be opened" );
         if ( !config_file->is_open() )
-            throw FileNotOpenException( "Error: " + config_path + " not found" );
+            throw FileNotOpenException( "Error: " + file_path + " not found" );
             
         return ( config_file );
     }
@@ -58,42 +53,42 @@ std::fstream *  openFile( std::string config_path )
     }
 }
 
-void    closeFile( std::fstream * config_file )
+void    ft::closeFile( std::fstream * _file )
 {
-    if ( config_file )
+    if ( _file )
     {
         try
         {
-            if ( config_file->is_open() )
+            if ( _file->is_open() )
             {
-                config_file->clear();
-                config_file->close();
+                _file->clear();
+                _file->close();
             }
-            if ( config_file->fail() )
+            if ( _file->fail() )
                 throw FileNotCloseException( "Error: file could not be closed" );
-            deleteOpenFile( config_file );
+            deleteOpenFile( _file );
         }
         catch( FileNotCloseException & e )
         {
             std::cerr << e.what() << std::endl;
-            deleteOpenFile( config_file );
+            deleteOpenFile( _file );
         }
         catch( ... )
         {
             std::cerr << "Error: unknown exception" << std::endl;
-            deleteOpenFile( config_file );
+            deleteOpenFile( _file );
         }
         
     }
     return ;
 }
 
-std::fstream *  deleteOpenFile( std::fstream * config_file )
+std::fstream *  ft::deleteOpenFile( std::fstream * _file )
 {
-    if ( config_file )
+    if ( _file )
     {
-        delete config_file;
-        config_file = NULL;
+        delete _file;
+        _file = NULL;
     }
     return ( NULL );
 }
@@ -113,7 +108,7 @@ std::fstream *  deleteOpenFile( std::fstream * config_file )
  * 
  * @see https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
  */
-void trim( std::string& str )
+void ft::trim( std::string& str )
 {
     size_t startpos = str.find_first_not_of( " \t\r\n" );
 
@@ -131,7 +126,7 @@ void trim( std::string& str )
     return ;
 }
 
-std::string& rtrim( std::string & str )
+std::string& ft::rtrim( std::string & str )
 {
     size_t endpos = str.find_last_not_of( " \t" );
     if ( std::string::npos != endpos )
@@ -140,7 +135,7 @@ std::string& rtrim( std::string & str )
     return ( str );
 }
 
-std::vector< std::string > split( const std::string & str, char delimiter )
+std::vector< std::string > ft::split( const std::string & str, char delimiter )
 {
     std::vector< std::string > tokens;
     std::istringstream iss( str );

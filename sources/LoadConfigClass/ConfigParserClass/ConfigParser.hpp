@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 13:47:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:54:40 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "webserv.hpp"
 # include "ConfigData.hpp"
 # include "Exceptions.hpp"
-# include "fileUtils.hpp"
+# include "utils.hpp"
 
 class ConfigParser
 {
@@ -41,6 +41,10 @@ class ConfigParser
         // OPERATORS OVERLOAD
         // ==================
         ConfigParser & operator=( ConfigParser const & rhs );
+
+        // MEMBER FUNCTIONS
+        // ================
+        static std::string parseLine( std::string * line, std::string error_message );
 };
 
 #endif

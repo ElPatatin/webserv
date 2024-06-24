@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 11:47:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 18:09:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 12:46:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Sock::~Sock( void ) { return ; }
 
 Sock & Sock::operator=( Sock const & rhs ) { (void)rhs; return *this; }
 
-Sock::Sock( int domain, int service, int protocol, u_int16_t port, std::string host )
+Sock::Sock( int domain, int service, int protocol, Port port, std::string host )
 {
     // Resolve host to IP address
     struct addrinfo hints, *servinfo, *p;

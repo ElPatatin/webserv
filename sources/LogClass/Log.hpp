@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:45 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:10:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:47:12 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,20 @@
 # include <sstream>
 # include <fstream>
 # include <string>
-# include <time.h>
+# include <ctime>
 # include <sys/stat.h>
-# include <dirent.h>
+# include <algorithm>
 
-# include "fileUtils.hpp"
+# include "utils.hpp"
 
 
 # define LOG(x) Log().get(x)
 
-# define LOGFILE "webserver.log"
+# define LOGDIR "./logs/"
+# define LOGFILE "webserver"
+# define LOGEXT ".log"
 
+// LOG LEVELS
 enum LogLevel
 {
     INFO,
@@ -53,26 +56,42 @@ enum LogLevel
 class Log
 {
     public:
+        // CONSTRUCTOR & DESTRUCTOR
+        // ========================
         Log();
-        virtual ~Log();
+        virtual ~Log(); // virtual destructor to allow derived classes to be destroyed properly
 
-        std::ostringstream& get( LogLevel level = INFO );
+        // OPERATORS OVERLOAD
+        // ==================
+        std::ostringstream&     get( LogLevel level = INFO );
     
-        static LogLevel& reportingLevel();
-        static std::string toString( LogLevel level );
-        static LogLevel fromString( const std::string & level );
+        // STATIC METHODS
+        // ==============
+        static LogLevel&        reportingLevel();
+        static std::string      toString( LogLevel level );
+        static LogLevel         fromString( const std::string & level );
 
     protected:
+        // ATTRIBUTES
+        // ==========
         std::ostringstream os;
 
     private:
+        // COPY CONSTRUCTOR & ASSIGNATION OPERATOR
+        // =======================================
         Log( const Log & );
         Log & operator=( const Log & );
+
+        // ATTRIBUTES
+        // ==========
         LogLevel messageLevel;
 
-        void writeLog( const std::string & message );
-        static std::string getTimeStr( void );
-        static std::fstream logFile;
+        // PRIVATE METHODS
+        // ===============
+        void                    writeLog( const std::string & message );
+        static std::string      getTimeStr( void );
+        std::string             makeLogFileName( void );
+        static std::fstream     logFile;
 };
 
 #endif

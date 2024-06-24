@@ -7,7 +7,7 @@
 # Prerequisites
 *.d
 .deps/
-*.log
+logs/
 
 # Compiled Object files
 *.slo

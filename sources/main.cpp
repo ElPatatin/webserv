@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 18:02:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:17:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int main(int ac, char **av)
 {
     ConfigData  config;
-    LOG(INFO) << "Starting server";
+    LOG( INFO ) << "Starting server";
 
     try
     {

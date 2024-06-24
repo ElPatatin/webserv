@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:09:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/24 15:49:10 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Log::Log( void )
 {
     if ( !logFile.is_open() )
     {
-        logFile.open( LOGFILE, std::ios::out | std::ios::app );
+        logFile.open( makeLogFileName().c_str(), std::ios::out | std::ios::app );
         if ( logFile.fail() )
             std::cerr << "Error: " << LOGFILE << " could not be opened" << std::endl;
     }
@@ -79,10 +79,20 @@ void Log::writeLog( const std::string & message )
 
 std::string Log::getTimeStr( void )
 {
-    time_t t = time( NULL );
+    time_t t = std::time( NULL );
     char buffer[ 100 ];
-    struct tm * tm_info = localtime( &t );
+    struct tm * tm_info = std::localtime( &t );
 
-    strftime( buffer, sizeof( buffer ), "%d-%m-%Y %H:%M:%S", tm_info );
+    std::strftime( buffer, sizeof( buffer ), "%d-%m-%Y_%H:%M:%S", tm_info );
     return ( buffer );
+}
+
+std::string Log::makeLogFileName( void )
+{
+    std::string logFileName = LOGDIR;
+    logFileName += LOGFILE;
+    logFileName += "_";
+    logFileName += getTimeStr();
+    logFileName += LOGEXT;
+    return ( logFileName );
 }
