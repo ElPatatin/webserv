@@ -6,20 +6,16 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:55:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:16:22 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGDATA_HPP
 # define CONFIGDATA_HPP
 
-# include <iostream>
-# include <sstream>
-# include <string>
+# include "common_dependencies.hpp"
 # include <vector>
 # include <map>
-
-# define UNUSED(x) (void)(x)
 
 // Forward declaration of ConfigData class for the typedef
 class ConfigData;

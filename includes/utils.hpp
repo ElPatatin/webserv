@@ -6,14 +6,14 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:27:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:11:36 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FILESUTILS_HPP
 # define FILESUTILS_HPP
 
-# include "webserv.hpp"
+# include "common_dependencies.hpp"
 
 namespace ft
 {
@@ -23,6 +23,7 @@ namespace ft
     void            trim( std::string& str );
     std::string&    rtrim( std::string & str );
     std::vector< std::string > split( const std::string & str, char delimiter );
-}
+    std::string     prettyPrint( std::string function, int line, std::string message );
+};
 
 #endif

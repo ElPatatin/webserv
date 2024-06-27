@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 17:06:43 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:32:49 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,28 @@ class FileParseException : public std::exception
         FileParseException( std::string const & message )
             : msg( message ) { return ; }
         ~FileParseException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class ResolveHostException : public std::exception
+{
+    public:
+        ResolveHostException( std::string const & message )
+            : msg( message ) { return ; }
+        ~ResolveHostException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class SocketException : public std::exception
+{
+    public:
+        SocketException( std::string const & message )
+            : msg( message ) { return ; }
+        ~SocketException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;

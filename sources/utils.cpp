@@ -146,3 +146,10 @@ std::vector< std::string > ft::split( const std::string & str, char delimiter )
 
     return ( tokens );
 }
+
+std::string ft::prettyPrint( std::string function, int line, std::string message )
+{
+    std::stringstream pretty;
+    pretty << "In function " << function << " at line " << line << ": " << message;
+    return ( pretty.str() );
+}

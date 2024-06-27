@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   common_dependencies.hpp                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:01:47 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/06/27 14:56:44 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/06/27 15:16:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#ifndef COMMON_DEPENCIES_HPP
+# define COMMON_DEPENCIES_HPP
 
 // C LIBRARIES
 # include <cstring>
@@ -27,8 +27,6 @@
 # include <sstream>
 # include <exception>
 # include <vector>
-
-# include "Log.hpp"
 
 # define UNUSED(x) (void)(x)
 

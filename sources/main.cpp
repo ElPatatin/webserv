@@ -6,13 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:17:07 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:31:23 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "LoadConfig.hpp"
 #include "ConfigData.hpp"
-#include "Sock.hpp"
+#include "webserver.hpp"
 
 int main(int ac, char **av)
 {
@@ -28,13 +28,7 @@ int main(int ac, char **av)
         if ( !LoadConfig::checkConfig( config ) )
             return ( 1 );
             
-        std::signal( SIGINT, Sock::handleSignal );
-        std::signal( SIGQUIT, Sock::handleSignal );
-
-        int nserver = config.getNestedServers().size() + 1;
-        for ( int i = 0; i < nserver; i++ )
-            Sock sock( AF_INET, SOCK_STREAM, 0, config.getPort(), config.getHost() );
-
+        webserver( config );
     }
     catch( BadArrgumentsException & e )
     {

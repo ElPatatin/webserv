@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:49:10 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 19:12:16 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,21 +45,19 @@ std::ostringstream& Log::get( LogLevel level )
 
 LogLevel& Log::reportingLevel( void )
 {
-    static LogLevel reportingLevel = DEBUG3;
+    static LogLevel reportingLevel = DEBUG;
     return reportingLevel;
 }
 
 std::string Log::toString( LogLevel level )
 {
-    static const char * const buffer[] = { "INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG1", "DEBUG2", "DEBUG3" };
+    static const char * const buffer[] = { "INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG" };
     return ( buffer[ level ] );
 }
 
 LogLevel Log::fromString( const std::string & level )
 {
-    if ( level == "DEBUG3" ) return ( DEBUG3 );
-    if ( level == "DEBUG2" ) return ( DEBUG2 );
-    if ( level == "DEBUG1" ) return ( DEBUG1 );
+    if ( level == "DEBUG" ) return ( DEBUG );
     if ( level == "CRITICAL" ) return ( CRITICAL );
     if ( level == "ERROR" ) return ( ERROR );
     if ( level == "WARNING" ) return ( WARNING );

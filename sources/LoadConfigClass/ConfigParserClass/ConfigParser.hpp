@@ -6,17 +6,18 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:54:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/27 15:02:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGPARSER_HPP
 # define CONFIGPARSER_HPP
 
-# include "webserv.hpp"
 # include "ConfigData.hpp"
 # include "Exceptions.hpp"
 # include "utils.hpp"
+# include "Log.hpp"
+
 
 class ConfigParser
 {
