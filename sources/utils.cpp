@@ -153,3 +153,15 @@ std::string ft::prettyPrint( std::string function, int line, std::string message
     pretty << "In function " << function << " at line " << line << ": " << message;
     return ( pretty.str() );
 }
+
+void    ft::printHeader( void )
+{
+    std::fstream * header = ft::openFile( "./welcome.txt", std::ios::in );
+    if ( header )
+    {
+        std::string line;
+        while ( std::getline( *header, line ) )
+            std::cout << line << std::endl;
+        ft::closeFile( header );
+    }
+}

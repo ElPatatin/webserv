@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 19:11:36 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/28 12:30:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ namespace ft
     std::string&    rtrim( std::string & str );
     std::vector< std::string > split( const std::string & str, char delimiter );
     std::string     prettyPrint( std::string function, int line, std::string message );
+    void            printHeader( void );
 };
 
 #endif
