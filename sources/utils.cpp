@@ -154,7 +154,7 @@ std::string ft::prettyPrint( std::string function, int line, std::string message
     return ( pretty.str() );
 }
 
-void    ft::printHeader( void )
+void    ft::welcome( void )
 {
     std::fstream * header = ft::openFile( "./welcome.txt", std::ios::in );
     if ( header )
