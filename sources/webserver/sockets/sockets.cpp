@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sockets.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 20:33:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/29 22:15:16 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,55 @@ void    Sockets::bindSocket( Data *data, ConfigData config )
         throw SocketException( "Error: bind: " + std::string( std::strerror( errno ) ) );
     }
 
+    return ;
+}
+
+void    Sockets::listenConnection( Data & data, int backlog )
+{
+    if ( listen( data.conn_fd, backlog ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "listen: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: listen: " + std::string( std::strerror( errno ) ) );
+    }
+
+    return ;
+}
+
+void    Sockets::acceptConnection( Data *data )
+{
+    if ( ( data->new_fd = accept( data->conn_fd,\
+                            reinterpret_cast< SockAddr * >( &data->addr ),\
+                            reinterpret_cast< socklen_t * >( &data->addr_len ) ) ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "accept: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: accept: " + std::string( std::strerror( errno ) ) );
+    }
+
+    return ;
+}
+
+void    Sockets::receiveConnection( Data *data )
+{
+    int     bytes;
+    char    buffer[ 1024 ];
+
+    if ( ( bytes = recv( data->new_fd, buffer, 1024, 0 ) ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
+    }
+
+    buffer[ bytes ] = '\0';
+    std::cout << "Received: " << buffer << std::endl;
+    return ;
+}
+
+void    Sockets::closeConnection( Data *data, std::string function, int line )
+{
+    if ( close( data->new_fd ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( function, line, "close: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: close: " + std::string( std::strerror( errno ) ) );
+    }
     return ;
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/27 20:00:06 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/29 22:13:20 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -121,8 +121,9 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)signals.cpp
 
 # Sockets files
-SRCS	+= $(SCK_DIR)sockets.cpp \
-		$(SCK_DIR)listeningSockets.cpp
+SRCS	+= $(SCK_DIR)sockets.cpp
+# EpollManager files
+SRCS	+= $(EPM_DIR)epollManager.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
