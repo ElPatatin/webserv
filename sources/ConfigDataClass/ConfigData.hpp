@@ -6,14 +6,14 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 15:16:22 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 12:54:19 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGDATA_HPP
 # define CONFIGDATA_HPP
 
-# include "common_dependencies.hpp"
+# include "common.hpp"
 # include <vector>
 # include <map>
 

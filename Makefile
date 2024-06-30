@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/29 22:13:20 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/06/30 12:57:32 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@
 LANG	:= C++
 
 SYSTEM	:= $(shell uname -s)
+
+LOG_FLE	:= webserver.log
 
 # -=-=-=-=-	NAME -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -89,6 +91,9 @@ WEB_DIR	:= $(SRC_DIR)webserver/
 SCK_DIR	:= $(WEB_DIR)sockets/
 EPM_DIR	:= $(WEB_DIR)epollManager/
 
+# Htpp directories
+HTP_DIR	:= $(SRC_DIR)http/
+
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
 ifeq ($(LANG), C)
@@ -125,6 +130,9 @@ SRCS	+= $(SCK_DIR)sockets.cpp
 # EpollManager files
 SRCS	+= $(EPM_DIR)epollManager.cpp
 
+# Http files
+SRCS	+= $(HTP_DIR)httpRequest.cpp
+
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
 SRCS	+= $(SRC_DIR)main.cpp
@@ -137,7 +145,6 @@ DEPS	= $(addprefix $(DEP_DIR), $(addsuffix .d, $(basename $(SRCS))))
 all: $(NAME)
 
 $(NAME):: $(OBJS)
-	@$(MK) logs
 	@$(CC) $(CFLAGS) $(XFLAGS) $(OBJS) -o $(NAME)
 	@printf "\n\t$(WHITE)Program \033[1;31m$(NAME) $(WHITE)has been compiled!$(DEF_CLR)\n"
 
@@ -151,7 +158,7 @@ clean:
 	@echo "$(BLUE)	$(NAME) object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o ./logs
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o $(LOG_FLE)
 	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:

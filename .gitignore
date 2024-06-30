@@ -7,7 +7,7 @@
 # Prerequisites
 *.d
 .deps/
-logs/
+webserver.log
 
 # Compiled Object files
 *.slo

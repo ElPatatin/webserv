@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 19:12:16 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:00:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Log::Log( void )
 {
     if ( !logFile.is_open() )
     {
-        logFile.open( makeLogFileName().c_str(), std::ios::out | std::ios::app );
+        logFile.open( LOGFILE, std::ios::out | std::ios::app );
         if ( logFile.fail() )
             std::cerr << "Error: " << LOGFILE << " could not be opened" << std::endl;
     }
@@ -83,14 +83,4 @@ std::string Log::getTimeStr( void )
 
     std::strftime( buffer, sizeof( buffer ), "%d-%m-%Y_%H:%M:%S", tm_info );
     return ( buffer );
-}
-
-std::string Log::makeLogFileName( void )
-{
-    std::string logFileName = LOGDIR;
-    logFileName += LOGFILE;
-    logFileName += "_";
-    logFileName += getTimeStr();
-    logFileName += LOGEXT;
-    return ( logFileName );
 }

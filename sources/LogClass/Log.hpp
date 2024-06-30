@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:45 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 19:08:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:00:35 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@
 
 # define LOG(x) Log().get(x)
 
-# define LOGDIR "./logs/"
-# define LOGFILE "webserver"
-# define LOGEXT ".log"
+# define LOGFILE "webserver.log"
 
 // LOG LEVELS
 enum LogLevel
@@ -84,7 +82,6 @@ class Log
         // ===============
         void                    writeLog( const std::string & message );
         static std::string      getTimeStr( void );
-        std::string             makeLogFileName( void );
         static std::fstream     logFile;
 };
 

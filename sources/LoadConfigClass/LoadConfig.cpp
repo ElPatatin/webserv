@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:30:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 12:52:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,8 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
     return ;
 }
 
-bool LoadConfig::checkConfig( ConfigData config )
+bool LoadConfig::checkConfig( void )
 {
-    UNUSED(config);
     return ( true );
 }
 

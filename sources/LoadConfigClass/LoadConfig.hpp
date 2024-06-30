@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 15:27:28 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 12:51:24 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
         static void loadConfig( int ac, char **av, ConfigData *config );
-        static bool checkConfig( ConfigData config );
+        static bool checkConfig( void );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR

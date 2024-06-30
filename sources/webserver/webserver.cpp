@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/29 22:25:09 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 12:48:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
 static bool startServer( ConfigData config, Addrs & addrs, Data & data );
-static bool runServer( ConfigData config, Addrs & addrs, Data & data, EpollData & epoll );
+static bool runServer( Data & data, EpollData & epoll );
 static bool stopServer( ConfigData config );
 
 void    webserver( ConfigData config )
@@ -30,7 +30,7 @@ void    webserver( ConfigData config )
     if ( !startServer( config, addrs, data ) )
         return ;
 
-    if ( !runServer( config, addrs, data, epoll ) )
+    if ( !runServer( data, epoll ) )
         return ;
 
     if ( !stopServer( config ) )
@@ -65,10 +65,8 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
     return ( true );
 }
 
-static bool runServer( ConfigData config, Addrs & addrs, Data & data, EpollData & epoll )
+static bool runServer( Data & data, EpollData & epoll )
 {
-    UNUSED( addrs );
-    UNUSED( config );
     LOG( INFO ) << "Running server";
     std::cout << "Running server" << std::endl;
 
@@ -78,13 +76,13 @@ static bool runServer( ConfigData config, Addrs & addrs, Data & data, EpollData 
         Epoll::createEpoll( data, epoll );
         Epoll::addEpoll( data, epoll );
 
-        while ( g_signal::g_signal_status )
+        while ( g_signal::g_signal_status ) // Main loop
         {
             Epoll::waitEpoll( data, epoll );
             if ( epoll.nfds == -1 )
             {
                 std::cout << "Timeout occurred, no events happened" << std::endl;
-                return ( true );
+                continue ;
             }
 
             for ( int i = 0; i < epoll.nfds; i++ )
@@ -102,7 +100,7 @@ static bool runServer( ConfigData config, Addrs & addrs, Data & data, EpollData 
 
                 Sockets::closeConnection( &data, __FUNCTION__, __LINE__ );
             }
-        }
+        }                                   // End of main loop
     }
     catch( SocketException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
     catch( EpollException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
