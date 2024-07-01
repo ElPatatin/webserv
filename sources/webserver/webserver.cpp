@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:48:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/01 22:48:05 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
 static bool startServer( ConfigData config, Addrs & addrs, Data & data );
 static bool runServer( Data & data, EpollData & epoll );
-static bool stopServer( ConfigData config );
+static bool stopServer( Data & data, EpollData & epoll );
 
 void    webserver( ConfigData config )
 {
@@ -33,7 +33,7 @@ void    webserver( ConfigData config )
     if ( !runServer( data, epoll ) )
         return ;
 
-    if ( !stopServer( config ) )
+    if ( !stopServer( data, epoll ) )
         return ;
 
     return ;
@@ -90,17 +90,13 @@ static bool runServer( Data & data, EpollData & epoll )
                 if ( epoll.events[ i ].data.fd == data.conn_fd )
                 {
                     Sockets::acceptConnection( &data );
-                    Epoll::addEpoll( data, epoll );
-                }
-                else
-                {
                     Sockets::receiveConnection( &data );
-                    Epoll::updateEpoll( data, epoll );
+                    Sockets::closeConnection( data.new_fd, __FUNCTION__, __LINE__ );
                 }
 
-                Sockets::closeConnection( &data, __FUNCTION__, __LINE__ );
             }
-        }                                   // End of main loop
+        }   // End of main loop
+
     }
     catch( SocketException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
     catch( EpollException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
@@ -111,8 +107,9 @@ static bool runServer( Data & data, EpollData & epoll )
     return ( true );
 }
 
-static bool stopServer( ConfigData config )
+static bool stopServer( Data & data, EpollData & epoll )
 {
-    UNUSED( config );
+    Epoll::removeEpoll( data, epoll );
+    Sockets::closeConnection( data.conn_fd, __FUNCTION__, __LINE__ );
     return ( true );
 }

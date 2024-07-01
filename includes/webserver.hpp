@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:54:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/01 22:46:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ namespace Sockets
     void    listenConnection( Data & data, int backlog );
     void    acceptConnection( Data *data );
     void    receiveConnection( Data *data );
-    void    closeConnection( Data *data, std::string function, int line );
+    void    closeConnection( int fd, std::string function, int line );
 }
 
 namespace Epoll
