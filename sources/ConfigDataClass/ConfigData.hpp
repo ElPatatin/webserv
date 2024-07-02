@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:54:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:13:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,17 @@ typedef std::vector< ConfigData > NestedServers;
 */
 class ConfigData
 {
+    private:
+        // ATTRIBUTES without '_in_front_cause_we_can_yololo'
+        // ========== 
+        Port            port;
+        std::string     host;
+        ServerNames     server_names;
+        ErrorPages      error_pages;
+        std::string     client_max_body_size;
+        Locations       locations;              // Each location is a map of settings
+        NestedServers   nested_servers;         // Nested servers if any
+
     public:
         // CONSTRUCTORS AND DESTRUCTOR
         // ==========================
@@ -48,16 +59,6 @@ class ConfigData
         // OPERATORS OVERLOAD
         // ==================
         ConfigData & operator=( ConfigData const & rhs );
-
-        // ATTRIBUTES
-        // ==========
-        Port            port;
-        std::string     host;
-        ServerNames     server_names;
-        ErrorPages      error_pages;
-        std::string     client_max_body_size;
-        Locations       locations;              // Each location is a map of settings
-        NestedServers   nested_servers;         // Nested servers if any
 
         // MEMBER FUNCTIONS
         // ================

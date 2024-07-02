@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 11:06:37 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:00:29 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include "Exceptions.hpp"
 # include "Log.hpp"
 # include "utils.hpp"
-# include "http.hpp"
 
 # include <csignal>
 # include <netdb.h>

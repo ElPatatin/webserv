@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:52:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:13:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 #include "ConfigData.hpp"
 #include "webserver.hpp"
 
+/**
+ * @brief If the arguments are adequate, checks if the config file is properly structured.
+ * Then, if posible set ups as many servers as the config file specifies.
+ * Finnaly, starts the webserver.
+*/
 int main(int ac, char **av)
 {
     try

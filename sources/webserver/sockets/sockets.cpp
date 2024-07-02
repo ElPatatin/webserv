@@ -6,11 +6,12 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 11:06:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:01:14 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
+#include "http.hpp"
 
 Addrs    Sockets::resolveHostToIp( int domain, int type, std::string host )
 {

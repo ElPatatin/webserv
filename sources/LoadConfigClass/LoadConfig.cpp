@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:52:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:13:10 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@ LoadConfig & LoadConfig::operator=( LoadConfig const & rhs ) { UNUSED(rhs); retu
 // MEMBER FUNCTIONS
 // ================
 
+
+/*
+ * @brief Sets the config path to the given or the default one.
+ * Opens the config file, reads it, and close it, if possible.
+*/
 void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 {
     std::string     config_path;
@@ -53,6 +58,9 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
     return ;
 }
 
+/*
+ * @brief Checks if the config file is properly structured.
+*/
 bool LoadConfig::checkConfig( void )
 {
     return ( true );
@@ -61,6 +69,9 @@ bool LoadConfig::checkConfig( void )
 // PRIVATE MEMBER FUNCTIONS
 // ========================
 
+/*
+ * @brief Reads the config file and parses it into a ConfigData object.
+*/
 void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
 {
     std::string line;

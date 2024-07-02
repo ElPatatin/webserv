@@ -6,18 +6,22 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 11:06:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:20:10 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "webserver.hpp"
+#include "webserver.hpp"
+#include "http.hpp"
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
 static bool startServer( ConfigData config, Addrs & addrs, Data & data );
-static bool runServer( Data & data, EpollData & epoll );
+static bool runServer( Data & data, EpollData & epoll, ConfigData config );
 static bool stopServer( Data & data, EpollData & epoll );
 
+/**
+ * @brief Sets up the signals for the servers and manages the webserver.
+*/
 void    webserver( ConfigData config )
 {
     Addrs       addrs;
@@ -30,7 +34,7 @@ void    webserver( ConfigData config )
     if ( !startServer( config, addrs, data ) )
         return ;
 
-    if ( !runServer( data, epoll ) )
+    if ( !runServer( data, epoll, config ) )
         return ;
 
     if ( !stopServer( data, epoll ) )
@@ -65,6 +69,9 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
     return ( true );
 }
 
+/*
+ * @brief Runs the listen sockets and accepts the incoming connections.
+*/
 static bool runServer( Data & data, EpollData & epoll, ConfigData config )
 {
     LOG( INFO ) << "Running server";
@@ -93,7 +100,6 @@ static bool runServer( Data & data, EpollData & epoll, ConfigData config )
                     Sockets::receiveConnection( &data, config );
                     Sockets::closeConnection( data.new_fd, __FUNCTION__, __LINE__ );
                 }
-
             }
         }   // End of main loop
 

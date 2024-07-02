@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 11:13:09 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 12:53:00 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 # include <map>
 
+typedef std::map<std::string, std::string> Headers;
+
 namespace Http
 {
     typedef struct s_http
@@ -29,7 +31,7 @@ namespace Http
         std::string path;
         std::string version;
         std::string body;
-        std::map<std::string, std::string> headers;
+        Headers     headers;
     }   HttpData;
 
     void    httpRequest( HttpData & http, Data & data, ConfigData config );
