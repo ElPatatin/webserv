@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 12:53:00 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 16:09:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,22 @@
 
 # include <map>
 
+# define LINE_END "\r\n"
+
 typedef std::map<std::string, std::string> Headers;
+
+    enum class Method
+    {
+        GET,
+        POST,
+        PUT,
+        DELETE,
+        HEAD,
+        OPTIONS,
+        TRACE,
+        CONNECT,
+        PATCH
+    };
 
 namespace Http
 {
