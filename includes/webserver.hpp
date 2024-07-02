@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/01 22:46:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 11:06:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Exceptions.hpp"
 # include "Log.hpp"
 # include "utils.hpp"
+# include "http.hpp"
 
 # include <csignal>
 # include <netdb.h>
@@ -71,7 +72,7 @@ namespace Sockets
     void    bindSocket( Data *data, ConfigData config );
     void    listenConnection( Data & data, int backlog );
     void    acceptConnection( Data *data );
-    void    receiveConnection( Data *data );
+    void    receiveConnection( Data *data, ConfigData config );
     void    closeConnection( int fd, std::string function, int line );
 }
 

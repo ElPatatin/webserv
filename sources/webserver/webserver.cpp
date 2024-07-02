@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/01 22:48:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 11:06:29 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
     return ( true );
 }
 
-static bool runServer( Data & data, EpollData & epoll )
+static bool runServer( Data & data, EpollData & epoll, ConfigData config )
 {
     LOG( INFO ) << "Running server";
     std::cout << "Running server" << std::endl;
@@ -90,7 +90,7 @@ static bool runServer( Data & data, EpollData & epoll )
                 if ( epoll.events[ i ].data.fd == data.conn_fd )
                 {
                     Sockets::acceptConnection( &data );
-                    Sockets::receiveConnection( &data );
+                    Sockets::receiveConnection( &data, config );
                     Sockets::closeConnection( data.new_fd, __FUNCTION__, __LINE__ );
                 }
 
