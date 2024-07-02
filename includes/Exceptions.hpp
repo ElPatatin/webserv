@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/29 22:22:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 18:45:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,4 +131,14 @@ class EpollException : public std::exception
         std::string msg;
 };
 
+class MethodNotAllowedException : public std::exception
+{
+    public:
+        MethodNotAllowedException( std::string const & message )
+            : msg( message ) { return ; }
+        ~MethodNotAllowedException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
 #endif

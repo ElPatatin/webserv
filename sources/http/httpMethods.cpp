@@ -6,13 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:07:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 16:12:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 18:46:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-std::string to_string( Method method )
+std::string Methods::toString( Method method )
 {
     switch ( method )
     {
@@ -25,11 +25,11 @@ std::string to_string( Method method )
         case Method::OPTIONS: return "OPTIONS";
         case Method::CONNECT: return "CONNECT";
         case Method::PATCH: return "PATCH";
-        default: return "";
+        default: throw MethodNotAllowedException( "Method to string not allowed" );
     }
 }
 
-Method method_from_string(const std::string& method) throw(std::invalid_argument)
+Method Methods::methodFromString( const std::string & method )
 {
     static const std::pair<std::string, Method> method_pairs[] = {
         std::make_pair("GET", Method::GET),
@@ -49,7 +49,7 @@ Method method_from_string(const std::string& method) throw(std::invalid_argument
 
     std::map<std::string, Method>::const_iterator it = method_map.find(method);
     if (it != method_map.end())
-    {
         return it->second;
-    }
+
+    throw MethodNotAllowedException( "String to method not allowed" );
 }

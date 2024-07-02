@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:48:46 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 16:41:39 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:16:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void    Http::httpRequest( HttpData & http, Data & data, ConfigData config )
 {
-    if ( http.method == "GET" && http.path == "/")
+    if ( Methods::toString( http.method ) == "GET" && http.path == "/" )
     {
         // Serve the index.html file
         std::fstream file;
@@ -41,7 +41,7 @@ void    Http::httpRequest( HttpData & http, Data & data, ConfigData config )
             throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
         }
     }
-    else if ( http.method == "GET" && http.path == "/favicon.ico" )
+    else if ( Methods::toString( http.method ) == "GET" && http.path == "/favicon.ico" )
     {
          // Serve the favicon.ico file
         std::ifstream file("./html/favicon.ico", std::ios::in | std::ios::binary);
@@ -70,7 +70,7 @@ void    Http::httpRequest( HttpData & http, Data & data, ConfigData config )
             throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
         }
     }
-    else if ( http.method == "GET" )
+    else if ( Methods::toString( http.method ) == "GET" )
     {
         std::fstream file_not_found; 
         file_not_found.open( "./html/errors/404.html", std::ios::in );

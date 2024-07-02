@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 16:09:21 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:09:22 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <map>
 
 # define LINE_END "\r\n"
+# define HTTP_VERSION "HTTP/1.1"
 
 typedef std::map<std::string, std::string> Headers;
 
@@ -37,12 +38,17 @@ typedef std::map<std::string, std::string> Headers;
         CONNECT,
         PATCH
     };
+namespace Methods
+{
+    std::string toString( Method method );
+    Method methodFromString( const std::string& method );
+}
 
 namespace Http
 {
     typedef struct s_http
     {
-        std::string method;
+        Method      method;
         std::string path;
         std::string version;
         std::string body;

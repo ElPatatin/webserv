@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 13:01:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:09:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,9 @@ void    Sockets::receiveConnection( Data *data, ConfigData config )
     request_stream >> method >> path >> protocol;
 
     Http::HttpData http;
-    http.method = method;
+    http.method = Methods::methodFromString( method );
     http.path = path;
-    http.version = protocol;
+    http.version = HTTP_VERSION;
     http.body = "";
     
     Http::httpRequest( http, *data, config );
