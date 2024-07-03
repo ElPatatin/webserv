@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 15:02:46 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 17:01:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 # include "utils.hpp"
 # include "Log.hpp"
 
+typedef enum e_dict_size
+{
+    BYTE,
+    KILO = 'K',
+    MEGA = 'M',
+}   DictSize;
 
 class ConfigParser
 {

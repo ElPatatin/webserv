@@ -2,10 +2,85 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>404 Not Found</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .tips {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .tips h3 {
+            font-size: 1.2em;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .tips ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .tips li {
+            margin-bottom: 10px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>404 Not Found</h1>
-    <h2>CULPA DEL PATATÍN</h2>
+    <div class="container">
+        <h1>404 Not Found</h1>
+        <h2>CULPA DEL PATATÍN</h2>
+        <p>El recurso solicitado no se encuentra en el servidor porque patatín lo ha escondido.</p>
+        <div class="tips">
+            <h3>¿Qué puedes hacer ahora?</h3>
+            <ul>
+                <li>Verificar la URL por errores tipográficos.</li>
+                <li>Regresar a la página anterior e intentar de nuevo.</li>
+                <li>Utilizar el menú de navegación para encontrar lo que buscas.</li>
+                <li>Contactar con el administrador del sitio si el problema persiste.</li>
+            </ul>
+        </div>
+        <a class="back-button" href="/">Volver a la página principal</a>
+    </div>
 </body>
 </html>

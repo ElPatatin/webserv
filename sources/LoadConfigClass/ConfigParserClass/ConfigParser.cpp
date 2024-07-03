@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:59:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 17:10:53 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,32 @@ bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config 
     if ( line.empty() )
         return ( false );
 
-    config->setClientMaxBodySize( line );
+    char c = std::toupper( line[line.size() - 1] );
+    long size = std::atol( line.c_str() );
+
+    if ( size <= 0 or size > 1024 )
+    {
+        std::cerr << "Error: Invalid size: " << line << std::endl;
+        LOG( ERROR ) << "Invalid size: " << line;
+        return ( false );
+    }
+
+    switch ( c )
+    {
+        case BYTE:
+            size *= 1;          // 1024 ^ 0
+            break;
+        case KILO:
+            size *= 1024;       // 1024 ^ 1
+            break;
+        case MEGA:
+            size *= 1048576;    // 1024 ^ 2
+            break;
+        default:
+            size = 1048576;     // 1024 ^ 2
+    }
+
+    config->setClientMaxBodySize( size );
     LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();
     return ( true );
 }

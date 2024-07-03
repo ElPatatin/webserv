@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 13:13:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:49:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ ConfigData::ConfigData( )
     this->host.clear();
     this->server_names.clear();
     this->error_pages.clear();
-    this->client_max_body_size.clear();
+    this->client_max_body_size = 0;
     this->locations.clear();
     this->nested_servers.clear();
 
@@ -64,7 +64,7 @@ void ConfigData::clear( void )
     this->host.clear();
     this->server_names.clear();
     this->error_pages.clear();
-    this->client_max_body_size.clear();
+    this->client_max_body_size = 0;
     this->locations.clear();
     this->nested_servers.clear();
 }
@@ -137,8 +137,8 @@ void ConfigData::setErrorPages( ErrorPages error_pages )
     return ;
 }
 
-std::string ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
-void ConfigData::setClientMaxBodySize( std::string client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }
+size_t  ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
+void    ConfigData::setClientMaxBodySize( size_t client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }
 
 Locations ConfigData::getLocations( void ) const { return ( this->locations ); }
 void ConfigData::setLocations( Locations locations )

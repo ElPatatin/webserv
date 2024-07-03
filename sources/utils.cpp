@@ -32,7 +32,6 @@ std::fstream *  ft::openFile( std::string file_path, std::ios::openmode _mode )
     }
     catch ( FileNotConfigException & e )
     {
-
         std::cerr << e.what() << std::endl;
         return ( deleteOpenFile( config_file ) );
     }

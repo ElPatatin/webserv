@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:51:24 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:19:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,22 +39,27 @@ class LoadConfig
     public:
         // MEMBER FUNCTIONS
         // ================
+
         static void loadConfig( int ac, char **av, ConfigData *config );
         static bool checkConfig( void );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR
-        // ==========================
+        // ===========================
+
         LoadConfig( );
         LoadConfig( LoadConfig const & src );
         ~LoadConfig( );
 
         // OPERATORS OVERLOAD
         // ==================
+
         LoadConfig & operator=( LoadConfig const & rhs );
 
         // MEMBER FUNCTIONS
         // ================
+
+        // ==========================
         static void readConfig( std::fstream * config_file, ConfigData * config );
 };
 

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 13:20:10 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:25:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data );
 static bool runServer( Data & data, EpollData & epoll, ConfigData config );
 static bool stopServer( Data & data, EpollData & epoll );
 
-/**
- * @brief Sets up the signals for the servers and manages the webserver.
-*/
+//  Sets up the signals for the servers and manages the webserver.
 void    webserver( ConfigData config )
 {
     Addrs       addrs;
@@ -43,6 +41,7 @@ void    webserver( ConfigData config )
     return ;
 }
 
+// Starts the server and binds the socket.
 static bool startServer( ConfigData config, Addrs & addrs, Data & data )
 {
     LOG( INFO ) << "Starting server";
@@ -50,6 +49,7 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
 
     try
     {
+        // AF_INET: IPv4, SOCK_STREAM: TCP
         addrs = Sockets::resolveHostToIp( AF_INET, SOCK_STREAM, config.getHost() );
 
         data.conn_fd = Sockets::createSocket( addrs.rp );
@@ -69,9 +69,7 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
     return ( true );
 }
 
-/*
- * @brief Runs the listen sockets and accepts the incoming connections.
-*/
+// Runs the listen sockets and accepts the incoming connections.
 static bool runServer( Data & data, EpollData & epoll, ConfigData config )
 {
     LOG( INFO ) << "Running server";
@@ -113,6 +111,7 @@ static bool runServer( Data & data, EpollData & epoll, ConfigData config )
     return ( true );
 }
 
+// Stops the server and closes the connection.
 static bool stopServer( Data & data, EpollData & epoll )
 {
     Epoll::removeEpoll( data, epoll );

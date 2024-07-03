@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 19:09:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 18:17:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void    Sockets::bindSocket( Data *data, ConfigData config )
     data->addr.sin_addr.s_addr = htonl( INADDR_ANY );
     std::memset( data->addr.sin_zero, '\0', sizeof( data->addr.sin_zero ) );
 
+    // Assigns the address specified by addr to the socket referred to by the file descriptor conn_fd.
     if ( bind( data->conn_fd, reinterpret_cast< SockAddr * >( &data->addr ), static_cast< socklen_t >( data->addr_len ) ) == -1 )  
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "bind: " + std::string( std::strerror( errno ) ) );
@@ -72,6 +73,8 @@ void    Sockets::bindSocket( Data *data, ConfigData config )
 
 void    Sockets::listenConnection( Data & data, int backlog )
 {
+    // Marks the socket referred to by conn_fd as a passive socket, that is,
+    // as a socket that will be used to accept incoming connection requests using accept.
     if ( listen( data.conn_fd, backlog ) == -1 )
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "listen: " + std::string( std::strerror( errno ) ) );
@@ -83,6 +86,8 @@ void    Sockets::listenConnection( Data & data, int backlog )
 
 void    Sockets::acceptConnection( Data *data )
 {
+    // It extracts the first connection request on the queue of pending connections for
+    // the listening socket, sockfd, creates a new connected socket, and returns a new file descriptor referring to that socket.
     if ( ( data->new_fd = accept( data->conn_fd,\
             reinterpret_cast< SockAddr * >( &data->addr ),\
             reinterpret_cast< socklen_t * >( &data->addr_len ) ) ) == -1 )
@@ -96,20 +101,31 @@ void    Sockets::acceptConnection( Data *data )
 
 void    Sockets::receiveConnection( Data *data, ConfigData config )
 {
-    char    buffer[ 1024 ];
+    size_t  bytes = config.getClientMaxBodySize();
+    char    *buffer = NULL;
 
-    std::memset( buffer, '\0', sizeof( buffer ) );
-    if ( recv( data->new_fd, buffer, sizeof( buffer ), 0 ) == -1 )
+    try { buffer = new char[ bytes ]; }
+    catch( std::bad_alloc & e )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "new: " + std::string( e.what() ) );
+        throw MemoryAllocationException( "Error: new: " + std::string( e.what() ) );
+    }
+
+    std::memset( buffer, '\0', bytes );
+    if ( recv( data->new_fd, buffer, bytes, 0 ) == -1 )
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
         throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
     }
 
-    LOG( DEBUG ) << "Received: " << buffer;
+    LOG( DEBUG ) << "Received:\n" << buffer;
+    LOG( DEBUG ) << "Received size: " << strlen( buffer );
     std::string request( buffer );
     std::istringstream request_stream( request );
     std::string method, path, protocol;
     request_stream >> method >> path >> protocol;
+
+    delete[] buffer;
 
     Http::HttpData http;
     http.method = Methods::methodFromString( method );

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 13:13:07 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 17:01:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class ConfigData
         std::string     host;
         ServerNames     server_names;
         ErrorPages      error_pages;
-        std::string     client_max_body_size;
+        size_t          client_max_body_size;
         Locations       locations;              // Each location is a map of settings
         NestedServers   nested_servers;         // Nested servers if any
 
@@ -80,8 +80,8 @@ class ConfigData
         ErrorPages      getErrorPages( void ) const;
         void            setErrorPages( ErrorPages error_pages );
 
-        std::string     getClientMaxBodySize( void ) const;
-        void            setClientMaxBodySize( std::string client_max_body_size );
+        size_t          getClientMaxBodySize( void ) const;
+        void            setClientMaxBodySize( size_t client_max_body_size );
 
         Locations       getLocations( void ) const;
         void            setLocations( Locations );

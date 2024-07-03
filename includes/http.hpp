@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 19:09:22 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:59:56 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,19 @@
 
 typedef std::map<std::string, std::string> Headers;
 
-    enum class Method
-    {
-        GET,
-        POST,
-        PUT,
-        DELETE,
-        HEAD,
-        OPTIONS,
-        TRACE,
-        CONNECT,
-        PATCH
-    };
+typedef enum e_method
+{
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD,
+    OPTIONS,
+    TRACE,
+    CONNECT,
+    PATCH
+}   Method;
+
 namespace Methods
 {
     std::string toString( Method method );

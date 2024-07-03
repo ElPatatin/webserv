@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:07:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 18:46:11 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:01:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@ std::string Methods::toString( Method method )
 {
     switch ( method )
     {
-        case Method::GET: return "GET";
-        case Method::HEAD: return "HEAD";
-        case Method::POST: return "POST";
-        case Method::PUT: return "PUT";
-        case Method::DELETE: return "DELETE";
-        case Method::TRACE: return "TRACE";
-        case Method::OPTIONS: return "OPTIONS";
-        case Method::CONNECT: return "CONNECT";
-        case Method::PATCH: return "PATCH";
+        case GET: return "GET";
+        case HEAD: return "HEAD";
+        case POST: return "POST";
+        case PUT: return "PUT";
+        case DELETE: return "DELETE";
+        case TRACE: return "TRACE";
+        case OPTIONS: return "OPTIONS";
+        case CONNECT: return "CONNECT";
+        case PATCH: return "PATCH";
         default: throw MethodNotAllowedException( "Method to string not allowed" );
     }
 }
@@ -32,15 +32,15 @@ std::string Methods::toString( Method method )
 Method Methods::methodFromString( const std::string & method )
 {
     static const std::pair<std::string, Method> method_pairs[] = {
-        std::make_pair("GET", Method::GET),
-        std::make_pair("HEAD", Method::HEAD),
-        std::make_pair("POST", Method::POST),
-        std::make_pair("PUT", Method::PUT),
-        std::make_pair("DELETE", Method::DELETE),
-        std::make_pair("TRACE", Method::TRACE),
-        std::make_pair("OPTIONS", Method::OPTIONS),
-        std::make_pair("CONNECT", Method::CONNECT),
-        std::make_pair("PATCH", Method::PATCH)
+        std::make_pair("GET", GET),
+        std::make_pair("HEAD", HEAD),
+        std::make_pair("POST", POST),
+        std::make_pair("PUT", PUT),
+        std::make_pair("DELETE", DELETE),
+        std::make_pair("TRACE", TRACE),
+        std::make_pair("OPTIONS", OPTIONS),
+        std::make_pair("CONNECT", CONNECT),
+        std::make_pair("PATCH", PATCH)
     };
 
     static const std::map<std::string, Method> method_map(
