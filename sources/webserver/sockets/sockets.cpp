@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 13:17:58 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 15:44:49 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,24 +111,8 @@ void    Sockets::receiveConnection( Data *data, ConfigData config )
         throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
     }
 
-    LOG( DEBUG ) << "Received:\n" << buffer;
-    LOG( DEBUG ) << "Received size: " << strlen( buffer );
-    std::string request( buffer );
-    std::istringstream request_stream( request );
-    std::string method, path;
-    request_stream >> method >> path;
+    HttpData http = HttpRequests::parseRequest( buffer );
 
-    HttpData http;
-    http.method = HttpMethods::methodFromString( method );
-    http.path = path;
-    http.version = HTTP_VERSION;
-    // http.headers = HttpHeaders::deserializeHeader( request );
-    http.body = "";
-
-    std::cout << "Method: " << HttpMethods::toString( http.method ) << std::endl;
-    std::cout << "Path: " << http.path << std::endl;
-    std::cout << "Version: " << http.version << std::endl;
-    
     Http::httpRequest( http, *data, config );
 }
 

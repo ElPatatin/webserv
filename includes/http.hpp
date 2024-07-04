@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 13:14:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 16:03:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 # define HTTP_VERSION "HTTP/1.1"
 
 typedef std::pair< std::string, std::string >   Header;
-typedef std::map< std::string, Header >                      Headers;
+typedef std::map< std::string, Header >         Headers;
 
 typedef enum e_method
 {
@@ -70,19 +70,13 @@ namespace HttpErrors
 
 namespace HttpHeaders
 {
-    std::string serializeHeader( std::string key, std::string value );
+    std::string serializeHeader( Headers headers );
     Headers deserializeHeader( std::string header );
 }
 
 namespace HttpRequests
 {
-    std::string serializeRequest( HttpData http );
+    HttpData    parseRequest( std::string buffer );
 }
-
-namespace HttpParser
-{
-    HttpData    parseRequest( std::string request );
-}
-
 
 #endif

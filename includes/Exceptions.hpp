@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/02 18:45:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 15:43:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,4 +141,16 @@ class MethodNotAllowedException : public std::exception
     private:
         std::string msg;
 };
+
+class HttpHeaderException : public std::exception
+{
+    public:
+        HttpHeaderException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpHeaderException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
 #endif

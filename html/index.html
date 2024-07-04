@@ -17,17 +17,20 @@
             color: white;
             padding: 10px 0;
             text-align: center;
+            border-bottom: 5px solid #388E3C;
         }
         .nav {
             display: flex;
             justify-content: center;
             background-color: #333;
+            border-bottom: 5px solid #222;
         }
         .nav a {
             color: white;
             padding: 14px 20px;
             text-decoration: none;
             text-align: center;
+            border-right: 1px solid #555;
         }
         .nav a:hover {
             background-color: #ddd;
@@ -42,6 +45,7 @@
             color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             text-align: center;
+            border-bottom: 5px solid #4CAF50;
         }
         .hero h1 {
             font-size: 3em;
@@ -49,7 +53,10 @@
         }
         .content {
             padding: 20px;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
         .content h2 {
             color: #4CAF50;
@@ -58,6 +65,16 @@
         .content p {
             font-size: 1.2em;
             line-height: 1.6;
+            margin: 10px 0;
+        }
+        .box {
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1 1 300px;
+            box-sizing: border-box;
         }
         .footer {
             background-color: #333;
@@ -67,12 +84,13 @@
             position: fixed;
             width: 100%;
             bottom: 0;
+            border-top: 5px solid #222;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Welcome to My Web Server</h1>
+        <h1>Welcome to Our Web Server</h1>
     </div>
     <div class="nav">
         <a href="#">Home</a>
@@ -83,16 +101,20 @@
         <h1>Delivering Excellence</h1>
     </div>
     <div class="content">
-        <h2>Welcome Evaluators!</h2>
-        <p>
-            Thank you for taking the time to evaluate our project. We have put a lot of effort into creating a robust and reliable web server. Please explore the different sections of our website to learn more about what we have accomplished.
-        </p>
-        <p>
-            If you have any questions or need further information, do not hesitate to contact us. We hope you enjoy your visit and find our project to your satisfaction.
-        </p>
+        <div class="box">
+            <h2>Welcome Evaluators!</h2>
+            <p>
+                Thank you for taking the time to evaluate our project. We have put a lot of effort into creating a robust and reliable web server. Please explore the different sections of our website to learn more about what we have accomplished.
+            </p>
+        </div>
+        <div class="box">
+            <p>
+                If you have any questions or need further information, do not hesitate to contact us. We hope you enjoy your visit and find our project to your satisfaction.
+            </p>
+        </div>
     </div>
     <div class="footer">
-        <p>&copy; 2024 My Web Server. All rights reserved.</p>
+        <p>&copy; 2024 Our Web Server. All rights reserved.</p>
     </div>
 </body>
 </html>

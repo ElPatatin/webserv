@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:10:24 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 12:20:56 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 16:11:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void    Http::httpRequest( HttpData & http, Data & data, ConfigData config )
     if ( HttpMethods::toString( http.method ) == "GET" && http.path == "/" )
     {
         LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "GET /" );
-        // Serve the index.html file
+        // Serve the index.html fileresponse_stream
         std::fstream file;
 
         file.open( "./html/index.html", std::ios::in );
