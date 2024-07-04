@@ -134,16 +134,20 @@ std::string& ft::rtrim( std::string & str )
     return ( str );
 }
 
-std::vector< std::string > ft::split( const std::string & str, char delimiter )
+std::vector< std::string > ft::split( const std::string & str, std::string delimiter )
 {
-    std::vector< std::string > tokens;
-    std::istringstream iss( str );
-    std::string token;
+    std::vector<std::string> tokens;
+    size_t start = 0;
+    size_t end = str.find(delimiter);
 
-    while ( std::getline( iss, token, delimiter ) )
-        tokens.push_back( token );
+    while (end != std::string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+        start = end + delimiter.length();
+        end = str.find(delimiter, start);
+    }
 
-    return ( tokens );
+    tokens.push_back(str.substr(start, end - start));
+    return tokens;
 }
 
 std::string ft::prettyPrint( std::string function, int line, std::string message )

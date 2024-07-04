@@ -6,13 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:07:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 16:01:11 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 12:19:48 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-std::string Methods::toString( Method method )
+std::string HttpMethods::toString( Method method )
 {
     switch ( method )
     {
@@ -29,7 +29,7 @@ std::string Methods::toString( Method method )
     }
 }
 
-Method Methods::methodFromString( const std::string & method )
+Method HttpMethods::methodFromString( const std::string & method )
 {
     static const std::pair<std::string, Method> method_pairs[] = {
         std::make_pair("GET", GET),

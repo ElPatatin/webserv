@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/02 19:17:09 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/04 12:12:04 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -131,9 +131,11 @@ SRCS	+= $(SCK_DIR)sockets.cpp
 SRCS	+= $(EPM_DIR)epollManager.cpp
 
 # Http files
-SRCS	+= $(HTP_DIR)httpRequest.cpp\
-		$(HTP_DIR)httpResponse.cpp\
-		$(HTP_DIR)httpMethods.cpp
+SRCS	+= $(HTP_DIR)httpRequest.cpp \
+		$(HTP_DIR)httpResponse.cpp \
+		$(HTP_DIR)httpMethods.cpp \
+		$(HTP_DIR)httpErrors.cpp \
+		$(HTP_DIR)http.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 

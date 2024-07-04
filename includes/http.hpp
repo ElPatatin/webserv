@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 15:59:56 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:14:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@
 # include "Exceptions.hpp"
 # include "webserver.hpp"
 
+# include "httpResponseCodes.hpp"
+
 # include <map>
 
 # define LINE_END "\r\n"
 # define HTTP_VERSION "HTTP/1.1"
 
-typedef std::map<std::string, std::string> Headers;
+typedef std::pair< std::string, std::string >   Header;
+typedef std::map< std::string, Header >                      Headers;
 
 typedef enum e_method
 {
@@ -39,25 +42,47 @@ typedef enum e_method
     PATCH
 }   Method;
 
-namespace Methods
+typedef struct s_http
+{
+    Method      method;
+    std::string path;
+    std::string version;
+    std::string body;
+    Headers     headers;
+
+}   HttpData;
+
+namespace Http
+{
+    void    httpRequest( HttpData & http, Data & data, ConfigData config );
+}
+
+namespace HttpMethods
 {
     std::string toString( Method method );
     Method methodFromString( const std::string& method );
 }
 
-namespace Http
+namespace HttpErrors
 {
-    typedef struct s_http
-    {
-        Method      method;
-        std::string path;
-        std::string version;
-        std::string body;
-        Headers     headers;
-    }   HttpData;
-
-    void    httpRequest( HttpData & http, Data & data, ConfigData config );
     void    sendError( Data & data, int status_code, ConfigData config );
 }
+
+namespace HttpHeaders
+{
+    std::string serializeHeader( std::string key, std::string value );
+    Headers deserializeHeader( std::string header );
+}
+
+namespace HttpRequests
+{
+    std::string serializeRequest( HttpData http );
+}
+
+namespace HttpParser
+{
+    HttpData    parseRequest( std::string request );
+}
+
 
 #endif

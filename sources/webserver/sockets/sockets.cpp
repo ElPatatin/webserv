@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 18:17:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:17:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,9 @@ void    Sockets::acceptConnection( Data *data )
 
 void    Sockets::receiveConnection( Data *data, ConfigData config )
 {
-    size_t  bytes = config.getClientMaxBodySize();
-    char    *buffer = NULL;
-
-    try { buffer = new char[ bytes ]; }
-    catch( std::bad_alloc & e )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "new: " + std::string( e.what() ) );
-        throw MemoryAllocationException( "Error: new: " + std::string( e.what() ) );
-    }
-
+    int bytes = 1024;
+    char buffer[ bytes ];
+    
     std::memset( buffer, '\0', bytes );
     if ( recv( data->new_fd, buffer, bytes, 0 ) == -1 )
     {
@@ -122,16 +115,19 @@ void    Sockets::receiveConnection( Data *data, ConfigData config )
     LOG( DEBUG ) << "Received size: " << strlen( buffer );
     std::string request( buffer );
     std::istringstream request_stream( request );
-    std::string method, path, protocol;
-    request_stream >> method >> path >> protocol;
+    std::string method, path;
+    request_stream >> method >> path;
 
-    delete[] buffer;
-
-    Http::HttpData http;
-    http.method = Methods::methodFromString( method );
+    HttpData http;
+    http.method = HttpMethods::methodFromString( method );
     http.path = path;
     http.version = HTTP_VERSION;
+    // http.headers = HttpHeaders::deserializeHeader( request );
     http.body = "";
+
+    std::cout << "Method: " << HttpMethods::toString( http.method ) << std::endl;
+    std::cout << "Path: " << http.path << std::endl;
+    std::cout << "Version: " << http.version << std::endl;
     
     Http::httpRequest( http, *data, config );
 }

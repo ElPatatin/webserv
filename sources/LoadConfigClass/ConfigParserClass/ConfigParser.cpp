@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 17:10:53 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:11:20 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool ConfigParser::parseServerName( std::string line, ConfigData *config )
     if ( line.empty() )
         return ( false );
 
-    std::vector< std::string > server_names = ft::split( line, ' ' );
+    std::vector< std::string > server_names = ft::split( line, " " );
 
     config->setHost( server_names[0] );
     config->setServerNames( server_names );
@@ -95,7 +95,7 @@ bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
 
     ErrorPages error_pages;
 
-    std::vector< std::string > error_page = ft::split( line, ' ' );
+    std::vector< std::string > error_page = ft::split( line, " " );
     if ( error_page.size() != 2 )
     {
         std::cerr << "Error: 'error_page' directive with invalid number of arguments" << std::endl;

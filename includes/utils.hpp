@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:54:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:09:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ namespace ft
     std::fstream *  deleteOpenFile( std::fstream * _file );
     void            trim( std::string& str );
     std::string&    rtrim( std::string & str );
-    std::vector< std::string > split( const std::string & str, char delimiter );
+    std::vector< std::string > split( const std::string & str, std::string delimiter );
     std::string     prettyPrint( std::string function, int line, std::string message );
     void            welcome( void );
 };
