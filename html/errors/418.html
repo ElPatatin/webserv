@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>418 I'm a Teapot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            text-align: center;
+            padding: 50px;
+            overflow: hidden; /* Prevent teapots from overflowing window */
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative; /* Ensure container is positioned relatively for absolute positioning of teapots */
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #dc3545; /* Red color for emphasis */
+        }
+        h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .tips {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .tips h3 {
+            font-size: 1.2em;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .tips ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .tips li {
+            margin-bottom: 10px;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        /* CSS for teapot image */
+        .teapot {
+            position: absolute;
+            width: 80px; /* Adjust size of teapot */
+            animation: spin 4s linear infinite; /* Animation for spinning */
+            pointer-events: none; /* Prevent teapot from capturing click events */
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>418 I'm a Teapot</h1>
+        <h2>This page is brewed with love but not available!</h2>
+        <p>Sorry, I'm just a teapot and cannot brew this page for you right now. Maybe try asking for coffee instead?</p>
+        <div class="tips">
+            <h3>What can you do?</h3>
+            <ul>
+                <li>Check if you've asked for tea instead of a web page.</li>
+                <li>Go back to the previous page and make a fresh request.</li>
+                <li>Use the navigation menu to find what you're looking for.</li>
+                <li>If all else fails, ask your friendly barista (website admin) for help.</li>
+            </ul>
+        </div>
+        <a class="back-button" href="/">Go back to the main café</a>
+    </div>
+
+    <!-- JavaScript for creating teapots at random positions -->
+    <script>
+        function createTeapot() {
+            // Create a new teapot image element
+            const teapot = document.createElement('img');
+            teapot.src = './../resources/teapot.svg'; // Path to your teapot image
+            teapot.classList.add('teapot');
+
+            // Random position calculation
+            const xPos = Math.random() * (window.innerWidth - 100); // Adjust 100 to half the teapot's width
+            const yPos = Math.random() * (window.innerHeight - 100); // Adjust 100 to half the teapot's height
+            teapot.style.left = `${xPos}px`;
+            teapot.style.top = `${yPos}px`;
+
+            // Append teapot to body
+            document.body.appendChild(teapot);
+        }
+
+        // Create multiple teapots
+        for (let i = 0; i < 30; i++) {
+            createTeapot();
+        }
+    </script>
+</body>
+</html>

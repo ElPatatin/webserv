@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   http.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 16:03:45 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/05 17:48:01 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,11 @@ namespace HttpHeaders
 namespace HttpRequests
 {
     HttpData    parseRequest( std::string buffer );
+}
+
+namespace HttpResponse
+{
+    std::string toString( int status_code );
 }
 
 #endif
