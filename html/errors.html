@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <title>Error Test - Our Web Server</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 5px solid #388E3C;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            border-bottom: 5px solid #222;
+        }
+        .nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            border-right: 1px solid #555;
+        }
+        .nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .hero {
+            background: url('./resources/error-hero.jpg') center/cover no-repeat;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            border-bottom: 5px solid #4CAF50;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+        .content {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .content h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .box {
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1 1 300px;
+            box-sizing: border-box;
+        }
+        .box button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .box button:hover {
+            background-color: #45a049;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            position: static; /* Changed from fixed to static */
+            width: 100%;
+            border-top: 5px solid #222;
+            margin-top: 20px; /* Added margin-top for spacing */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Test Error Responses</h1>
+    </div>
+    <div class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./contact.html">Contact</a>
+        <a href="./errors.html">Errors</a>
+    </div>
+    <div class="hero">
+        <h1>Error Code Tester</h1>
+    </div>
+    <div class="content">
+        <div class="box">
+            <h2>1xx Informational</h2>
+            <button onclick="testError(100)">100 Continue</button>
+            <button onclick="testError(101)">101 Switching Protocols</button>
+            <button onclick="testError(102)">102 Processing</button>
+            <button onclick="testError(103)">103 Early Hints</button>
+        </div>
+        <div class="box">
+            <h2>2xx Success</h2>
+            <button onclick="testError(200)">200 OK</button>
+            <button onclick="testError(201)">201 Created</button>
+            <button onclick="testError(202)">202 Accepted</button>
+            <button onclick="testError(203)">203 Non-Authoritative Information</button>
+            <button onclick="testError(204)">204 No Content</button>
+            <button onclick="testError(205)">205 Reset Content</button>
+            <button onclick="testError(206)">206 Partial Content</button>
+            <button onclick="testError(207)">207 Multi-Status</button>
+            <button onclick="testError(208)">208 Already Reported</button>
+            <button onclick="testError(226)">226 IM Used</button>
+        </div>
+        <div class="box">
+            <h2>3xx Redirection</h2>
+            <button onclick="testError(300)">300 Multiple Choices</button>
+            <button onclick="testError(301)">301 Moved Permanently</button>
+            <button onclick="testError(302)">302 Found</button>
+            <button onclick="testError(303)">303 See Other</button>
+            <button onclick="testError(304)">304 Not Modified</button>
+            <button onclick="testError(305)">305 Use Proxy</button>
+            <button onclick="testError(306)">306 Switch Proxy</button> <!-- Note: This code is unused -->
+            <button onclick="testError(307)">307 Temporary Redirect</button>
+            <button onclick="testError(308)">308 Permanent Redirect</button>
+        </div>
+        <div class="box">
+            <h2>4xx Client Errors</h2>
+            <button onclick="testError(400)">400 Bad Request</button>
+            <button onclick="testError(401)">401 Unauthorized</button>
+            <button onclick="testError(402)">402 Payment Required</button>
+            <button onclick="testError(403)">403 Forbidden</button>
+            <button onclick="testError(404)">404 Not Found</button>
+            <button onclick="testError(405)">405 Method Not Allowed</button>
+            <button onclick="testError(406)">406 Not Acceptable</button>
+            <button onclick="testError(407)">407 Proxy Authentication Required</button>
+            <button onclick="testError(408)">408 Request Timeout</button>
+            <button onclick="testError(409)">409 Conflict</button>
+            <button onclick="testError(410)">410 Gone</button>
+            <button onclick="testError(411)">411 Length Required</button>
+            <button onclick="testError(412)">412 Precondition Failed</button>
+            <button onclick="testError(413)">413 Payload Too Large</button>
+            <button onclick="testError(414)">414 URI Too Long</button>
+            <button onclick="testError(415)">415 Unsupported Media Type</button>
+            <button onclick="testError(416)">416 Range Not Satisfiable</button>
+            <button onclick="testError(417)">417 Expectation Failed</button>
+            <button onclick="testError(418)">418 I'm a teapot</button>
+            <button onclick="testError(421)">421 Misdirected Request</button>
+            <button onclick="testError(422)">422 Unprocessable Entity</button>
+            <button onclick="testError(423)">423 Locked</button>
+            <button onclick="testError(424)">424 Failed Dependency</button>
+            <button onclick="testError(425)">425 Too Early</button>
+            <button onclick="testError(426)">426 Upgrade Required</button>
+            <button onclick="testError(428)">428 Precondition Required</button>
+            <button onclick="testError(429)">429 Too Many Requests</button>
+            <button onclick="testError(431)">431 Request Header Fields Too Large</button>
+            <button onclick="testError(451)">451 Unavailable For Legal Reasons</button>
+        </div>
+        <div class="box">
+            <h2>5xx Server Errors</h2>
+            <button onclick="testError(500)">500 Internal Server Error</button>
+            <button onclick="testError(501)">501 Not Implemented</button>
+            <button onclick="testError(502)">502 Bad Gateway</button>
+            <button onclick="testError(503)">503 Service Unavailable</button>
+            <button onclick="testError(504)">504 Gateway Timeout</button>
+            <button onclick="testError(505)">505 HTTP Version Not Supported</button>
+            <button onclick="testError(506)">506 Variant Also Negotiates</button>
+            <button onclick="testError(507)">507 Insufficient Storage</button>
+            <button onclick="testError(508)">508 Loop Detected</button>
+            <button onclick="testError(510)">510 Not Extended</button>
+            <button onclick="testError(511)">511 Network Authentication Required</button>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Our Web Server. All rights reserved.</p>
+    </div>
+    <script>
+        function testError(code) {
+            // Here you can add code to navigate to the error page for the specified error code.
+            // For example:
+            window.location.href = `error_pages/${code}.html`;
+        }
+    </script>
+</body>
+</html>
