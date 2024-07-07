@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 15:23:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:14:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,16 @@ namespace g_signal { extern volatile sig_atomic_t g_signal_status; }
 void    signalHandler( int signum );
 
 // Webserver
-void    webserver( ConfigData config );
+void    webserver( ConfigData &config );
 
 namespace Sockets
 {
     Addrs   resolveHostToIp( int domain, int type, std::string host );
     int     createSocket( AddrInfo *rp );
-    void    bindSocket( Data *data, ConfigData config );
+    void    bindSocket( Data *data, ConfigData & config );
     void    listenConnection( Data & data, int backlog );
     void    acceptConnection( Data *data );
-    void    receiveConnection( Data *data, ConfigData config );
+    void    receiveConnection( Data *data, ConfigData & config );
     void    closeConnection( int fd, std::string function, int line );
 }
 

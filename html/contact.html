@@ -114,6 +114,39 @@
             border-top: 5px solid #222;
             margin-top: 20px;
         }
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .popup-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .popup-content button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .popup-content button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -131,7 +164,7 @@
     </div>
     <div class="content">
         <h2>We'd love to hear from you!</h2>
-        <form action="/submit_contact" method="POST">
+        <form id="contactForm" action="/submit_contact" method="POST">
             <div class="form-group">
                 <label for="name">Name:</label>
                 <input type="text" id="name" name="name" required>
@@ -152,5 +185,37 @@
     <div class="footer">
         <p>&copy; 2024 My Web Server. All rights reserved.</p>
     </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <p id="popup-message"></p>
+            <button onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            var form = event.target;
+            var formData = new FormData(form);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', form.action, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    document.getElementById('popup-message').innerText = 'Your data has been processed successfully!';
+                } else {
+                    document.getElementById('popup-message').innerText = 'There was an error processing your request.';
+                }
+                document.getElementById('popup').style.display = 'block';
+            };
+            xhr.send(formData);
+        });
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
 </body>
 </html>

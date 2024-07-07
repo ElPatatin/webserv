@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   common.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/30 12:54:26 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:19:12 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <string>
 # include <fstream>
 # include <sstream>
+# include <algorithm>
 # include <exception>
 # include <vector>
 

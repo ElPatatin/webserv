@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 16:49:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:47:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ ConfigData & ConfigData::operator=( ConfigData const & rhs )
         this->server_names = rhs.server_names;
         this->error_pages = rhs.error_pages;
         this->client_max_body_size = rhs.client_max_body_size;
+        this->is_directory_listing = rhs.is_directory_listing;
         this->locations = rhs.locations;
         this->nested_servers = rhs.nested_servers;
     }
@@ -88,6 +89,7 @@ std::string ConfigData::toString( void ) const
     oss << std::endl;
 
     oss << "Client Max Body Size: " << this->client_max_body_size << std::endl;
+    oss << "Directory Listing: " << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
     oss << "Locations: " << std::endl;
     for ( size_t i = 0; i < this->locations.size(); ++i )
     {
@@ -153,3 +155,6 @@ void ConfigData::setNestedServers( NestedServers nested_servers )
     this->nested_servers.insert( this->nested_servers.end(), nested_servers.begin(), nested_servers.end() );
     return ;
 }
+
+bool ConfigData::getIsDirectoryListing( void ) const { return ( this->is_directory_listing ); }
+void ConfigData::setIsDirectoryListing( bool is_directory_listing ) { this->is_directory_listing = is_directory_listing; return ; }

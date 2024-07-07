@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 17:01:17 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:04:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ class ConfigData
         size_t          client_max_body_size;
         Locations       locations;              // Each location is a map of settings
         NestedServers   nested_servers;         // Nested servers if any
+        bool            is_directory_listing;   // If directory listing is enabled
 
     public:
         // CONSTRUCTORS AND DESTRUCTOR
@@ -88,6 +89,9 @@ class ConfigData
 
         NestedServers   getNestedServers( void ) const;
         void            setNestedServers( NestedServers nested_servers );
+
+        bool            getIsDirectoryListing( void ) const;
+        void            setIsDirectoryListing( bool is_directory_listing );
 };
 
 #endif

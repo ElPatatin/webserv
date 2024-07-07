@@ -6,13 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:11:20 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/05 17:55:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:14:53 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-void    HttpErrors::sendError( Data & data, int status_code, ConfigData config )
+void    HttpErrors::sendError( Data & data, int status_code, ConfigData & config )
 {
     UNUSED( config );
 

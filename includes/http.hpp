@@ -6,14 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/05 17:48:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 20:35:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef HTTP_HPP
 # define HTTP_HPP
 
-# include "common.hpp"
 # include "Log.hpp"
 # include "utils.hpp"
 # include "Exceptions.hpp"
@@ -54,7 +53,9 @@ typedef struct s_http
 
 namespace Http
 {
-    void    httpRequest( HttpData & http, Data & data, ConfigData config );
+    void    httpRequest( HttpData & http, Data & data, ConfigData & config );
+    void    httpDirectoryListing( std::string path, std::string fullPath, Data &data, ConfigData & config );
+    void    httpFileServing( std::string path, std::string fullPath, Data &data, ConfigData &config );
 }
 
 namespace HttpMethods
@@ -65,7 +66,7 @@ namespace HttpMethods
 
 namespace HttpErrors
 {
-    void    sendError( Data & data, int status_code, ConfigData config );
+    void    sendError( Data & data, int status_code, ConfigData & config );
 }
 
 namespace HttpHeaders

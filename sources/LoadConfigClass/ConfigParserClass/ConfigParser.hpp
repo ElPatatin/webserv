@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigParser.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 17:01:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:29:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class ConfigParser
         static bool parseErrorPage( std::string line, ConfigData *config );
         static bool parseClientMaxBodySize( std::string line, ConfigData *config );
         static bool parseLocation( std::string line, ConfigData *config );
+        static bool parseDirectoryListing( std::string line, ConfigData *config );
         static bool parseNestedServer( std::string line, ConfigData *config );
 
     private:

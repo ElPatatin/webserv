@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 13:11:20 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:56:57 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,4 +153,36 @@ bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config 
     config->setClientMaxBodySize( size );
     LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();
     return ( true );
+}
+
+bool ConfigParser::parseDirectoryListing( std::string line, ConfigData *config )
+{
+    static volatile bool already_parsed = false;
+
+    if ( already_parsed )
+    {
+        std::cerr << "Error: 'directory_listing' directive already parsed" << std::endl;
+        LOG( ERROR ) << "'directory_listing' directive already parsed";
+        return ( false );
+    }
+
+    parseLine( &line, "'directory_listing' directive without 'on' or 'off'" );
+    if ( line.empty() )
+        return ( false );
+
+    if ( line == "on" )
+        config->setIsDirectoryListing( true );
+    else if ( line == "off" )
+        config->setIsDirectoryListing( false );
+    else
+    {
+        std::cerr << "Error: Invalid argument for 'directory_listing' directive: " << line << std::endl;
+        LOG( ERROR ) << "Invalid argument for 'directory_listing' directive: " << line;
+        return ( false );
+    }
+
+    already_parsed = true;
+    LOG( INFO ) << "Successfully parsed directory listing: " << ( config->getIsDirectoryListing() ? "on" : "off" );
+    return ( true );
+
 }

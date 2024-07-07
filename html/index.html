@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
-    <title>Home - Our  Server</title>
+    <title>Home - Our Server</title>
     <style>
         body {
             margin: 0;
@@ -81,10 +81,9 @@
             color: white;
             padding: 10px 0;
             text-align: center;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
             border-top: 5px solid #222;
+            position: relative; /* Changed from fixed to relative */
+            width: 100%;
         }
     </style>
 </head>
@@ -120,6 +119,12 @@
             </p>
         </div>
     </div>
+    <div class="content">
+        <div class="box">
+            <h2>Directory Listing</h2>
+            <a href="./resources/">Parent Directory</a><br>
+        </div>
+    </div> <!-- Corrected closing div tag -->
     <div class="footer">
         <p>&copy; 2024 Our Web Server. All rights reserved.</p>
     </div>

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 15:25:01 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:13:40 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
-static bool startServer( ConfigData config, Addrs & addrs, Data & data );
-static bool runServer( Data & data, EpollData & epoll, ConfigData config );
+static bool startServer( ConfigData & config, Addrs & addrs, Data & data );
+static bool runServer( Data & data, EpollData & epoll, ConfigData & config );
 static bool stopServer( Data & data, EpollData & epoll );
 
 //  Sets up the signals for the servers and manages the webserver.
-void    webserver( ConfigData config )
+void    webserver( ConfigData &config )
 {
     Addrs       addrs;
     Data        data;
@@ -42,7 +42,7 @@ void    webserver( ConfigData config )
 }
 
 // Starts the server and binds the socket.
-static bool startServer( ConfigData config, Addrs & addrs, Data & data )
+static bool startServer( ConfigData & config, Addrs & addrs, Data & data )
 {
     LOG( INFO ) << "Starting server";
     std::cout << "Starting server" << std::endl;
@@ -70,7 +70,7 @@ static bool startServer( ConfigData config, Addrs & addrs, Data & data )
 }
 
 // Runs the listen sockets and accepts the incoming connections.
-static bool runServer( Data & data, EpollData & epoll, ConfigData config )
+static bool runServer( Data & data, EpollData & epoll, ConfigData & config )
 {
     LOG( INFO ) << "Running server";
     std::cout << "Running server" << std::endl;

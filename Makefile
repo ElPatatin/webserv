@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/04 15:48:10 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/07 20:43:48 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -136,6 +136,8 @@ SRCS	+= $(HTP_DIR)httpRequest.cpp \
 		$(HTP_DIR)httpHeaders.cpp \
 		$(HTP_DIR)httpMethods.cpp \
 		$(HTP_DIR)httpErrors.cpp \
+		$(HTP_DIR)httpDirectoryListing.cpp \
+		$(HTP_DIR)httpFileServing.cpp \
 		$(HTP_DIR)http.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #

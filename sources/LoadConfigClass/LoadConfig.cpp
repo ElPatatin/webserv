@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 15:16:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:28:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,18 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
         {
             if ( !ConfigParser::parseClientMaxBodySize( line, config ) )
                 { LOG( ERROR ) << "Error parsing client max body size"; continue ; }
+        }
+
+        // if ( line.find( "location" ) != std::string::npos )
+        // {
+        //     if ( !ConfigParser::parseLocation( line, config ) )
+        //         { LOG( ERROR ) << "Error parsing location"; continue ; }
+        // }
+
+        if ( line.find( "directory_listing" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseDirectoryListing( line, config ) )
+                { LOG( ERROR ) << "Error parsing directory listing"; continue ; }
         }
 
     }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sockets.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 15:44:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:14:55 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int Sockets::createSocket( AddrInfo *rp )
     return ( conn_fd );
 }
 
-void    Sockets::bindSocket( Data *data, ConfigData config )
+void    Sockets::bindSocket( Data *data, ConfigData & config )
 {
     data->addr_len = sizeof( data->addr );
     data->addr.sin_family = AF_INET;
@@ -99,7 +99,7 @@ void    Sockets::acceptConnection( Data *data )
     return ;
 }
 
-void    Sockets::receiveConnection( Data *data, ConfigData config )
+void    Sockets::receiveConnection( Data *data, ConfigData & config )
 {
     int bytes = 1024;
     char buffer[ bytes ];
