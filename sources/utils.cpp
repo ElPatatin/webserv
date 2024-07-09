@@ -168,3 +168,11 @@ void    ft::welcome( void )
         ft::closeFile( header );
     }
 }
+
+int    ft::stoi( std::string str )
+{
+    std::stringstream ss( str );
+    int i;
+    ss >> i;
+    return ( i );
+}

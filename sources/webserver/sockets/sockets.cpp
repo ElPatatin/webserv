@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:14:55 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 20:28:14 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void    Sockets::bindSocket( Data *data, ConfigData & config )
     std::memset( data->addr.sin_zero, '\0', sizeof( data->addr.sin_zero ) );
 
     // Assigns the address specified by addr to the socket referred to by the file descriptor conn_fd.
-    if ( bind( data->conn_fd, reinterpret_cast< SockAddr * >( &data->addr ), static_cast< socklen_t >( data->addr_len ) ) == -1 )  
+    if ( bind( data->listen_sock, reinterpret_cast< SockAddr * >( &data->addr ), static_cast< socklen_t >( data->addr_len ) ) == -1 )  
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "bind: " + std::string( std::strerror( errno ) ) );
         throw SocketException( "Error: bind: " + std::string( std::strerror( errno ) ) );
@@ -75,7 +75,7 @@ void    Sockets::listenConnection( Data & data, int backlog )
 {
     // Marks the socket referred to by conn_fd as a passive socket, that is,
     // as a socket that will be used to accept incoming connection requests using accept.
-    if ( listen( data.conn_fd, backlog ) == -1 )
+    if ( listen( data.listen_sock, backlog ) == -1 )
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "listen: " + std::string( std::strerror( errno ) ) );
         throw SocketException( "Error: listen: " + std::string( std::strerror( errno ) ) );
@@ -84,36 +84,128 @@ void    Sockets::listenConnection( Data & data, int backlog )
     return ;
 }
 
-void    Sockets::acceptConnection( Data *data )
+void    Sockets::acceptConnection( Data & data )
 {
     // It extracts the first connection request on the queue of pending connections for
     // the listening socket, sockfd, creates a new connected socket, and returns a new file descriptor referring to that socket.
-    if ( ( data->new_fd = accept( data->conn_fd,\
-            reinterpret_cast< SockAddr * >( &data->addr ),\
-            reinterpret_cast< socklen_t * >( &data->addr_len ) ) ) == -1 )
+    if ( ( data.conn_sock = accept( data.listen_sock,\
+            reinterpret_cast< SockAddr * >( &data.addr ),\
+            reinterpret_cast< socklen_t * >( &data.addr_len ) ) ) == -1 )
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "accept: " + std::string( std::strerror( errno ) ) );
         throw SocketException( "Error: accept: " + std::string( std::strerror( errno ) ) );
     }
 
+
     return ;
 }
 
-void    Sockets::receiveConnection( Data *data, ConfigData & config )
+void    Sockets::setSocketBlockingMode( int sockfd, bool blocking )
 {
-    int bytes = 1024;
-    char buffer[ bytes ];
-    
-    std::memset( buffer, '\0', bytes );
-    if ( recv( data->new_fd, buffer, bytes, 0 ) == -1 )
+    int flags = fcntl( sockfd, F_GETFL, 0 );
+    if ( flags == -1 )
     {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
-        throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "fcntl: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: fcntl: " + std::string( std::strerror( errno ) ) );
     }
 
-    HttpData http = HttpRequests::parseRequest( buffer );
+    if ( blocking )
+        flags &= ~O_NONBLOCK; // Clear O_NONBLOCK flag
+    else
+        flags |= O_NONBLOCK; // Set O_NONBLOCK flag
 
-    Http::httpRequest( http, *data, config );
+    if ( fcntl( sockfd, F_SETFL, flags ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "fcntl: " + std::string( std::strerror( errno)));
+        throw SocketException("Error: fcntl: " + std::string(std::strerror(errno)));
+    }
+
+    return ;
+}
+
+
+void    Sockets::receiveConnection( Data & data, ConfigData & config )
+{
+    const int buffer_size = 8192;
+    char buffer[ buffer_size ];
+    std::memset( buffer, '\0', buffer_size );
+
+    std::string full_request;
+    int     content_length = 0;
+    bool    headers_received = false;
+    int     total_bytes_read = 0;
+
+    // Ensure the socket is in blocking mode
+    Sockets::setSocketBlockingMode( data.conn_fd, true );
+
+    while ( 42 )
+    {
+        int bytes_read = recv( data.conn_fd, buffer, buffer_size - 1, 0 );
+        if ( bytes_read > 0 )
+        {
+            buffer[ bytes_read ] = '\0';
+            full_request.append( buffer, bytes_read );
+            total_bytes_read += bytes_read;
+
+            if ( !headers_received )
+                headers_received = headersReceived( full_request, content_length );
+
+            size_t header_end_pos = full_request.find( "\r\n\r\n" );
+            if ( headers_received && header_end_pos != std::string::npos )
+            {
+                size_t body_start_pos = header_end_pos + 4;
+                size_t remaining_body_length = content_length - ( total_bytes_read - body_start_pos );
+
+                if ( remaining_body_length <= 0 )
+                    break ; // Fully received headers and body
+            }
+        }
+        else if ( bytes_read == 0 )
+            break ; // Connection closed
+        else
+        {
+            if ( errno == EAGAIN || errno == EWOULDBLOCK )
+                continue ; // Retry if temporarily unavailable
+            else
+            {
+                LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
+                throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
+            }
+        }
+    }
+
+    HttpData http = HttpRequests::parseRequest( full_request );
+    Http::httpRequest( http, data, config );
+    return ;
+}
+
+bool    Sockets::headersReceived( const std::string & request, int & content_length )
+{
+    size_t header_end_pos = request.find( "\r\n\r\n" );
+    if ( header_end_pos != std::string::npos )
+    {
+        // Extract headers and find Content-Length
+        std::string headers = request.substr( 0, header_end_pos + 4 );
+        HttpData temp_http = HttpRequests::parseRequest( headers );
+
+        if ( temp_http.headers.find( "Content-Length" ) != temp_http.headers.end() )
+            content_length = ft::stoi( temp_http.headers[ "Content-Length" ].second );
+
+        return ( true );
+    }
+
+    return ( false );
+}
+
+void    Sockets::sendConnection( Data & data )
+{
+    if ( send( data.conn_fd, data.response.c_str(), data.response.length(), 0 ) == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: " + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
+    }
+
+    return ;
 }
 
 void    Sockets::closeConnection( int fd , std::string function, int line )

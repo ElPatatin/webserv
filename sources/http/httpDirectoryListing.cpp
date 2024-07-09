@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 17:46:22 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:14:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:09:06 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,10 +149,5 @@ void Http::httpDirectoryListing( std::string path, std::string fullPath, Data &d
                 << content;
 
     LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Sending directory listing response" );
-    std::string response = header_stream.str();
-    if ( send( data.new_fd, response.c_str(), response.length(), 0 ) == -1 )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: " + std::string( std::strerror( errno ) ) );
-        throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
-    }
+    data.response = header_stream.str();
 }

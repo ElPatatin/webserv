@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:11:20 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:14:53 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:09:19 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,7 @@ void    HttpErrors::sendError( Data & data, int status_code, ConfigData & config
                     << "\r\n"
                     << content;
 
-    std::string response = response_stream.str();
-    if ( send( data.new_fd, response.c_str(), response.length(), 0 ) == -1 )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: error" );
-        throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
-    }
+    data.response = response_stream.str();
 
     return ;
 }

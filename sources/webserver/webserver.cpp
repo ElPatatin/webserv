@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:13:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 19:55:31 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,15 @@ static bool startServer( ConfigData & config, Addrs & addrs, Data & data )
         // AF_INET: IPv4, SOCK_STREAM: TCP
         addrs = Sockets::resolveHostToIp( AF_INET, SOCK_STREAM, config.getHost() );
 
-        data.conn_fd = Sockets::createSocket( addrs.rp );
+        data.listen_sock = Sockets::createSocket( addrs.rp );
         Sockets::bindSocket( &data, config );
 
         if ( !addrs.rp )
             throw ResolveHostException( "Error: failed to bind" );
 
         freeaddrinfo( addrs.result );
+
+        Sockets::listenConnection( data, BACKLOG );
     }
     catch( ResolveHostException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
     catch( SocketException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
@@ -77,30 +79,35 @@ static bool runServer( Data & data, EpollData & epoll, ConfigData & config )
 
     try
     {
-        Sockets::listenConnection( data, BACKLOG );
-        Epoll::createEpoll( data, epoll );
-        Epoll::addEpoll( data, epoll );
+        Epoll::createEpoll( epoll );
+        Epoll::addEpoll( epoll, data.listen_sock, EPOLLIN );
 
-        while ( g_signal::g_signal_status ) // Main loop
+        while ( g_signal::g_signal_status )
         {
-            Epoll::waitEpoll( data, epoll );
+            Epoll::waitEpoll( epoll );
             if ( epoll.nfds == -1 )
             {
                 std::cout << "Timeout occurred, no events happened" << std::endl;
                 continue ;
             }
 
-            for ( int i = 0; i < epoll.nfds; i++ )
+            for ( int i = 0; i < epoll.nfds; ++i )
             {
-                if ( epoll.events[ i ].data.fd == data.conn_fd )
+                if ( epoll.events[ i ].data.fd == data.listen_sock )
                 {
-                    Sockets::acceptConnection( &data );
-                    Sockets::receiveConnection( &data, config );
-                    Sockets::closeConnection( data.new_fd, __FUNCTION__, __LINE__ );
+                    Sockets::acceptConnection( data );
+                    Sockets::setSocketBlockingMode( data.conn_sock, false );
+                    Epoll::addEpoll( epoll, data.conn_sock, EPOLLIN | EPOLLET );
+                }
+                else
+                {
+                    data.conn_fd = epoll.events[ i ].data.fd;
+                    Sockets::receiveConnection( data, config );
+                    Sockets::sendConnection( data );
+                    Sockets::closeConnection( data.conn_fd, __FUNCTION__, __LINE__ );
                 }
             }
-        }   // End of main loop
-
+        }
     }
     catch( SocketException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
     catch( EpollException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
@@ -114,7 +121,11 @@ static bool runServer( Data & data, EpollData & epoll, ConfigData & config )
 // Stops the server and closes the connection.
 static bool stopServer( Data & data, EpollData & epoll )
 {
-    Epoll::removeEpoll( data, epoll );
-    Sockets::closeConnection( data.conn_fd, __FUNCTION__, __LINE__ );
+    LOG( INFO ) << "Stopping server";
+    
+    UNUSED( data );
+    UNUSED( epoll );
+    // Epoll::removeEpoll( data, epoll );
+    // Sockets::closeConnection( data.conn_fd, __FUNCTION__, __LINE__ );
     return ( true );
 }

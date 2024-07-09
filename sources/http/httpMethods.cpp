@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   httpMethods.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:07:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 12:19:48 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:40:56 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,14 @@ Method HttpMethods::methodFromString( const std::string & method )
     };
 
     static const std::map<std::string, Method> method_map(
-        method_pairs, method_pairs + sizeof(method_pairs) / sizeof(method_pairs[0])
+        method_pairs, method_pairs + sizeof(method_pairs) / sizeof( method_pairs[0] )
     );
 
-    std::map<std::string, Method>::const_iterator it = method_map.find(method);
+    std::map<std::string, Method>::const_iterator it = method_map.find( method );
     if (it != method_map.end())
         return it->second;
+
+    LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Method not allowed" );
 
     throw MethodNotAllowedException( "String to method not allowed" );
 }

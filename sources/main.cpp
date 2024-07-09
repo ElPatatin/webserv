@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:07:26 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:58:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ int main(int ac, char **av)
 {
     try
     {
+        // Delete previous log file if it exists
+        std::remove( "webserver.log" );
+
         LOG( INFO ) << "--[ Program started ]--";
 
         if (ac < 1 || ac > 2)
@@ -39,7 +42,8 @@ int main(int ac, char **av)
     }
     catch( BadArrgumentsException & e ) { std::cerr << e.what() << std::endl; return ( 1 ); }
     catch( ConfigFileException & e ) { std::cerr << e.what() << std::endl; return ( 2 ); }
-    catch( ... ) { std::cerr << "Error: unknown exception" << std::endl; return ( 255 ); }
+    catch( std::exception & e ) { std::cerr << e.what() << std::endl; return ( 3 ); }
+    
 
     return ( 0 );
 }

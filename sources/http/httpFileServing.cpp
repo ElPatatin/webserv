@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:34:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 20:35:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:09:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,7 @@ void    Http::httpFileServing( std::string path, std::string fullPath, Data &dat
 
     response_stream << "\r\n" << content;
 
-    std::string response = response_stream.str();
-    if ( send( data.new_fd, response.c_str(), response.length(), 0 ) == -1 )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: " + std::string( std::strerror( errno ) ) );
-        throw SocketException( "Error: send: " + std::string( std::strerror( errno ) ) );
-    }
+    data.response = response_stream.str();
+
+    return ;
 }
