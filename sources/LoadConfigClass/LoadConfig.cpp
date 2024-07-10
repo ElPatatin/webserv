@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:30:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/10 18:35:53 by pramos-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,26 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 
 bool LoadConfig::checkConfig( ConfigData config )
 {
-    UNUSED(config);
-    return ( true );
+	if (config.getPort() <= 0 || config.getPort() > USHRT_MAX) 
+	{
+        std::cerr << "Error: Invalid port number: " << config.getPort() << std::endl;
+        LOG(ERROR) << "Invalid port number: " << config.getPort();
+        return false;
+    	}
+	    // Check host
+    if (config.getHost().empty()) {
+        std::cerr << "Error: Host cannot be empty" << std::endl;
+        LOG(ERROR) << "Host cannot be empty";
+        return false;
+    }
+	// Check server names
+    if (config.getServerNames().empty()) {
+        std::cerr << "Error: Server names cannot be empty" << std::endl;
+        LOG(ERROR) << "Server names cannot be empty";
+        return false;
+    }	
+    
+    return true;
 }
 
 // PRIVATE MEMBER FUNCTIONS
