@@ -1,35 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   webserv.hpp                                        :+:      :+:    :+:   */
+/*   signals.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:01:47 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/06/26 16:40:49 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/06/27 19:04:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#include "webserver.hpp"
+#include "colors.hpp"
 
-// C LIBRARIES
-# include <cstring>
-# include <cerrno>
-# include <cstdlib>
-# include <climits>
-# include <unistd.h>
+void    signalHandler( int signum )
+{
+    g_signal::g_signal_status = false;
 
-// C++ LIBRARIES
-# include <iostream>
-# include <string>
-# include <fstream>
-# include <sstream>
-# include <exception>
-# include <vector>
+    std::cout << "\n\033[A\033[K";
+    if ( signum == SIGINT )
+        std::cout << ORANGE << "SIGINT received" << RESET << std::endl;
+    else if ( signum == SIGQUIT )
+        std::cout << ORANGE << "SIGQUIT received" << RESET << std::endl;
 
-# include "Log.hpp"
-
-# define UNUSED(x) (void)(x)
-
-#endif
+    return ;
+}

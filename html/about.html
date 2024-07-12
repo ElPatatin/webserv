@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
-    <title>Home - Our Server</title>
+    <title>About Us - Our Web Server</title>
     <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
             background-color: #f5f5f5;
             color: #333;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
         .header {
             background-color: #4CAF50;
@@ -40,7 +37,7 @@
             color: black;
         }
         .hero {
-            background: url('./resources/main-hero.jpg') center/cover no-repeat;
+            background: url('./resources/about-hero.jpg') center/cover no-repeat;
             height: 300px;
             display: flex;
             justify-content: center;
@@ -60,7 +57,6 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            flex: 1;
         }
         .content h2 {
             color: #4CAF50;
@@ -85,26 +81,16 @@
             color: white;
             padding: 10px 0;
             text-align: center;
-            border-top: 5px solid #222;
+            position: fixed;
             width: 100%;
-        }
-        .form-group button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px 30px; /* Increased padding for larger button */
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 1em; /* Increased font size */
-        }
-        .form-group button:hover {
-            background-color: #45a049;
+            bottom: 0;
+            border-top: 5px solid #222;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Welcome to Our Web Server</h1>
+        <h1>About Us</h1>
     </div>
     <div class="nav">
         <a href="./index.html">Home</a>
@@ -112,51 +98,32 @@
         <a href="./contact.html">Contact</a>
     </div>
     <div class="hero">
-        <h1>Delivering Excellence</h1>
+        <h1>Our Story</h1>
     </div>
     <div class="content">
         <div class="box">
-            <h2>Welcome Evaluators!</h2>
+            <h2>Who We Are</h2>
             <p>
-                Thank you for taking the time to evaluate our project. We have put a lot of effort into creating a robust and reliable web server. Please explore the different sections of our website to learn more about what we have accomplished.
-            </p>
-            <p>
-                If you have any questions or need further information, do not hesitate to contact us. We hope you enjoy your visit and find our project to your satisfaction.
+                We are a team of dedicated professionals committed to delivering high-quality web solutions. Our goal is to provide reliable and efficient web servers that meet the needs of our clients.
             </p>
         </div>
         <div class="box">
+            <h2>Our Mission</h2>
             <p>
-                42 Barcelona és el campus de programació més innovador i gratuït que t'obre les portes al mercat laboral. Amb una metodologia revolucionària i una durada mitjana de tres anys, està obert les 24 hores del dia, 7 dies a la setmana perquè puguis aprendre al teu ritme.
-            </p>
-            <p>
-                Per formar part de 42 Barcelona no necessites coneixements previs ni titulació de cap mena, només tenir més de 18 anys, ganes d'aprendre, actitud i perseverança. Només cal superar dues fases: un test d'inscripció online i un període de selecció presencial de 26 dies.
+                Our mission is to innovate and lead in the web server industry, ensuring that our clients have access to the best tools and technologies. We strive to exceed expectations and deliver outstanding results.
             </p>
         </div>
-    </div>
-    <div class="content">
         <div class="box">
-            <h2>Directory Listing</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = '/'">View Directory</button>
-            </div>
+            <h2>Our Vision</h2>
+            <p>
+                We envision a world where technology seamlessly integrates into daily life, enhancing productivity and connectivity. We are passionate about making this vision a reality through our cutting-edge solutions.
+            </p>
         </div>
         <div class="box">
-            <h2>Upload Files</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = './upload.html'">Upload Files</button>
-            </div>
-        </div>
-        <div class="box">
-            <h2>Test Response Codes</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = './codes.html'">View Codes</button>
-            </div>
-        </div>
-        <div class="box">
-            <h2>Test Methods</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = './methods.html'">View Methods</button>
-            </div>
+            <h2>Our Values</h2>
+            <p>
+                Integrity, innovation, and customer satisfaction are at the core of everything we do. We believe in building long-term relationships with our clients based on trust and excellence.
+            </p>
         </div>
     </div>
     <div class="footer">

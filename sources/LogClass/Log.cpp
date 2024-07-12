@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:49:10 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:00:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ Log::Log( void )
 {
     if ( !logFile.is_open() )
     {
-        logFile.open( makeLogFileName().c_str(), std::ios::out | std::ios::app );
+        logFile.open( LOGFILE, std::ios::out | std::ios::app );
         if ( logFile.fail() )
             std::cerr << "Error: " << LOGFILE << " could not be opened" << std::endl;
     }
@@ -45,21 +45,19 @@ std::ostringstream& Log::get( LogLevel level )
 
 LogLevel& Log::reportingLevel( void )
 {
-    static LogLevel reportingLevel = DEBUG3;
+    static LogLevel reportingLevel = DEBUG;
     return reportingLevel;
 }
 
 std::string Log::toString( LogLevel level )
 {
-    static const char * const buffer[] = { "INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG1", "DEBUG2", "DEBUG3" };
+    static const char * const buffer[] = { "INFO", "WARNING", "ERROR", "CRITICAL", "DEBUG" };
     return ( buffer[ level ] );
 }
 
 LogLevel Log::fromString( const std::string & level )
 {
-    if ( level == "DEBUG3" ) return ( DEBUG3 );
-    if ( level == "DEBUG2" ) return ( DEBUG2 );
-    if ( level == "DEBUG1" ) return ( DEBUG1 );
+    if ( level == "DEBUG" ) return ( DEBUG );
     if ( level == "CRITICAL" ) return ( CRITICAL );
     if ( level == "ERROR" ) return ( ERROR );
     if ( level == "WARNING" ) return ( WARNING );
@@ -85,14 +83,4 @@ std::string Log::getTimeStr( void )
 
     std::strftime( buffer, sizeof( buffer ), "%d-%m-%Y_%H:%M:%S", tm_info );
     return ( buffer );
-}
-
-std::string Log::makeLogFileName( void )
-{
-    std::string logFileName = LOGDIR;
-    logFileName += LOGFILE;
-    logFileName += "_";
-    logFileName += getTimeStr();
-    logFileName += LOGEXT;
-    return ( logFileName );
 }

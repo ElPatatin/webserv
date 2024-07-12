@@ -6,17 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:58:45 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:47:12 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:00:35 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LOG_HPP
 # define LOG_HPP
 
-# include <iostream>
-# include <sstream>
-# include <fstream>
-# include <string>
 # include <ctime>
 # include <sys/stat.h>
 # include <algorithm>
@@ -26,9 +22,7 @@
 
 # define LOG(x) Log().get(x)
 
-# define LOGDIR "./logs/"
-# define LOGFILE "webserver"
-# define LOGEXT ".log"
+# define LOGFILE "webserver.log"
 
 // LOG LEVELS
 enum LogLevel
@@ -37,9 +31,7 @@ enum LogLevel
     WARNING,
     ERROR,
     CRITICAL,
-    DEBUG1,
-    DEBUG2,
-    DEBUG3
+    DEBUG
 };
 
 
@@ -90,7 +82,6 @@ class Log
         // ===============
         void                    writeLog( const std::string & message );
         static std::string      getTimeStr( void );
-        std::string             makeLogFileName( void );
         static std::fstream     logFile;
 };
 

@@ -6,18 +6,18 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:29:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:19:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LOADCONFIG_HPP
 # define LOADCONFIG_HPP
 
-# include "webserv.hpp"
-# include "Exceptions.hpp"
-# include "utils.hpp"
 # include "ConfigData.hpp"
+# include "Log.hpp"
+# include "Exceptions.hpp"
 # include "ConfigParser.hpp"
+# include "utils.hpp"
 
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
 
@@ -39,22 +39,27 @@ class LoadConfig
     public:
         // MEMBER FUNCTIONS
         // ================
+
         static void loadConfig( int ac, char **av, ConfigData *config );
-        static bool checkConfig( ConfigData config );
+        static bool checkConfig( void );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR
-        // ==========================
+        // ===========================
+
         LoadConfig( );
         LoadConfig( LoadConfig const & src );
         ~LoadConfig( );
 
         // OPERATORS OVERLOAD
         // ==================
+
         LoadConfig & operator=( LoadConfig const & rhs );
 
         // MEMBER FUNCTIONS
         // ================
+
+        // ==========================
         static void readConfig( std::fstream * config_file, ConfigData * config );
 };
 

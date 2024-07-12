@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <title>Upload Files - Our Server</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 5px solid #388E3C;
+        }
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            border-bottom: 5px solid #222;
+        }
+        .nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+            border-right: 1px solid #555;
+        }
+        .nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .content {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .content h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .content p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+        .box {
+            background-color: white;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            flex: 1 1 300px;
+            box-sizing: border-box;
+        }
+        .upload-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #4CAF50;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .upload-box:hover {
+            background-color: #e9e9e9;
+        }
+        .directory-list {
+            width: 100%;
+            margin-top: 20px;
+        }
+        .directory-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .directory-list li {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align items and buttons */
+        }
+        .directory-list li span {
+            margin-right: 10px;
+            font-size: 1.2em; /* Adjust font size */
+        }
+        .directory-list li a {
+            color: #1a73e8;
+            text-decoration: none;
+            display: flex; /* Make link and emoji inline */
+            align-items: center;
+        }
+        .directory-list li a:hover {
+            text-decoration: underline;
+        }
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .delete-button:hover {
+            background-color: #cc0000;
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            border-top: 5px solid #222;
+            width: 100%;
+            margin-top: auto; /* Push footer to the bottom */
+        }
+        .hidden-input {
+            display: none;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 20px;
+            transform: translateX(-50%);
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .popup.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to Our Web Server</h1>
+    </div>
+    <div class="nav">
+        <a href="./index.html">Home</a>
+        <a href="./about.html">About</a>
+        <a href="./contact.html">Contact</a>
+    </div>
+    <div class="content">
+        <div class="box upload-box" id="uploadBox">
+            <h2>Upload Files</h2>
+            <p>Drag and drop files here or click to select files</p>
+            <input type="file" id="fileInput" class="hidden-input" multiple>
+        </div>
+        <div class="box directory-list">
+            <h2>Directory Contents</h2>
+            <ul id="fileList"></ul>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Our Web Server. All rights reserved.</p>
+    </div>
+    <div id="popup" class="popup">
+        <p>Upload successful!</p>
+        <button onclick="this.parentElement.classList.remove('show')">Close</button>
+    </div>
+
+
+    <script>
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('fileInput');
+        const popup = document.getElementById('popup');
+
+        uploadBox.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        uploadBox.addEventListener('dragover', (event) => {
+            event.preventDefault();
+            uploadBox.style.backgroundColor = '#e9e9e9';
+        });
+
+        uploadBox.addEventListener('dragleave', () => {
+            uploadBox.style.backgroundColor = '#f9f9f9';
+        });
+
+        uploadBox.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadBox.style.backgroundColor = '#f9f9f9';
+            fileInput.files = event.dataTransfer.files;
+            handleFiles(fileInput.files);
+            
+        });
+
+        fileInput.addEventListener('change', () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files[]', files[i]);
+            }
+
+            fetch('./html/uploads', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log('Success:', data);
+                showPopup();
+                fetchFiles(); // Reload file list
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function showPopup() {
+            popup.classList.add('show');
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 3000);
+        }
+
+        async function fetchFiles() {
+            try {
+                const path = 'html/uploads';  // Adjust this path as needed
+                const response = await fetch(`/cgi-bin/list-files.py?path=${encodeURIComponent(path)}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch files');
+                }
+                
+                const rawText = await response.text(); // Get raw response text
+                console.log('Raw Text from Server:', rawText); // Debug: Log raw response text
+                
+                const files = rawText.split("\n").filter(Boolean); // Split raw text by newline and filter out empty strings
+                
+                displayFiles(files); // Display parsed files
+            } catch (error) {
+                console.error('Error fetching files:', error.message);
+                displayError('Failed to fetch files. Please try again.');
+            }
+        }
+
+        async function deleteFile(filePath) {
+            try {
+                const response = await fetch(`${encodeURIComponent(filePath)}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete file');
+                }
+
+                console.log('File deleted successfully:', filePath);
+                fetchFiles(); // Reload file list
+            } catch (error) {
+                console.error('Error deleting file:', error.message);
+                alert('Failed to delete file. Please try again.');
+            }
+        }
+
+        function displayFiles(files) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = ''; // Clear previous list
+            
+            files.forEach(file => {
+                const listItem = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = `/uploads/${file}`;
+                link.textContent = file;
+
+                // Add emoji
+                const emoji = document.createElement('span');
+                emoji.textContent = '📄'; // You can adjust the emoji here
+                emoji.style.marginRight = '5px'; // Adjust margin if needed
+                link.prepend(emoji);
+
+                listItem.appendChild(link);
+
+                // Create delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.className = 'delete-button'; // Add class for styling
+                deleteButton.addEventListener('click', () => deleteFile(`/uploads/${file}`));
+                listItem.appendChild(deleteButton);
+
+                fileList.appendChild(listItem);
+            });
+        }
+
+        function displayError(message) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = `<li style="color: red;">${message}</li>`;
+        }
+
+        // Fetch files when the page loads
+        document.addEventListener('DOMContentLoaded', fetchFiles);
+    </script>
+</body>
+</html>

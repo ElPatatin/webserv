@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:59:05 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:56:57 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ bool ConfigParser::parseServerName( std::string line, ConfigData *config )
     if ( line.empty() )
         return ( false );
 
-    std::vector< std::string > server_names = ft::split( line, ' ' );
+    std::vector< std::string > server_names = ft::split( line, " " );
 
     config->setHost( server_names[0] );
     config->setServerNames( server_names );
@@ -95,7 +95,7 @@ bool ConfigParser::parseErrorPage( std::string line, ConfigData *config )
 
     ErrorPages error_pages;
 
-    std::vector< std::string > error_page = ft::split( line, ' ' );
+    std::vector< std::string > error_page = ft::split( line, " " );
     if ( error_page.size() != 2 )
     {
         std::cerr << "Error: 'error_page' directive with invalid number of arguments" << std::endl;
@@ -125,7 +125,64 @@ bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config 
     if ( line.empty() )
         return ( false );
 
-    config->setClientMaxBodySize( line );
+    char c = std::toupper( line[line.size() - 1] );
+    long size = std::atol( line.c_str() );
+
+    if ( size <= 0 or size > 1024 )
+    {
+        std::cerr << "Error: Invalid size: " << line << std::endl;
+        LOG( ERROR ) << "Invalid size: " << line;
+        return ( false );
+    }
+
+    switch ( c )
+    {
+        case BYTE:
+            size *= 1;          // 1024 ^ 0
+            break;
+        case KILO:
+            size *= 1024;       // 1024 ^ 1
+            break;
+        case MEGA:
+            size *= 1048576;    // 1024 ^ 2
+            break;
+        default:
+            size = 1048576;     // 1024 ^ 2
+    }
+
+    config->setClientMaxBodySize( size );
     LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();
     return ( true );
+}
+
+bool ConfigParser::parseDirectoryListing( std::string line, ConfigData *config )
+{
+    static volatile bool already_parsed = false;
+
+    if ( already_parsed )
+    {
+        std::cerr << "Error: 'directory_listing' directive already parsed" << std::endl;
+        LOG( ERROR ) << "'directory_listing' directive already parsed";
+        return ( false );
+    }
+
+    parseLine( &line, "'directory_listing' directive without 'on' or 'off'" );
+    if ( line.empty() )
+        return ( false );
+
+    if ( line == "on" )
+        config->setIsDirectoryListing( true );
+    else if ( line == "off" )
+        config->setIsDirectoryListing( false );
+    else
+    {
+        std::cerr << "Error: Invalid argument for 'directory_listing' directive: " << line << std::endl;
+        LOG( ERROR ) << "Invalid argument for 'directory_listing' directive: " << line;
+        return ( false );
+    }
+
+    already_parsed = true;
+    LOG( INFO ) << "Successfully parsed directory listing: " << ( config->getIsDirectoryListing() ? "on" : "off" );
+    return ( true );
+
 }

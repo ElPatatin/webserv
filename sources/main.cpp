@@ -3,54 +3,48 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/24 15:17:07 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:59:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "LoadConfig.hpp"
 #include "ConfigData.hpp"
-#include "Sock.hpp"
+#include "webserver.hpp"
 
+/**
+ * @brief If the arguments are adequate, checks if the config file is properly structured.
+ * Then, if posible set ups as many servers as the config file specifies.
+ * Finnaly, starts the webserver.
+*/
 int main(int ac, char **av)
 {
-    ConfigData  config;
-    LOG( INFO ) << "Starting server";
-
     try
     {
+        // Delete previous log file if it exists
+        if ( std::ifstream( "webserver.log" ) )
+            std::remove( "webserver.log" );
+
+        LOG( INFO ) << "--[ Program started ]--";
+
         if (ac < 1 || ac > 2)
             throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
-        LoadConfig::loadConfig( ac, av, &config );
-        if ( !LoadConfig::checkConfig( config ) )
+        if ( !LoadConfig::checkConfig() )
             return ( 1 );
-            
-        std::signal( SIGINT, Sock::handleSignal );
-        std::signal( SIGQUIT, Sock::handleSignal );
 
-        int nserver = config.getNestedServers().size() + 1;
-        for ( int i = 0; i < nserver; i++ )
-            Sock sock( AF_INET, SOCK_STREAM, 0, config.getPort(), config.getHost() );
+        ConfigData config;
+        LoadConfig::loadConfig( ac, av, &config );
 
+        // ft::welcome();
+        webserver( config );
     }
-    catch( BadArrgumentsException & e )
-    {
-        std::cerr << e.what() << std::endl;
-        return ( 1 );
-    }
-    catch( ConfigFileException & e )
-    {
-        std::cerr << e.what() << std::endl;
-        return ( 2 );
-    }
-    catch( ... )
-    {
-        std::cerr << "Error: unknown exception" << std::endl;
-        return ( 255 );
-    }
+    catch( BadArrgumentsException & e ) { std::cerr << e.what() << std::endl; return ( 1 ); }
+    catch( ConfigFileException & e ) { std::cerr << e.what() << std::endl; return ( 2 ); }
+    catch( std::exception & e ) { std::cerr << e.what() << std::endl; return ( 3 ); }
+    
 
     return ( 0 );
 }

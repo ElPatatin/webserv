@@ -3,23 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 16:55:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 19:04:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CONFIGDATA_HPP
 # define CONFIGDATA_HPP
 
-# include <iostream>
-# include <sstream>
-# include <string>
+# include "common.hpp"
 # include <vector>
 # include <map>
-
-# define UNUSED(x) (void)(x)
 
 // Forward declaration of ConfigData class for the typedef
 class ConfigData;
@@ -42,6 +38,18 @@ typedef std::vector< ConfigData > NestedServers;
 */
 class ConfigData
 {
+    private:
+        // ATTRIBUTES without '_in_front_cause_we_can_yololo'
+        // ========== 
+        Port            port;
+        std::string     host;
+        ServerNames     server_names;
+        ErrorPages      error_pages;
+        size_t          client_max_body_size;
+        Locations       locations;              // Each location is a map of settings
+        NestedServers   nested_servers;         // Nested servers if any
+        bool            is_directory_listing;   // If directory listing is enabled
+
     public:
         // CONSTRUCTORS AND DESTRUCTOR
         // ==========================
@@ -52,16 +60,6 @@ class ConfigData
         // OPERATORS OVERLOAD
         // ==================
         ConfigData & operator=( ConfigData const & rhs );
-
-        // ATTRIBUTES
-        // ==========
-        Port            port;
-        std::string     host;
-        ServerNames     server_names;
-        ErrorPages      error_pages;
-        std::string     client_max_body_size;
-        Locations       locations;              // Each location is a map of settings
-        NestedServers   nested_servers;         // Nested servers if any
 
         // MEMBER FUNCTIONS
         // ================
@@ -83,14 +81,17 @@ class ConfigData
         ErrorPages      getErrorPages( void ) const;
         void            setErrorPages( ErrorPages error_pages );
 
-        std::string     getClientMaxBodySize( void ) const;
-        void            setClientMaxBodySize( std::string client_max_body_size );
+        size_t          getClientMaxBodySize( void ) const;
+        void            setClientMaxBodySize( size_t client_max_body_size );
 
         Locations       getLocations( void ) const;
         void            setLocations( Locations );
 
         NestedServers   getNestedServers( void ) const;
         void            setNestedServers( NestedServers nested_servers );
+
+        bool            getIsDirectoryListing( void ) const;
+        void            setIsDirectoryListing( bool is_directory_listing );
 };
 
 #endif

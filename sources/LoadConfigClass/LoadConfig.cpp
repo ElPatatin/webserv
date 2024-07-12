@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
 /*   Updated: 2024/07/10 18:35:53 by pramos-m         ###   ########.fr       */
@@ -29,6 +29,11 @@ LoadConfig & LoadConfig::operator=( LoadConfig const & rhs ) { UNUSED(rhs); retu
 // MEMBER FUNCTIONS
 // ================
 
+
+/**
+ * @brief Sets the config path to the given or the default one.
+ * Opens the config file, reads it, and close it, if possible.
+*/
 void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 {
     std::string     config_path;
@@ -53,7 +58,10 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
     return ;
 }
 
-bool LoadConfig::checkConfig( ConfigData config )
+/**
+ * @brief Checks if the config file is properly structured.
+*/
+bool LoadConfig::checkConfig( void )
 {
 	if (config.getPort() <= 0 || config.getPort() > USHRT_MAX) 
 	{
@@ -74,12 +82,15 @@ bool LoadConfig::checkConfig( ConfigData config )
         return false;
     }	
     
-    return true;
+    return (true);
 }
 
 // PRIVATE MEMBER FUNCTIONS
 // ========================
 
+/**
+ * @brief Reads the config file and parses it into a ConfigData object.
+*/
 void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
 {
     std::string line;
@@ -114,6 +125,18 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
         {
             if ( !ConfigParser::parseClientMaxBodySize( line, config ) )
                 { LOG( ERROR ) << "Error parsing client max body size"; continue ; }
+        }
+
+        // if ( line.find( "location" ) != std::string::npos )
+        // {
+        //     if ( !ConfigParser::parseLocation( line, config ) )
+        //         { LOG( ERROR ) << "Error parsing location"; continue ; }
+        // }
+
+        if ( line.find( "directory_listing" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseDirectoryListing( line, config ) )
+                { LOG( ERROR ) << "Error parsing directory listing"; continue ; }
         }
 
     }

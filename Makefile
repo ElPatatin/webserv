@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/06/24 15:17:29 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/11 14:45:35 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,8 @@
 LANG	:= C++
 
 SYSTEM	:= $(shell uname -s)
+
+LOG_FLE	:= webserver.log
 
 # -=-=-=-=-	NAME -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -57,7 +59,7 @@ endif
 
 # Define compiler flags.
 
-CFLAGS		:= -Wall -Wextra -Werror -W
+CFLAGS		:= -Wall -Wextra -Werror -W -g
 ifeq ($(LANG), C++)
 	CFLAGS	+= -std=c++98
 endif
@@ -78,12 +80,19 @@ DEP_DIR	:= .deps/
 SRC_DIR	:= ./sources/
 INC_DIR	:= ./includes/
 
-# LoadConfigClass
-LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
-CNP_DIR	:= $(LCC_DIR)ConfigParserClass/
-SOC_DIR	:= $(SRC_DIR)SockClass/
+# Classes directories
 CNF_DIR	:= $(SRC_DIR)ConfigDataClass/
 LOG_DIR	:= $(SRC_DIR)LogClass/
+LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
+CNP_DIR	:= $(LCC_DIR)ConfigParserClass/
+
+# Webserver directories
+WEB_DIR	:= $(SRC_DIR)webserver/
+SCK_DIR	:= $(WEB_DIR)sockets/
+EPM_DIR	:= $(WEB_DIR)epollManager/
+
+# Htpp directories
+HTP_DIR	:= $(SRC_DIR)http/
 
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -94,17 +103,12 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I$(INC_DIR) -I$(LCC_DIR) -I$(SOC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(LCC_DIR) -I$(CNP_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
 # utils
 SRCS	+= $(SRC_DIR)utils.cpp
-
-# LoadConfigClass
-SRCS	+= $(LCC_DIR)LoadConfig.cpp
-# ConfigParserClass
-SRCS	+= $(CNP_DIR)ConfigParser.cpp
 
 # ConfigDataClass
 SRCS	+= $(CNF_DIR)ConfigData.cpp
@@ -112,9 +116,31 @@ SRCS	+= $(CNF_DIR)ConfigData.cpp
 # LogClass
 SRCS	+= $(LOG_DIR)Log.cpp
 
-# SockClass
-SRCS	+= $(SOC_DIR)Sock.cpp \
-			$(SOC_DIR)SockException.cpp
+# LoadConfigClass
+SRCS	+= $(LCC_DIR)LoadConfig.cpp
+# ConfigParserClass
+SRCS	+= $(CNP_DIR)ConfigParser.cpp
+
+# Webserver files
+SRCS	+= $(WEB_DIR)webserver.cpp \
+		$(WEB_DIR)signals.cpp
+
+# Sockets files
+SRCS	+= $(SCK_DIR)sockets.cpp
+# EpollManager files
+SRCS	+= $(EPM_DIR)epollManager.cpp
+
+# Http files
+SRCS	+= $(HTP_DIR)httpRequest.cpp \
+		$(HTP_DIR)httpResponse.cpp \
+		$(HTP_DIR)httpHeaders.cpp \
+		$(HTP_DIR)httpMethods.cpp \
+		$(HTP_DIR)httpErrors.cpp \
+		$(HTP_DIR)httpDirectoryListing.cpp \
+		$(HTP_DIR)httpFileServing.cpp \
+		$(HTP_DIR)http.cpp \
+		$(HTP_DIR)httpUrl.cpp \
+		$(HTP_DIR)httpCGI.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
@@ -128,7 +154,6 @@ DEPS	= $(addprefix $(DEP_DIR), $(addsuffix .d, $(basename $(SRCS))))
 all: $(NAME)
 
 $(NAME):: $(OBJS)
-	@$(MK) logs
 	@$(CC) $(CFLAGS) $(XFLAGS) $(OBJS) -o $(NAME)
 	@printf "\n\t$(WHITE)Program \033[1;31m$(NAME) $(WHITE)has been compiled!$(DEF_CLR)\n"
 
@@ -142,7 +167,7 @@ clean:
 	@echo "$(BLUE)	$(NAME) object and dependencies files cleaned.$(DEF_CLR)"
 
 fclean: 
-	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o ./logs
+	@$(RM) -r $(OBJ_DIR) $(DEP_DIR) $(NAME) dummy ./tests/dummy_client.o $(LOG_FLE)
 	@echo "$(WHITE)	All objects, dependencies and executables removed.$(DEF_CLR)"
 
 re:

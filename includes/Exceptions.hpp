@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/23 17:06:43 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/07 18:32:06 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,72 @@ class FileParseException : public std::exception
         FileParseException( std::string const & message )
             : msg( message ) { return ; }
         ~FileParseException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class ResolveHostException : public std::exception
+{
+    public:
+        ResolveHostException( std::string const & message )
+            : msg( message ) { return ; }
+        ~ResolveHostException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class SocketException : public std::exception
+{
+    public:
+        SocketException( std::string const & message )
+            : msg( message ) { return ; }
+        ~SocketException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class EpollException : public std::exception
+{
+    public:
+        EpollException( std::string const & message )
+            : msg( message ) { return ; }
+        ~EpollException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class MethodNotAllowedException : public std::exception
+{
+    public:
+        MethodNotAllowedException( std::string const & message )
+            : msg( message ) { return ; }
+        ~MethodNotAllowedException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpHeaderException : public std::exception
+{
+    public:
+        HttpHeaderException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpHeaderException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class DirectoryListingException : public std::exception
+{
+    public:
+        DirectoryListingException( std::string const & message )
+            : msg( message ) { return ; }
+        ~DirectoryListingException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;
