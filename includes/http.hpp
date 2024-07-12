@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 20:35:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:05:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 
 typedef std::pair< std::string, std::string >   Header;
 typedef std::map< std::string, Header >         Headers;
+typedef std::map< std::string, std::string >      ContentType;
 
 typedef enum e_method
 {
@@ -45,17 +46,26 @@ typedef struct s_http
 {
     Method      method;
     std::string path;
+    std::string params;
     std::string version;
     std::string body;
     Headers     headers;
+    bool        isCGI;
 
 }   HttpData;
+
+namespace Url
+{
+    std::string decode( const std::string & url );
+    std::string encode( const std::string & url );
+}
 
 namespace Http
 {
     void    httpRequest( HttpData & http, Data & data, ConfigData & config );
-    void    httpDirectoryListing( std::string path, std::string fullPath, Data &data, ConfigData & config );
-    void    httpFileServing( std::string path, std::string fullPath, Data &data, ConfigData &config );
+    void    httpDirectoryListing( std::string path, std::string fullPath, Data & data, ConfigData & config );
+    void    httpFileServing( std::string path, std::string fullPath, Data & data, ConfigData & config );
+    void    executeCGI(const std::string &scriptPath, const std::string &queryString, std::ostringstream &response_stream, Data &data, ConfigData &config, HttpData & http );
 }
 
 namespace HttpMethods

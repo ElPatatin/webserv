@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:10:24 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/10 00:15:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:46:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void    postRequest( HttpData & http, Data & data, ConfigData & config )
         // Find filename in headers
         std::size_t filenamePos = headers.find( "filename=\"" );
         if ( filenamePos == std::string::npos ) continue;
-        filenamePos += 10;  // Move past 'filename="'
+        filenamePos += 10;
         std::size_t filenameEnd = headers.find( "\"", filenamePos );
         if ( filenameEnd == std::string::npos ) continue;
         std::string filename = headers.substr( filenamePos, filenameEnd - filenamePos );
@@ -49,6 +49,7 @@ void    postRequest( HttpData & http, Data & data, ConfigData & config )
         // Construct file path
         std::string path_file = "./html/" + http.path.substr( http.path.find_last_of( "/" ) + 1 ) + "/" + filename;
         std::cout << "path_file: " << path_file << std::endl;
+
         // Save file content
         std::fstream *file = ft::openFile( path_file, std::ios::out | std::ios::binary );
         if ( file && file->is_open() )
@@ -66,13 +67,30 @@ void    postRequest( HttpData & http, Data & data, ConfigData & config )
     return ;
 }
 
+void    redirection( Data & data, ConfigData & config, std::string path )
+{
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Redirecting to: " + path );
+
+    UNUSED( config );
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Path: " + path );
+    if ( path == "/redirection" )
+        path = "https://www.youtube.com/watch?v=OgIRAjnnJzI";
+    else if ( path == "/tig" )
+        path = "https://cdn.intra.42.fr/users/f501b2a1aa0ff80e6a5f5797a77946bf/jagarcia.jpg";
+
+    std::string response = "HTTP/1.1 301 Moved Permanently\r\nLocation: " + path + "\r\nContent-Length: 0\r\n\r\n";
+    data.response = response;
+}
+
 void Http::httpRequest( HttpData & http, Data & data, ConfigData & config )
 {
     LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Request received" );
 
-    std::string path = http.path == "/" ? "/index.html" : http.path;
+    std::string path = Url::decode( http.path );
     std::string fullPath = "./html" + path;
 
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Path: " + path );
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Full path: " + fullPath );
     struct stat info;
     std::string response;
     std::ostringstream response_stream;
@@ -83,17 +101,42 @@ void Http::httpRequest( HttpData & http, Data & data, ConfigData & config )
         case ( GET ):
             LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "GET request" );
 
+            // Check if the path is a redirection
+            LOG( DEBUG ) << path.find( "redirection" );
+            if ( path.find( "redirection" ) != std::string::npos || path.find( "tig" ) != std::string::npos )
+                return ( redirection( data, config, path ) );
+
+            // Check if file exists
             if ( stat( fullPath.c_str(), &info ) != 0 )
-                return ( HttpErrors::sendError( data, NOT_FOUND, config ) );            // Check if file exists
-            else if ( info.st_mode & S_IFDIR )
-                return ( Http::httpDirectoryListing( path, fullPath, data, config ) );  // Handle Directory listing
-            else
-                return ( Http::httpFileServing( path, fullPath, data, config ) );       // Handle file serving
+                return ( HttpErrors::sendError( data, NOT_FOUND, config ) );
+            
+            if ( http.isCGI )
+                return ( Http::executeCGI( fullPath, http.params, response_stream, data, config, http ) );
+
+            if ( info.st_mode & S_IFDIR )           // Handle Directory listing
+                return ( Http::httpDirectoryListing( path, fullPath, data, config ) );
+            else if ( info.st_mode & S_IFREG )      // Handle file serving
+                return ( Http::httpFileServing( path, fullPath, data, config ) );
+            else                                     // Internal server error
+                return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
 
             break ;
         case ( POST ):
             postRequest( http, data, config );
-            break;
+            break ;
+        case ( DELETE ):
+            LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "DELETE request" );
+
+            if ( stat( fullPath.c_str(), &info ) != 0 )
+                return ( HttpErrors::sendError( data, NOT_FOUND, config ) );
+            
+            if ( std::remove( fullPath.c_str() ) != 0 )
+                return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
+
+            response = "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n";
+
+            data.response = response;
+            break ;
         default:
             LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Method not allowed" );
             HttpErrors::sendError( data, METHOD_NOT_ALLOWED, config );

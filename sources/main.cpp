@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/09 16:58:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/12 14:59:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ int main(int ac, char **av)
     try
     {
         // Delete previous log file if it exists
-        std::remove( "webserver.log" );
+        if ( std::ifstream( "webserver.log" ) )
+            std::remove( "webserver.log" );
 
         LOG( INFO ) << "--[ Program started ]--";
 
@@ -37,7 +38,7 @@ int main(int ac, char **av)
         ConfigData config;
         LoadConfig::loadConfig( ac, av, &config );
 
-        ft::welcome();
+        // ft::welcome();
         webserver( config );
     }
     catch( BadArrgumentsException & e ) { std::cerr << e.what() << std::endl; return ( 1 ); }

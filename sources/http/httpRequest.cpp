@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:48:46 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/09 17:49:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/11 12:57:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,32 @@ HttpData    HttpRequests::parseRequest( std::string buffer )
     request_stream >> method >> path;
 
     http.method = HttpMethods::methodFromString( method );
-    http.path = path;
     http.version = HTTP_VERSION;
     http.headers = HttpHeaders::deserializeHeader( request );
     http.body = "";
+
+    std::vector< std::string > path_parts = ft::split( path, "?" );
+    if ( path_parts.size() > 1 )
+    {
+        http.path = path_parts[ 0 ];
+        http.params = path_parts[ 1 ];
+    }
+    else
+    {
+        http.path = path;
+        http.params = "";
+    }
+
+    // Identify if the request is for a CGI script
+    if ( http.path.find( ".cgi" ) != std::string::npos || http.path.find( "/cgi-bin/" ) != std::string::npos )
+        http.isCGI = true;
+    else
+        http.isCGI = false;
     
     // Find the end of headers
     size_t headerEndPos = buffer.find("\r\n\r\n");
     if (headerEndPos == std::string::npos)
     {
-        // Handle case where headers are not properly terminated
-        // You might want to throw an exception or handle this case as appropriate
         LOG(ERROR) << "Headers are not properly terminated in the request";
         return http;
     }
@@ -41,24 +56,21 @@ HttpData    HttpRequests::parseRequest( std::string buffer )
     http.headers = HttpHeaders::deserializeHeader(headers);
 
     // Check if Content-Length header is present to determine body length
-    if (http.headers.find("Content-Length") != http.headers.end()) {
+    if (http.headers.find("Content-Length") != http.headers.end())
+    {
         int contentLength = ft::stoi(http.headers["Content-Length"].second);
         size_t bodyStartPos = headerEndPos + 4;
 
-        // Ensure buffer has enough content to extract the body
-        if (buffer.size() < bodyStartPos + contentLength) {
-            // Handle case where the buffer does not contain enough data
-            LOG(ERROR) << "Buffer does not contain enough data to extract body";
-            LOG(ERROR) << "Buffer size: " << buffer.size() << ", Expected body size: " << bodyStartPos + contentLength;
+        if (buffer.size() < bodyStartPos + contentLength)
+        {
+            LOG(ERROR) << "Body length is less than the content length specified in the header";
+            LOG(ERROR) << "Body length: " << buffer.size() - bodyStartPos;
             LOG(ERROR) << "Content-Length: " << contentLength;
-            LOG(ERROR) << "Body start position: " << bodyStartPos;
-            return http;
+            return ( http );
         }
 
         std::string body = buffer.substr(bodyStartPos, contentLength);
         http.body = body;
-
-        LOG(DEBUG) << "Body:\n" << http.body;
     }
 
     std::ostringstream response_stream;
