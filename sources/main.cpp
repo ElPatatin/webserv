@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:59:47 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 18:46:48 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,22 @@ int main(int ac, char **av)
         // Delete previous log file if it exists
         if ( std::ifstream( "webserver.log" ) )
             std::remove( "webserver.log" );
-
         LOG( INFO ) << "--[ Program started ]--";
 
         if (ac < 1 || ac > 2)
             throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
-        if ( !LoadConfig::checkConfig() )
+        if ( !LoadConfig::parseConfigFile( ac, av ) )
             return ( 1 );
 
         ConfigData config;
         LoadConfig::loadConfig( ac, av, &config );
 
+        if ( !LoadConfig::checkConfig( config ) )
+            return ( 2 );
+
+        config.print();
+        return ( 0 );
         // ft::welcome();
         webserver( config );
     }

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/05 12:37:10 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/03 15:19:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 15:00:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "Log.hpp"
 # include "Exceptions.hpp"
 # include "ConfigParser.hpp"
+# include "ConfigFileParser.hpp"
 # include "utils.hpp"
 
 # define DEFAULT_CONF_PATH "./configuration/default.conf"
@@ -40,8 +41,9 @@ class LoadConfig
         // MEMBER FUNCTIONS
         // ================
 
+        static bool parseConfigFile( int ac, char **av );
         static void loadConfig( int ac, char **av, ConfigData *config );
-        static bool checkConfig( void );
+        static bool checkConfig( ConfigData & config );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR

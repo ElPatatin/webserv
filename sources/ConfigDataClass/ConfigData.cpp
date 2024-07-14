@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:47:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 19:30:57 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,22 +90,24 @@ std::string ConfigData::toString( void ) const
 
     oss << "Client Max Body Size: " << this->client_max_body_size << std::endl;
     oss << "Directory Listing: " << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
-    oss << "Locations: " << std::endl;
-    for ( size_t i = 0; i < this->locations.size(); ++i )
-    {
-        for ( std::map<std::string, std::string>::const_iterator it = this->locations[i].begin(); it != this->locations[i].end(); ++it )
-            oss << "    " << it->first << " -> " << it->second << std::endl;
-    }
 
-    if ( !this->nested_servers.empty() )
+    oss << "Locations: ";
+    for (Locations::const_iterator it = locations.begin(); it != locations.end(); ++it)
     {
-        oss << "Nested Servers: " << std::endl;
-        for (size_t i = 0; i < this->nested_servers.size(); ++i)
+        oss << std::endl << "    " << it->first << ": ";
+        const Location& loc = it->second;
+        for (Location::const_iterator locIt = loc.begin(); locIt != loc.end(); ++locIt)
         {
-            oss << "  Nested Server " << i + 1 << ": " << std::endl;
-            oss << this->nested_servers[i].toString();
+            oss << std::endl << "        " << locIt->first << ": ";
+            for (size_t j = 0; j < locIt->second.size(); ++j)
+                oss << locIt->second[j] << " ";
         }
     }
+    oss << std::endl;
+
+    oss << "Redirects: ";
+    for ( Redirects::const_iterator it = this->redirects.begin(); it != this->redirects.end(); ++it )
+        oss << std::endl << "    " << it->first << " -> " << it->second.first << " " << it->second.second;
 
     return ( oss.str() );
 
@@ -145,7 +147,14 @@ void    ConfigData::setClientMaxBodySize( size_t client_max_body_size ) { this->
 Locations ConfigData::getLocations( void ) const { return ( this->locations ); }
 void ConfigData::setLocations( Locations locations )
 {
-    this->locations.insert( this->locations.end(), locations.begin(), locations.end() );
+    this->locations.insert( std::make_pair( locations.begin()->first, locations.begin()->second ) );
+    return ;
+}
+
+Redirects ConfigData::getRedirects( void ) const { return ( this->redirects ); }
+void ConfigData::setRedirects( Redirects redirects )
+{
+    this->redirects.insert( redirects.begin(), redirects.end() );
     return ;
 }
 

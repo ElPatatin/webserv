@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:04:21 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 19:31:09 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ class ConfigData;
 typedef unsigned short Port;
 typedef std::vector< std::string > ServerNames;
 typedef std::map< int, std::string > ErrorPages;
-typedef std::vector< std::map< std::string, std::string > > Locations;
+typedef std::map< std::string, std::vector< std::string > > Location;
+typedef std::map< std::string, Location > Locations;
+typedef std::map< std::string, std::pair< unsigned short, std::string > > Redirects;
 typedef std::vector< ConfigData > NestedServers;
 
 
@@ -46,7 +48,8 @@ class ConfigData
         ServerNames     server_names;
         ErrorPages      error_pages;
         size_t          client_max_body_size;
-        Locations       locations;              // Each location is a map of settings
+        Locations       locations;              // Each location is a vector of settings
+        Redirects       redirects;              // Each redirect is a map of settings
         NestedServers   nested_servers;         // Nested servers if any
         bool            is_directory_listing;   // If directory listing is enabled
 
@@ -86,6 +89,9 @@ class ConfigData
 
         Locations       getLocations( void ) const;
         void            setLocations( Locations );
+
+        Redirects       getRedirects( void ) const;
+        void            setRedirects( Redirects redirects );
 
         NestedServers   getNestedServers( void ) const;
         void            setNestedServers( NestedServers nested_servers );

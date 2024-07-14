@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:17 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 18:56:57 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 19:29:08 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,15 @@ void ConfigParser::parseComment( std::string * line )
 
 bool ConfigParser::parsePort( std::string line, ConfigData *config )
 {
+    static volatile bool already_parsed = false;
+
+    if ( already_parsed )
+    {
+        std::cerr << "Error: 'port' directive already parsed" << std::endl;
+        LOG( ERROR ) << "'port' directive already parsed";
+        return ( false );
+    }
+
     parseLine( &line, "'port' directive without port number" );
     if ( line.empty() )
         return ( false );
@@ -152,6 +161,93 @@ bool ConfigParser::parseClientMaxBodySize( std::string line, ConfigData *config 
 
     config->setClientMaxBodySize( size );
     LOG( INFO ) << "Successfully parsed client max body size: " << config->getClientMaxBodySize();
+    return ( true );
+}
+
+bool ConfigParser::parseLocations( std::fstream * config_file, std::string line, ConfigData *config )
+{
+    UNUSED(config);
+    std::vector< std::string > location = ft::split( line, " " );
+    if ( location.size() != 3 )
+    {
+        std::cerr << "Error: 'location' directive with invalid number of arguments" << std::endl;
+        LOG( ERROR ) << "'location' directive with invalid number of arguments";
+        return ( false );
+    }
+    std::string endpoint = location[1];    
+
+    std::vector< std::string > settings;
+    while ( std::getline( *config_file, line ) )
+    {
+        if ( line.find( "}" ) != std::string::npos )
+            break ;
+        ft::trim( line );
+        if ( line[0] == '#' || line.empty() )
+            continue ;
+        ConfigParser::parseComment( &line );
+
+        settings.push_back( line );
+    }
+
+    if ( settings.empty() )
+    {
+        std::cerr << "Error: 'location' directive without settings" << std::endl;
+        LOG( ERROR ) << "'location' directive without settings";
+        return ( false );
+    }
+
+    if ( settings.size() == 1 && settings[0].find( "return" ) != std::string::npos )
+    {
+        if ( !ConfigParser::parseRedirect( endpoint, settings[0], config ) )
+            return ( false );
+    }
+    else
+    {
+        Locations   locations;
+        Location    loc;
+        std::vector< std::string > content;
+
+        for ( size_t i = 0; i < settings.size(); ++i )
+        {
+            content = ft::split( settings[i], " " );
+
+            // delete the ';' at the end of the line
+            content[content.size() - 1].erase( content[content.size() - 1].size() - 1 );
+
+            // Insert the content of the variables to a vector
+            std::vector< std::string > values;
+            for ( size_t j = 1; j < content.size(); ++j )
+                values.push_back( content[j] );
+
+            loc[content[0]] = values;            
+        }
+        locations.insert( std::make_pair( endpoint, loc ) );
+        config->setLocations( locations );
+    }
+
+    LOG( INFO ) << "Successfully parsed location: " << endpoint;
+    return ( true );
+}
+
+bool    ConfigParser::parseRedirect( std::string endpoint, std::string line, ConfigData *config )
+{
+    std::vector< std::string > redirect = ft::split( line, " " );
+
+    if ( redirect.size() != 3 )
+    {
+        std::cerr << "Error: 'return' directive with invalid number of arguments" << std::endl;
+        LOG( ERROR ) << "'return' directive with invalid number of arguments";
+        return ( false );
+    }
+
+    // delete the ';' at the end of the line
+    redirect[2].erase( redirect[2].size() - 1 );
+
+    Redirects redirects;
+    redirects[endpoint].first = ft::stoi( redirect[1] );
+    redirects[endpoint].second = redirect[2];
+
+    config->setRedirects( redirects );
     return ( true );
 }
 

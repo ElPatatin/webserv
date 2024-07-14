@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/09 16:31:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 16:19:04 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ namespace ft
     std::string     prettyPrint( std::string function, int line, std::string message );
     void            welcome( void );
     int             stoi( std::string str );
+    template < typename T >
+    std::string     itos( const T & value );
 };
 
 #endif

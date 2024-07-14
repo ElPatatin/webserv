@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   LoadConfig.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/06 11:59:40 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 15:20:48 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/14 15:36:53 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,7 @@ LoadConfig & LoadConfig::operator=( LoadConfig const & rhs ) { UNUSED(rhs); retu
 // MEMBER FUNCTIONS
 // ================
 
-
-/**
- * @brief Sets the config path to the given or the default one.
- * Opens the config file, reads it, and close it, if possible.
-*/
-void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
+bool    LoadConfig::parseConfigFile( int ac, char **av )
 {
     std::string     config_path;
     std::fstream *  config_file;
@@ -51,7 +46,32 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 
     config_file = ft::openFile( config_path, std::ios::in | std::ios::out );
     if ( !config_file )
-        throw ConfigFileException( "Error: could not open config file" );
+        throw ConfigFileException( "Error: could not open config file to parse." );
+    if ( !ConfigFileParser::parseConfigFile( config_file ) )
+        throw ConfigFileException( "Error: could not parse config file properly." );
+    ft::closeFile( config_file );
+
+    return ( true );
+}
+
+
+/**
+ * @brief Sets the config path to the given or the default one.
+ * Opens the config file, reads it, and close it, if possible.
+*/
+void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
+{
+    std::string     config_path;
+    std::fstream *  config_file;
+
+    if (ac == 1)
+        config_path = DEFAULT_CONF_PATH;
+    else
+        config_path = av[1];
+
+    config_file = ft::openFile( config_path, std::ios::in | std::ios::out );
+    if ( !config_file )
+        throw ConfigFileException( "Error: could not open config file to load." );
     readConfig( config_file, config );
     ft::closeFile( config_file );
 
@@ -61,8 +81,9 @@ void LoadConfig::loadConfig( int ac, char **av, ConfigData *config )
 /**
  * @brief Checks if the config file is properly structured.
 */
-bool LoadConfig::checkConfig( void )
+bool LoadConfig::checkConfig( ConfigData & config )
 {
+    UNUSED(config);
     return ( true );
 }
 
@@ -108,11 +129,11 @@ void LoadConfig::readConfig( std::fstream *config_file, ConfigData *config )
                 { LOG( ERROR ) << "Error parsing client max body size"; continue ; }
         }
 
-        // if ( line.find( "location" ) != std::string::npos )
-        // {
-        //     if ( !ConfigParser::parseLocation( line, config ) )
-        //         { LOG( ERROR ) << "Error parsing location"; continue ; }
-        // }
+        if ( line.find( "location" ) != std::string::npos )
+        {
+            if ( !ConfigParser::parseLocations( config_file, line, config ) )
+                { LOG( ERROR ) << "Error parsing location"; continue ; }
+        }
 
         if ( line.find( "directory_listing" ) != std::string::npos )
         {
