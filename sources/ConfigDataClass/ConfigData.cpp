@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 19:30:57 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/15 15:31:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,10 @@ ConfigData::ConfigData( )
     this->server_names.clear();
     this->error_pages.clear();
     this->client_max_body_size = 0;
+    this->is_directory_listing = false;
     this->locations.clear();
-    this->nested_servers.clear();
+    this->redirects.clear();
+    this->virtual_servers.clear();
 
     return ;
 }
@@ -48,7 +50,7 @@ ConfigData & ConfigData::operator=( ConfigData const & rhs )
         this->client_max_body_size = rhs.client_max_body_size;
         this->is_directory_listing = rhs.is_directory_listing;
         this->locations = rhs.locations;
-        this->nested_servers = rhs.nested_servers;
+        this->virtual_servers = rhs.virtual_servers;
     }
     return *this;
 }
@@ -67,7 +69,7 @@ void ConfigData::clear( void )
     this->error_pages.clear();
     this->client_max_body_size = 0;
     this->locations.clear();
-    this->nested_servers.clear();
+    this->virtual_servers.clear();
 }
 
 std::string ConfigData::toString( void ) const
@@ -158,10 +160,10 @@ void ConfigData::setRedirects( Redirects redirects )
     return ;
 }
 
-NestedServers ConfigData::getNestedServers( void ) const { return ( this->nested_servers ); }
-void ConfigData::setNestedServers( NestedServers nested_servers )
+VirtualServers ConfigData::getVirtualServers( void ) const { return ( this->virtual_servers ); }
+void ConfigData::setVirtualServers( VirtualServers nested_servers )
 {
-    this->nested_servers.insert( this->nested_servers.end(), nested_servers.begin(), nested_servers.end() );
+    UNUSED(nested_servers);
     return ;
 }
 

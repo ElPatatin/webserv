@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:58:24 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 15:00:08 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/15 16:10:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 class ConfigFileParser
 {
-    public:
+    public: 
         // MEMBER FUNCTIONS
         // ================
         static bool parseConfigFile( std::fstream * config_file );

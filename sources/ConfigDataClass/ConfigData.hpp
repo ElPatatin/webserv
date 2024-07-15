@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 19:31:09 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:48:59 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef std::map< int, std::string > ErrorPages;
 typedef std::map< std::string, std::vector< std::string > > Location;
 typedef std::map< std::string, Location > Locations;
 typedef std::map< std::string, std::pair< unsigned short, std::string > > Redirects;
-typedef std::vector< ConfigData > NestedServers;
+typedef std::vector< ConfigData > VirtualServers;
 
 
 /**
@@ -50,7 +50,7 @@ class ConfigData
         size_t          client_max_body_size;
         Locations       locations;              // Each location is a vector of settings
         Redirects       redirects;              // Each redirect is a map of settings
-        NestedServers   nested_servers;         // Nested servers if any
+        VirtualServers  virtual_servers;        // Each virtual server is a vector of settings
         bool            is_directory_listing;   // If directory listing is enabled
 
     public:
@@ -93,8 +93,8 @@ class ConfigData
         Redirects       getRedirects( void ) const;
         void            setRedirects( Redirects redirects );
 
-        NestedServers   getNestedServers( void ) const;
-        void            setNestedServers( NestedServers nested_servers );
+        VirtualServers   getVirtualServers( void ) const;
+        void            setVirtualServers( VirtualServers nested_servers );
 
         bool            getIsDirectoryListing( void ) const;
         void            setIsDirectoryListing( bool is_directory_listing );

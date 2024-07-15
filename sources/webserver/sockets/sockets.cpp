@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sockets.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/09 20:28:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/15 14:47:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,16 +161,12 @@ void    Sockets::receiveConnection( Data & data, ConfigData & config )
             }
         }
         else if ( bytes_read == 0 )
-            break ; // Connection closed
+            break ;
         else
         {
-            if ( errno == EAGAIN || errno == EWOULDBLOCK )
-                continue ; // Retry if temporarily unavailable
-            else
-            {
-                LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
-                throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
-            }
+            if ( errno == EAGAIN || errno == EWOULDBLOCK ) continue ;
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: " + std::string( std::strerror( errno ) ) );
+            throw SocketException( "Error: recv: " + std::string( std::strerror( errno ) ) );
         }
     }
 
