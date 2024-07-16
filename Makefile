@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/14 15:36:20 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/16 15:07:56 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,9 +83,9 @@ INC_DIR	:= ./includes/
 # Classes directories
 CNF_DIR	:= $(SRC_DIR)ConfigDataClass/
 LOG_DIR	:= $(SRC_DIR)LogClass/
-LCC_DIR	:= $(SRC_DIR)LoadConfigClass/
-CNP_DIR	:= $(LCC_DIR)ConfigParserClass/
-CFP_DIR	:= $(LCC_DIR)ConfigFileParserClass/
+
+# Config Parser directories
+CNP_DIR	:= $(SRC_DIR)config_parser/
 
 # Webserver directories
 WEB_DIR	:= $(SRC_DIR)webserver/
@@ -104,7 +104,7 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(LCC_DIR) -I$(CNP_DIR) -I$(CFP_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
@@ -117,12 +117,13 @@ SRCS	+= $(CNF_DIR)ConfigData.cpp
 # LogClass
 SRCS	+= $(LOG_DIR)Log.cpp
 
-# LoadConfigClass
-SRCS	+= $(LCC_DIR)LoadConfig.cpp
-# ConfigParserClass
-SRCS	+= $(CNP_DIR)ConfigParser.cpp
-# ConfigFileParserClass
-SRCS	+= $(CFP_DIR)ConfigFileParser.cpp
+# Config Parser
+SRCS	+= $(CNP_DIR)config_parse.cpp \
+		$(CNP_DIR)config_get.cpp \
+		$(CNP_DIR)config_validate.cpp \
+		$(CNP_DIR)config_server_count.cpp \
+		$(CNP_DIR)config_load.cpp \
+		$(CNP_DIR)config_load_validate.cpp
 
 # Webserver files
 SRCS	+= $(WEB_DIR)webserver.cpp \

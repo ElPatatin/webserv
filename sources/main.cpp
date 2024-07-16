@@ -6,13 +6,13 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 18:46:48 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/16 14:50:16 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "LoadConfig.hpp"
 #include "ConfigData.hpp"
 #include "webserver.hpp"
+#include "config_parser.hpp"
 
 /**
  * @brief If the arguments are adequate, checks if the config file is properly structured.
@@ -31,19 +31,22 @@ int main(int ac, char **av)
         if (ac < 1 || ac > 2)
             throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
-        if ( !LoadConfig::parseConfigFile( ac, av ) )
-            return ( 1 );
-
-        ConfigData config;
-        LoadConfig::loadConfig( ac, av, &config );
-
-        if ( !LoadConfig::checkConfig( config ) )
-            return ( 2 );
-
-        config.print();
+        config_parser( ac, av );
         return ( 0 );
-        // ft::welcome();
-        webserver( config );
+
+        // if ( !LoadConfig::parseConfigFile( ac, av ) )
+        //     return ( 1 );
+
+        // ConfigData config;
+        // LoadConfig::loadConfig( ac, av, &config );
+
+        // if ( !LoadConfig::checkConfig( config ) )
+        //     return ( 2 );
+
+        // config.print();
+        // return ( 0 );
+        // // ft::welcome();
+        // webserver( config );
     }
     catch( BadArrgumentsException & e ) { std::cerr << e.what() << std::endl; return ( 1 ); }
     catch( ConfigFileException & e ) { std::cerr << e.what() << std::endl; return ( 2 ); }
