@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/15 15:31:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 20:30:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ ConfigData & ConfigData::operator=( ConfigData const & rhs )
         this->error_pages = rhs.error_pages;
         this->client_max_body_size = rhs.client_max_body_size;
         this->is_directory_listing = rhs.is_directory_listing;
+        this->redirects = rhs.redirects;
         this->locations = rhs.locations;
         this->virtual_servers = rhs.virtual_servers;
     }
@@ -93,12 +94,12 @@ std::string ConfigData::toString( void ) const
     oss << "Client Max Body Size: " << this->client_max_body_size << std::endl;
     oss << "Directory Listing: " << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
 
-    oss << "Locations: ";
-    for (Locations::const_iterator it = locations.begin(); it != locations.end(); ++it)
+    oss << "Locations: " << this->locations.size();
+    for ( Locations::const_iterator it = locations.begin(); it != locations.end(); ++it )
     {
         oss << std::endl << "    " << it->first << ": ";
         const Location& loc = it->second;
-        for (Location::const_iterator locIt = loc.begin(); locIt != loc.end(); ++locIt)
+        for ( Location::const_iterator locIt = loc.begin(); locIt != loc.end(); ++locIt )
         {
             oss << std::endl << "        " << locIt->first << ": ";
             for (size_t j = 0; j < locIt->second.size(); ++j)
@@ -107,9 +108,24 @@ std::string ConfigData::toString( void ) const
     }
     oss << std::endl;
 
-    oss << "Redirects: ";
-    for ( Redirects::const_iterator it = this->redirects.begin(); it != this->redirects.end(); ++it )
-        oss << std::endl << "    " << it->first << " -> " << it->second.first << " " << it->second.second;
+    // oss << this->redirects.size() << std::endl;
+    oss << "Redirects: " << this->redirects.size();
+    for (Redirects::const_iterator it = this->redirects.begin(); it != this->redirects.end(); ++it)
+    {
+        oss << std::endl << "    " << it->first << ": ";
+        oss << it->second.first << " -> " << it->second.second;
+    }
+    
+    oss << std::endl;
+
+    oss << "Virtual Servers: " << this->virtual_servers.size();
+    for ( size_t i = 0; i < this->virtual_servers.size(); ++i )
+    {
+        oss << std::endl << "    Virtual Server " << i << ":";
+        oss << this->virtual_servers[i].toString();
+    }
+
+    oss << std::endl;
 
     return ( oss.str() );
 
@@ -160,10 +176,15 @@ void ConfigData::setRedirects( Redirects redirects )
     return ;
 }
 
-VirtualServers ConfigData::getVirtualServers( void ) const { return ( this->virtual_servers ); }
-void ConfigData::setVirtualServers( VirtualServers nested_servers )
+VirtualServers ConfigData::getVirtualServers( void ) const
 {
-    UNUSED(nested_servers);
+    // if ( this->virtual_servers.empty() )
+    //     return ( VirtualServers( 1, ConfigData() ) );
+    return ( this->virtual_servers );
+}
+void ConfigData::setVirtualServers( ConfigData virtual_servers )
+{
+    this->virtual_servers.insert( this->virtual_servers.end(), virtual_servers );
     return ;
 }
 

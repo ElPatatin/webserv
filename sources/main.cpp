@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/16 14:50:16 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 19:15:28 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,15 @@ int main(int ac, char **av)
         if (ac < 1 || ac > 2)
             throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
-        config_parser( ac, av );
+        Cluster cluster;
+
+        config_parser( ac, av, cluster );
+
+        for ( size_t i = 0; i < cluster.n_servers; ++i )
+        {
+            cluster.config_data[ i ].print();
+            // webserver( cluster.config_data[ i ] );
+        }
         return ( 0 );
 
         // if ( !LoadConfig::parseConfigFile( ac, av ) )

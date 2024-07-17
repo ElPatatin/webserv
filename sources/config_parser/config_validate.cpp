@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:52:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/16 15:51:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 15:14:51 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,5 @@ static int  getEndOfBlock( ConfigFile & config )
         }
     }
 
-    std::cout << "char_count: " << char_count << std::endl;
     return ( char_count );
 }

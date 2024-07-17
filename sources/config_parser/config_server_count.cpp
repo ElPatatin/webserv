@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:53:20 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/16 17:03:33 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 14:29:04 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ size_t config_server_count( ConfigFile config )
 
 static void check_port( const ConfigFile & config, ConfigFile::iterator & it, std::vector < std::string > & tokens, size_t & n_servers )
 {
-    std::vector < std::string > ports;
-    std::string                 current_port;
-    int                         bracket_level = 1;
+    static std::vector < std::string >  ports;
+    std::string                         current_port;
+    int                                 bracket_level = 1;
 
     while ( it != config.end() )
     {

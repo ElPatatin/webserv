@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 16:11:55 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/16 16:56:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 19:16:43 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,23 @@
 
 static std::fstream * get_file( int ac, char **av );
 
-
-void    config_parser( int ac, char **av )
+void    config_parser( int ac, char **av, Cluster & cluster )
 {
     std::fstream *  config_file;
     ConfigFile      config;
-    size_t          n_servers;
 
     config_file = get_file( ac, av );
     config = conf_get( config_file );
     ft::closeFile( config_file );
     if ( !config_validate( config ) )
         throw ConfigFileException( "Error: config file is not properly structured." );
-    n_servers = config_server_count( config );
-    if ( n_servers == 0 )
+    cluster.n_servers = config_server_count( config );
+    if ( cluster.n_servers == 0 )
         throw ConfigFileException( "Error: no servers found in config file." );
-    std::cout << "Number of servers: " << n_servers << std::endl;
-    return ;
-    ConfigData* config_data = new ConfigData[ n_servers ];
-    config_load( config, config_data );
-    if ( !config_load_validate( config_data ) )
-        throw ConfigFileException( "Error: config data is not ok." );
+    cluster.config_data = new ConfigData[ cluster.n_servers ];
+    config_load( config, cluster.config_data, cluster.n_servers );
+    if ( !config_load_validate( cluster.config_data ) )
+        throw ConfigFileException( "Error: config data is bad." );
     return ;
 }
 

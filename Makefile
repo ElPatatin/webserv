@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/16 15:07:56 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/17 18:08:12 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -123,6 +123,7 @@ SRCS	+= $(CNP_DIR)config_parse.cpp \
 		$(CNP_DIR)config_validate.cpp \
 		$(CNP_DIR)config_server_count.cpp \
 		$(CNP_DIR)config_load.cpp \
+		$(CNP_DIR)config_load_utils.cpp \
 		$(CNP_DIR)config_load_validate.cpp
 
 # Webserver files

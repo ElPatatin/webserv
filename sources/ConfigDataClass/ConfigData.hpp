@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/16 15:07:25 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 18:19:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ class ConfigData
         Redirects       getRedirects( void ) const;
         void            setRedirects( Redirects redirects );
 
-        VirtualServers   getVirtualServers( void ) const;
-        void            setVirtualServers( VirtualServers nested_servers );
+        VirtualServers  getVirtualServers( void ) const;
+        void            setVirtualServers( ConfigData virtual_servers );
 
         bool            getIsDirectoryListing( void ) const;
         void            setIsDirectoryListing( bool is_directory_listing );

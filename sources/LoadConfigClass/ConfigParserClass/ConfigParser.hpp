@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 12:08:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 16:12:28 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 17:21:38 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ class ConfigParser
         static bool parseLocations( std::fstream * config_file, std::string line, ConfigData *config );
         static bool parseRedirect( std::string endpoint, std::string line, ConfigData *config );
         static bool parseDirectoryListing( std::string line, ConfigData *config );
-        static bool parseNestedServer( std::string line, ConfigData *config );
 
     private:
         // CONSTRUCTORS AND DESTRUCTOR
