@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 18:19:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/17 23:40:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ class ConfigData
         void            print( void ) const;
         void            clear( void );
         std::string     toString( void ) const;
+        bool            isEmpty( void ) const;
 
         // ACCESSORS
         // =========
@@ -94,7 +95,7 @@ class ConfigData
         void            setRedirects( Redirects redirects );
 
         VirtualServers  getVirtualServers( void ) const;
-        void            setVirtualServers( ConfigData virtual_servers );
+        void            setVirtualServers( VirtualServers virtual_servers );
 
         bool            getIsDirectoryListing( void ) const;
         void            setIsDirectoryListing( bool is_directory_listing );

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_load.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:57:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 20:35:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 01:10:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ void    config_load( const ConfigFile & config, ConfigData * config_data, size_t
     info.line_num = 0;
 
     // print config file with line numbers
-    for ( size_t i = 0; i < config.size(); ++i )
-        std::cout << i << ": " << config[ i ] << std::endl;
+    // for ( size_t i = 0; i < config.size(); ++i )
+    //     std::cout << i << ": " << config[ i ] << std::endl;
 
     for ( size_t i = 0; i < n_servers; ++i )
         config_select_server_load( config, &config_data[ i ], info );
@@ -37,8 +37,9 @@ static void config_select_server_load( const ConfigFile & config, ConfigData * c
 {
     info.is_virtual = false;
     size_t bracket_level = 0;
+    std::vector < ConfigData > virtual_servers;
+    ConfigData *current_config_data = config_data;
 
-    std::cout << info.line_num << std::endl;
     for ( size_t i = info.line_num; i < config.size(); ++i )
     {
         if ( config[ i ].find( "{" ) != std::string::npos )
@@ -48,19 +49,31 @@ static void config_select_server_load( const ConfigFile & config, ConfigData * c
 
         if ( bracket_level == 0 )
         {
+            if ( i == config.size() - 1 )
+                break ;
             get_server_info( config, i, info );
-            if ( info.is_virtual )
+            if ( info.is_virtual == true )
             {
-                if ( config_data->getVirtualServers().empty() )
-                    config_data->setVirtualServers( ConfigData() );
+                virtual_servers.push_back( ConfigData() );
+                current_config_data = &virtual_servers.back();
+                info.is_virtual = false;
+            }
+            else
+            {
+                current_config_data = config_data;
+                return ;
             }
         }
-
-        config_checking( config[ i ], *config_data, i, config );
+        else
+            config_checking( config[ i ], *current_config_data, i, config );
     }
+
+    if ( !virtual_servers.empty() )
+        config_data->setVirtualServers( virtual_servers );
 
     return ;
 }
+
 
 
 static void   get_server_info( const ConfigFile & config, size_t line_num, InfoServer & info )
@@ -69,7 +82,11 @@ static void   get_server_info( const ConfigFile & config, size_t line_num, InfoS
     {
         std::vector < std::string > tokens = ft::split( *it, " " );
         if ( tokens.size() == 2 && tokens[ 0 ] == "server" && tokens[ 1 ] == "{" )
+        {
             get_server_info1( config, ++it, line_num, info );
+            if ( info.is_virtual == false )
+                break ;
+        }
     }
 
     return ;
@@ -94,7 +111,7 @@ static void get_server_info1( const ConfigFile & config, ConfigFile::const_itera
             if ( std::find( ports.begin(), ports.end(), current_port ) == ports.end() )
             {
                 ports.push_back( current_port );
-                info.line_num = line_num;
+                info.line_num = ++line_num;
                 info.is_virtual = false;
                 break ;
             }

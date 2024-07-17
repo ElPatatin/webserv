@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 20:30:17 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 00:56:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,58 +77,64 @@ std::string ConfigData::toString( void ) const
 {
     std::ostringstream oss;
 
-    oss << "Configuration Data:" << std::endl;
-    oss << "Port: " << this->port << std::endl;
-    oss << "Host: " << this->host << std::endl;
+    // Add separator at the beginning
+    oss << YELLOW << "----------------------------------------" << RESET << std::endl;
 
-    oss << "Server Names: ";
-    for (size_t i = 0; i < this->server_names.size(); ++i)
-        oss << this->server_names[i] << " ";
+    oss << GREEN << "Configuration Data:" << RESET << std::endl;
+    oss << BLUE << "Port: " << RESET << this->port << std::endl;
+    oss << BLUE << "Host: " << RESET << this->host << std::endl;
+
+    oss << BLUE << "Server Names: " << RESET;
+    for ( size_t i = 0; i < this->server_names.size(); ++i )
+        oss << this->server_names[ i ] << " ";
     oss << std::endl;
 
-    oss << "Error Pages: ";
-    for (std::map<int, std::string>::const_iterator it = this->error_pages.begin(); it != this->error_pages.end(); ++it)
+    oss << BLUE << "Error Pages: " << RESET;
+    for ( std::map<int, std::string>::const_iterator it = this->error_pages.begin(); it != this->error_pages.end(); ++it )
         oss << it->first << " -> " << it->second << " ";
     oss << std::endl;
 
-    oss << "Client Max Body Size: " << this->client_max_body_size << std::endl;
-    oss << "Directory Listing: " << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
+    oss << BLUE << "Client Max Body Size: " << RESET << this->client_max_body_size << std::endl;
+    oss << BLUE << "Directory Listing: " << RESET << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
 
-    oss << "Locations: " << this->locations.size();
+    oss << BLUE << "Locations: " << RESET << this->locations.size();
     for ( Locations::const_iterator it = locations.begin(); it != locations.end(); ++it )
     {
-        oss << std::endl << "    " << it->first << ": ";
+        oss << std::endl << "    " << CYAN << it->first << RESET << ": ";
         const Location& loc = it->second;
         for ( Location::const_iterator locIt = loc.begin(); locIt != loc.end(); ++locIt )
         {
-            oss << std::endl << "        " << locIt->first << ": ";
-            for (size_t j = 0; j < locIt->second.size(); ++j)
-                oss << locIt->second[j] << " ";
+            oss << std::endl << "        " << CYAN << locIt->first << RESET << ": ";
+            for ( size_t j = 0; j < locIt->second.size(); ++j )
+                oss << locIt->second[ j ] << " ";
         }
     }
     oss << std::endl;
 
-    // oss << this->redirects.size() << std::endl;
-    oss << "Redirects: " << this->redirects.size();
-    for (Redirects::const_iterator it = this->redirects.begin(); it != this->redirects.end(); ++it)
+    oss << BLUE << "Redirects: " << RESET << this->redirects.size();
+    for ( Redirects::const_iterator it = this->redirects.begin(); it != this->redirects.end(); ++it )
     {
-        oss << std::endl << "    " << it->first << ": ";
+        oss << std::endl << "    " << CYAN << it->first << RESET << ": ";
         oss << it->second.first << " -> " << it->second.second;
     }
     
     oss << std::endl;
 
-    oss << "Virtual Servers: " << this->virtual_servers.size();
+    oss << BLUE << "Virtual Servers: " << RESET << this->virtual_servers.size();
     for ( size_t i = 0; i < this->virtual_servers.size(); ++i )
     {
-        oss << std::endl << "    Virtual Server " << i << ":";
-        oss << this->virtual_servers[i].toString();
+        oss << std::endl << "    " << CYAN << "Virtual Server " << i + 1 << ":" << RESET << std::endl;
+        oss << this->virtual_servers[ i ].toString();
     }
 
     oss << std::endl;
 
     return ( oss.str() );
+}
 
+bool ConfigData::isEmpty( void ) const
+{
+    return ( this->port == 0 && this->host.empty() && this->server_names.empty() && this->error_pages.empty() && this->client_max_body_size == 0 && this->locations.empty() && this->redirects.empty() && this->virtual_servers.empty() && this->is_directory_listing == false );
 }
 
 // ACCESSORS
@@ -182,9 +188,10 @@ VirtualServers ConfigData::getVirtualServers( void ) const
     //     return ( VirtualServers( 1, ConfigData() ) );
     return ( this->virtual_servers );
 }
-void ConfigData::setVirtualServers( ConfigData virtual_servers )
+void ConfigData::setVirtualServers( VirtualServers virtual_servers )
 {
-    this->virtual_servers.insert( this->virtual_servers.end(), virtual_servers );
+    this->virtual_servers.insert( this->virtual_servers.end(), virtual_servers.begin(), virtual_servers.end() );
+    // this->virtual_servers.push_back( virtual_servers );
     return ;
 }
 
