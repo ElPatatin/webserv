@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 15:27:35 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 19:34:12 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static bool runServer( Data & data, EpollData & epoll, ConfigData & config );
 static bool stopServer( Data & data, EpollData & epoll );
 
 //  Sets up the signals for the servers and manages the webserver.
-void    webserver( ConfigData &config )
+void    webserver( Cluster & cluster )
 {
     Addrs       addrs;
     Data        data;
@@ -29,10 +29,10 @@ void    webserver( ConfigData &config )
     std::signal( SIGINT, signalHandler );
     std::signal( SIGQUIT, signalHandler );
 
-    if ( !startServer( config, addrs, data ) )
+    if ( !startServer( cluster.config_data[ 0 ], addrs, data ) )
         return ;
 
-    if ( !runServer( data, epoll, config ) )
+    if ( !runServer( data, epoll, cluster.config_data[ 0 ] ) )
         return ;
 
     if ( !stopServer( data, epoll ) )

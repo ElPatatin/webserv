@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Exceptions.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 18:32:06 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 19:08:59 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,17 @@ class DirectoryListingException : public std::exception
         DirectoryListingException( std::string const & message )
             : msg( message ) { return ; }
         ~DirectoryListingException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class ForkException : public std::exception
+{
+    public:
+        ForkException( std::string const & message )
+            : msg( message ) { return ; }
+        ~ForkException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:22:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 19:16:44 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:04:23 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ typedef enum e_dict_size
     KILO = 'K',
     MEGA = 'M',
 }   DictSize;
-
-typedef struct s_cluster
-{
-    ConfigData *    config_data;
-    size_t          n_servers;
-}                   Cluster;
-
 typedef struct s_info_server
 {
     size_t  line_num;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/09 19:54:57 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:04:44 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ namespace g_signal { extern volatile sig_atomic_t g_signal_status; }
 void    signalHandler( int signum );
 
 // Webserver
-void    webserver( ConfigData &config );
+void    webserver( Cluster & cluster );
 
 namespace Sockets
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 23:40:39 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:07:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@
 
 // Forward declaration of ConfigData class for the typedef
 class ConfigData;
+
+typedef struct s_cluster
+{
+    ConfigData *    config_data;
+    size_t          n_servers;
+}                   Cluster;
 
 typedef unsigned short Port;
 typedef std::vector< std::string > ServerNames;
