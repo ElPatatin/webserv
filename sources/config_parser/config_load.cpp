@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:57:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 10:25:06 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:54:29 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,26 +67,45 @@ static void config_setup_servers( const ConfigFile & config, std::vector < Confi
     return ;
 }
 
+// Takes the current server configuration and loads it into the ConfigData object.
 static void config_select_server_load( const ConfigFile & config, ConfigData * config_data )
 {
     ConfigData  current_config;
+    ConfigData  primary_config;
     size_t  brackets = 0;
     VirtualServers  virtual_servers;
 
+    // 
     for ( size_t i = 0; i < config.size(); ++i )
     {
         if ( config[ i ].find( "{" ) != std::string::npos )
             ++brackets;
-        if ( config[ i ].find( "}" ) != std::string::npos )
+        else if ( config[ i ].find( "}" ) != std::string::npos )
             --brackets;
         
-        if ( brackets == 0 && config.size() - 1 == i )
+        if  ( brackets )
+        {
+            config_checking( config[ i ], current_config, i, config );
+            continue ;
+        }
+
+        if ( primary_config.isEmpty() )
+            primary_config = current_config;
+        else
+        {
+            virtual_servers.push_back( ConfigData() );
+            virtual_servers.back() = current_config;
+        }
+
+        current_config.clear();
+        if ( config.size() - 1 == i )
             break ;
-        
-        config_checking( config[ i ], current_config, i, config );
     }
 
-    *config_data = current_config;
+    if ( !virtual_servers.empty() )
+        primary_config.setVirtualServers( virtual_servers );
+
+    *config_data = primary_config;
     return ;
 }
 

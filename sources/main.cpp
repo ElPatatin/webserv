@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 19:15:28 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 12:58:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int ac, char **av)
         for ( size_t i = 0; i < cluster.n_servers; ++i )
         {
             cluster.config_data[ i ].print();
-            // webserver( cluster.config_data[ i ] );
+            webserver( cluster.config_data[ i ] );
         }
         return ( 0 );
 
