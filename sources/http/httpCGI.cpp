@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   httpCGI.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: pramos-m <pramos-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:32:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:46:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 15:47:13 by pramos-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,17 +85,7 @@ void Http::executeCGI( const std::string & scriptPath, const std::string & query
             return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
         }
         else
-        {
-            LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "CGI script executed successfully" );
-            std::ostringstream header_stream;
-            header_stream << "HTTP/1.1 200 OK\r\n"
-                        << "Content-Length: " << response_stream.str().length() << "\r\n"
-                        << "Content-Type: text/html\r\n"
-                        << "\r\n"
-                        << response_stream.str();
-            data.response = header_stream.str();
-        }
+            data.response = response_stream.str();
     }
-
     return ;
 }
