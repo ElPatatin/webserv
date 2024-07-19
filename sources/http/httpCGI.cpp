@@ -6,7 +6,7 @@
 /*   By: pramos-m <pramos-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:32:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 14:56:00 by pramos-m         ###   ########.fr       */
+/*   Updated: 2024/07/19 19:36:34 by pramos-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,14 @@
 char **createCGIEnvironment(const std::string &scriptPath, const std::string &queryString, Data &data, ConfigData &config, HttpData &http);
 void Http::executeCGI( const std::string & scriptPath, const std::string & queryString, std::ostringstream & response_stream, Data & data, ConfigData & config, HttpData & http )
 {
-    std::system("ls -l >test.txt");// en vez de ls poner todo el http literal
+    std::system("html/cgi-bin/list-files.py \"HTTP /1.1 GET \r\n\" > tmp.txt");
+    
+    // 1.path 2. httpresponse(argument y redireccion a archivo, que todos los prints de py van a stdout y en consecuencia al file.)
+    // En el py, con py y su libreria cgi hay que usar la libreria para parsear el http (lo hace solo)
+    // Despues hay que devolver la response del gci. 
+    
+    // en vez de ls poner el path del script
+   
     // LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Executing CGI script" );
 
     // int pipe_fd[ 2 ];
