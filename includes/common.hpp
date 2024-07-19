@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/27 14:56:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/11 21:15:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 00:28:51 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include <algorithm>
 # include <exception>
 # include <vector>
+
+# include "colors.hpp"
 
 # define UNUSED(x) (void)(x)
 

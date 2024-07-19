@@ -176,3 +176,11 @@ int    ft::stoi( std::string str )
     ss >> i;
     return ( i );
 }
+
+template< typename T >
+std::string ft::itos( const T & value )
+{
+    std::ostringstream oss;
+    oss << value;
+    return ( oss.str() );
+}

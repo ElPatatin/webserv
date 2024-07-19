@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/07 19:04:21 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/18 18:07:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,19 @@
 // Forward declaration of ConfigData class for the typedef
 class ConfigData;
 
+typedef struct s_cluster
+{
+    ConfigData *    config_data;
+    size_t          n_servers;
+}                   Cluster;
+
 typedef unsigned short Port;
 typedef std::vector< std::string > ServerNames;
 typedef std::map< int, std::string > ErrorPages;
-typedef std::vector< std::map< std::string, std::string > > Locations;
-typedef std::vector< ConfigData > NestedServers;
+typedef std::map< std::string, std::vector< std::string > > Location;
+typedef std::map< std::string, Location > Locations;
+typedef std::map< std::string, std::pair< unsigned short, std::string > > Redirects;
+typedef std::vector< ConfigData > VirtualServers;
 
 
 /**
@@ -46,8 +54,9 @@ class ConfigData
         ServerNames     server_names;
         ErrorPages      error_pages;
         size_t          client_max_body_size;
-        Locations       locations;              // Each location is a map of settings
-        NestedServers   nested_servers;         // Nested servers if any
+        Locations       locations;              // Each location is a vector of settings
+        Redirects       redirects;              // Each redirect is a map of settings
+        VirtualServers  virtual_servers;        // Each virtual server is a vector of settings
         bool            is_directory_listing;   // If directory listing is enabled
 
     public:
@@ -66,6 +75,7 @@ class ConfigData
         void            print( void ) const;
         void            clear( void );
         std::string     toString( void ) const;
+        bool            isEmpty( void ) const;
 
         // ACCESSORS
         // =========
@@ -87,8 +97,11 @@ class ConfigData
         Locations       getLocations( void ) const;
         void            setLocations( Locations );
 
-        NestedServers   getNestedServers( void ) const;
-        void            setNestedServers( NestedServers nested_servers );
+        Redirects       getRedirects( void ) const;
+        void            setRedirects( Redirects redirects );
+
+        VirtualServers  getVirtualServers( void ) const;
+        void            setVirtualServers( VirtualServers virtual_servers );
 
         bool            getIsDirectoryListing( void ) const;
         void            setIsDirectoryListing( bool is_directory_listing );
