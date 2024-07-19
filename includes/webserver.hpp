@@ -3,89 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 18:04:44 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/19 20:02:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef WEBSERVER_HPP
 # define WEBSERVER_HPP
 
-# include "common.hpp"
-# include "ConfigData.hpp"
-# include "Exceptions.hpp"
-# include "Log.hpp"
-# include "utils.hpp"
+# include "sockets.hpp"
+# include "epoll.hpp"
+# include "signals.hpp"
 
-# include <csignal>
-# include <netdb.h>
-# include <sys/epoll.h>
-# include <fcntl.h>
+typedef struct s_server_data {
+    Addrs addrs;
+    Data data;
+    ConfigData * config;
+}   ServerData;
 
-# define UNUSED(x) (void)(x)
+typedef std::map < int, ServerData > Servers;
 
-# define MAX_EVENTS 64
-# define BACKLOG 10
-# define TIMEOUT 300000
-
-typedef struct addrinfo     AddrInfo;
-typedef struct sockaddr_in  SockAddrIn;
-typedef struct sockaddr     SockAddr;
-typedef struct epoll_event  EpollEvent;
-
-typedef struct s_addrs
-{
-    AddrInfo    *result;
-    AddrInfo    *rp;
-}   Addrs;
-
-typedef struct s_data
-{
-    int         listen_sock;
-    int         conn_sock;
-    int         conn_fd;
-    SockAddrIn  addr;
-    size_t      addr_len;
-    std::string response;
-}   Data;
-
-typedef struct s_epoll
-{
-    int         epoll_fd;
-    int         nfds;
-    EpollEvent  event;
-    EpollEvent  events[ MAX_EVENTS ];
-}   EpollData;
-
-namespace g_signal { extern volatile sig_atomic_t g_signal_status; }
-
-// Signals
-void    signalHandler( int signum );
-
-// Webserver
+/**
+ * @brief Function to create a web server
+ * 
+ * @param cluster
+ * @return void
+ */
 void    webserver( Cluster & cluster );
 
-namespace Sockets
+namespace WebServer
 {
-    Addrs   resolveHostToIp( int domain, int type, std::string host );
-    int     createSocket( AddrInfo *rp );
-    void    bindSocket( Data *data, ConfigData & config );
-    void    listenConnection( Data & data, int backlog );
-    void    acceptConnection( Data & data );
-    void    setSocketBlockingMode( int sockfd, bool blocking );
-    void    receiveConnection( Data & data, ConfigData & config );
-    bool    headersReceived( const std::string & request, int & content_length );
-    void    sendConnection( Data & data );
-    void    closeConnection( int fd, std::string function, int line );
-}
+    bool start_server( ConfigData & config, Servers & servers );
+    bool run_server( Servers & servers );
+    bool stop_server( Servers & servers );
 
-namespace Epoll
-{
-    void    createEpoll( EpollData & epoll );
-    void    addEpoll( EpollData & epoll, int sock, int events );
-    void    waitEpoll( EpollData & epoll );
+    bool    run_server_loop( Servers & servers, EpollData & epoll, std::map < int, ServerData * > & connection_to_server_map );
+    void    handle_new_connection( int event_fd, Servers & servers, EpollData & epoll, std::map < int, ServerData * > & connection_to_server_map );
+    void    handle_existing_connection( int event_fd, std::map < int, ServerData * > & connection_to_server_map );
+    void    add_listening_sockets_to_epoll( Servers & servers, EpollData & epoll );
 }
 
 #endif

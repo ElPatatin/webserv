@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signals.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/06/27 19:04:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/19 19:05:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "webserver.hpp"
-#include "colors.hpp"
+#include "signals.hpp"
 
 void    signalHandler( int signum )
 {

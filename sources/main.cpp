@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 18:03:26 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/19 16:41:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,29 +32,15 @@ int main(int ac, char **av)
             throw BadArrgumentsException( "Usage: ./webserv [config_file]" );
 
         Cluster cluster;
-
         config_parser( ac, av, cluster );
+
+        // // ft::welcome();
         webserver( cluster );
         return ( 0 );
-
-        // if ( !LoadConfig::parseConfigFile( ac, av ) )
-        //     return ( 1 );
-
-        // ConfigData config;
-        // LoadConfig::loadConfig( ac, av, &config );
-
-        // if ( !LoadConfig::checkConfig( config ) )
-        //     return ( 2 );
-
-        // config.print();
-        // return ( 0 );
-        // // ft::welcome();
-        // webserver( config );
     }
     catch( BadArrgumentsException & e ) { std::cerr << e.what() << std::endl; return ( 1 ); }
     catch( ConfigFileException & e ) { std::cerr << e.what() << std::endl; return ( 2 ); }
     catch( std::exception & e ) { std::cerr << e.what() << std::endl; return ( 3 ); }
-    
 
     return ( 0 );
 }
