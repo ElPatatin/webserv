@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/19 20:04:11 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/20 11:40:00 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -129,7 +129,9 @@ SRCS	+= $(CNP_DIR)config_parse.cpp \
 # Webserver files
 SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)signals.cpp \
-		$(WEB_DIR)server.cpp \
+		$(WEB_DIR)webserver_start.cpp \
+		$(WEB_DIR)webserver_run.cpp \
+		$(WEB_DIR)webserver_stop.cpp \
 		$(WEB_DIR)sockets_comm.cpp \
 		$(WEB_DIR)sockets_conn.cpp \
 		$(WEB_DIR)epoll.cpp

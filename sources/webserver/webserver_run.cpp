@@ -1,52 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   server.cpp                                         :+:      :+:    :+:   */
+/*   webserver_run.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/19 19:46:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 20:03:11 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/07/20 11:38:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
-
-// Starts the server and binds the socket.
-bool WebServer::start_server( ConfigData & config, Servers & servers )
-{
-    LOG( INFO ) << "Starting server";
-    std::cout << "Starting server" << std::endl;
-    ServerData server_data;
-    server_data.config = &config;
-
-    try
-    {
-        // AF_INET: IPv4, SOCK_STREAM: TCP
-        server_data.addrs = ConectionSockets::resolveHostToIp( AF_INET, SOCK_STREAM, config.getHost() );
-
-        server_data.data.listen_sock = ConectionSockets::createSocket( server_data.addrs.rp );
-        ConectionSockets::bindSocket( &server_data.data, config );
-
-        if ( !server_data.addrs.rp )
-            throw ResolveHostException( "Error: failed to bind" );
-
-        freeaddrinfo( server_data.addrs.result );
-
-        ConectionSockets::listenConnection( server_data.data, BACKLOG );
-
-        servers[ server_data.data.listen_sock ] = server_data;
-    }
-    catch( ResolveHostException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
-    catch( SocketException & e ) { return ( std::cerr << e.what() << std::endl, false ); }
-    catch( ... ) { return ( std::cerr << "Error: unknown exception" << std::endl, false ); }
-
-    LOG( INFO ) << "Server started";
-    std::cout << "Server started" << std::endl;
-    return ( true );
-}
 
 // Runs the listen sockets and accepts the incoming connections.
 bool    WebServer::run_server( Servers & servers )
@@ -69,19 +35,6 @@ bool    WebServer::run_server( Servers & servers )
 
     LOG( INFO ) << "Servers stopped";
     std::cout << "Servers stopped" << std::endl;
-    return ( true );
-}
-
-// Stops the server and closes the connection.
-bool WebServer::stop_server( Servers & servers )
-{
-    LOG( INFO ) << "Stopping server";
-    
-    for ( Servers::iterator it = servers.begin(); it != servers.end(); ++it )
-    {
-        ConectionSockets::closeConnection( it->second.data.listen_sock, __FUNCTION__, __LINE__ );
-    }
-
     return ( true );
 }
 
