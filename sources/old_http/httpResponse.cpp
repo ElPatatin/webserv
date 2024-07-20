@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   httpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 19:10:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/05 17:52:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:33:08 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-std::string HttpResponse::toString( int stauts_code )
+std::string HttpResponse::toString1( int stauts_code )
 {
     if ( stauts_code == 100 )
         return ( "Continue" );

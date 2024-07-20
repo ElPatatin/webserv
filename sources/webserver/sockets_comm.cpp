@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sockets_comm.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 19:41:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/20 12:15:06 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ void    CommunicationSockets::receiveConnection( Data & data, ConfigData & confi
 
         if (ret == -1)
         {
-            LOG(ERROR) << ft::prettyPrint(__FUNCTION__, __LINE__, "select: " + std::string(std::strerror(errno)));
-            throw SocketException("Error: select: " + std::string(std::strerror(errno)));
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: " + std::string( std::strerror( errno ) ) );
+            throw SocketException( "Error: select: " + std::string( std::strerror( errno ) ) );
         }
         else if (ret == 0)
         {
             // Timeout occurred; handle as needed
-            LOG(WARNING) << "select() timeout occurred, socket not ready for reading";
-            continue; // Retry or handle timeout
+            LOG( WARNING ) << "select() timeout occurred, socket not ready for reading";
+            continue ; // Retry or handle timeout
         }
 
         // Socket is ready for reading, proceed with recv()
@@ -69,13 +69,13 @@ void    CommunicationSockets::receiveConnection( Data & data, ConfigData & confi
                 size_t remaining_body_length = content_length - (total_bytes_read - body_start_pos);
 
                 if (remaining_body_length <= 0)
-                    break; // Fully received headers and body
+                    break ; // Fully received headers and body
             }
         }
         else if (bytes_read == 0)
         {
             // Connection closed
-            break;
+            break ;
         }
         else
         {

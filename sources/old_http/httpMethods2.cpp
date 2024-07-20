@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httpMethods.cpp                                    :+:      :+:    :+:   */
+/*   httpMethods2.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 16:07:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:58:33 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:56:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-std::string HttpMethods::toString( Method method )
+std::string HttpMethods::toString1( Method method )
 {
     switch ( method )
     {
@@ -29,7 +29,7 @@ std::string HttpMethods::toString( Method method )
     }
 }
 
-Method HttpMethods::methodFromString( const std::string & method )
+Method HttpMethods::methodFromString1( const std::string & method )
 {
     static const std::pair<std::string, Method> method_pairs[] = {
         std::make_pair( "GET", GET ),

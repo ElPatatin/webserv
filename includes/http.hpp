@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   http.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/11 13:05:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:33:20 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,8 @@ namespace Http
 
 namespace HttpMethods
 {
-    std::string toString( Method method );
-    Method methodFromString( const std::string& method );
+    std::string toString1( Method method );
+    Method methodFromString1( const std::string& method );
 }
 
 namespace HttpErrors
@@ -92,7 +92,7 @@ namespace HttpRequests
 
 namespace HttpResponse
 {
-    std::string toString( int status_code );
+    std::string toString1( int status_code );
 }
 
 #endif

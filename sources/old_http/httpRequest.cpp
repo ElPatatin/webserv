@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:48:46 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/15 15:06:24 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:25:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ HttpData    HttpRequests::parseRequest( std::string buffer )
     std::string method, path;
     request_stream >> method >> path;
 
-    http.method = HttpMethods::methodFromString( method );
+    http.method = HttpMethods::methodFromString1( method );
     http.version = HTTP_VERSION;
     http.headers = HttpHeaders::deserializeHeader( request );
     http.body = "";
@@ -74,7 +74,7 @@ HttpData    HttpRequests::parseRequest( std::string buffer )
     }
 
     std::ostringstream response_stream;
-    response_stream << "Method: " << HttpMethods::toString( http.method ) << std::endl;
+    response_stream << "Method: " << HttpMethods::toString1( http.method ) << std::endl;
     response_stream << "Path: " << http.path << std::endl;
     response_stream << "Version: " << http.version << std::endl;
     for ( Headers::iterator it = http.headers.begin(); it != http.headers.end(); it++ )
