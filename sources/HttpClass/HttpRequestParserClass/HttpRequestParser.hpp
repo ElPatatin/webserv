@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 12:15:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 16:39:25 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class HttpRequestParser : public HttpHeaders, public HttpMethods, public HttpRes
 
         static void parseUrl( Request & request, const std::string & line );
         static std::string parseQuery( const std::string & query );
+        static bool parseIsCGI( const std::string & url );
 };
 
 #endif

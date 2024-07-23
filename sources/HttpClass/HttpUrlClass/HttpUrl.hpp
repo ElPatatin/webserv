@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:02:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 11:58:08 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:39:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class HttpUrl
         static std::string decode( const std::string & url );
         static std::string encode( const std::string & url );
 
-    private:
+    protected:
         HttpUrl( void );
         HttpUrl( const HttpUrl & src );
         HttpUrl& operator=( const HttpUrl & rhs );

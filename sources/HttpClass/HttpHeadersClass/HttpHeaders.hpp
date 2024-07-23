@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:00:56 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 11:34:11 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:38:49 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class HttpHeaders
         static std::string serializeHeader( const Headers & headers );
         static Headers deserializeHeader( const std::string & header );
 
-    private:
+    protected:
         HttpHeaders( void );
         HttpHeaders( const HttpHeaders & src );
         HttpHeaders& operator=( const HttpHeaders & rhs );

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Username Prompt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .username-display {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="username-display" class="username-display"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var username = getCookie("username");
+            if (username) {
+                document.getElementById("username-display").innerText = "Hello, " + username + "!";
+            } else {
+                var user = prompt("Please enter your username:");
+                if (user != null && user != "") {
+                    setUsername(user);
+                }
+            }
+        });
+
+        function setUsername(username) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/set-username", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    document.getElementById("username-display").innerText = "Hello, " + username + "!";
+                }
+            };
+            xhr.send("username=" + encodeURIComponent(username));
+        }
+
+        function getCookie(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+    </script>
+</body>
+</html>

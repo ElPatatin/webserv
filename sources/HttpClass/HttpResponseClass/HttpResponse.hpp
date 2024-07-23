@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 11:35:25 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:39:10 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,13 @@ class HttpResponse
         static std::string toString( int status_code );
         static int fromString( const std::string & status_message );
 
-    private:
+    protected:
         HttpResponse( void );
         HttpResponse( const HttpResponse& src );
         HttpResponse & operator=( const HttpResponse & rhs );
         ~HttpResponse( void );
 
+    private:
         static StatusCodes     createStatusCodeMap( void );
         static StatusMessages  createStatusMessageMap( void );
 

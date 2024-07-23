@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:02:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 11:43:00 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 15:39:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class HttpVersion
         static std::string toString( const size_t & hash );
         static Version fromString( const std::string & version );
 
-    private:
+    protected:
         HttpVersion( void );
         HttpVersion( const HttpVersion & src );
         HttpVersion& operator=( const HttpVersion & rhs );
