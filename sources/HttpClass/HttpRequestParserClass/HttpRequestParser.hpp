@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 16:39:25 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:25:25 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class HttpRequestParser : public HttpHeaders, public HttpMethods, public HttpRes
 
         static Request parseRequest( const std::string & request );
         static std::string serializeRequest( const Request & request );
+        static Request deserializedRequest( const std::string & request );
 
     private:
         HttpRequestParser( void );
@@ -46,6 +47,10 @@ class HttpRequestParser : public HttpHeaders, public HttpMethods, public HttpRes
         static void parseUrl( Request & request, const std::string & line );
         static std::string parseQuery( const std::string & query );
         static bool parseIsCGI( const std::string & url );
+        static void parseHeaders( Request & request_data, const std::string & request, size_t headerEndPos );
+        static void parseBody( Request & request_data, const std::string & request, size_t headerEndPos );
+        static void parseCookie( Request & request_data );
+
 };
 
 #endif

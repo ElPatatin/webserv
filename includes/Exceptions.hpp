@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 12:30:03 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:07:21 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -225,6 +225,28 @@ class HttpQueryException : public std::exception
         HttpQueryException( std::string const & message )
             : msg( message ) { return ; }
         ~HttpQueryException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpBodyException : public std::exception
+{
+    public:
+        HttpBodyException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpBodyException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpHeadersException : public std::exception
+{
+    public:
+        HttpHeadersException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpHeadersException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 16:39:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:26:19 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ HttpRequestParser & HttpRequestParser::operator=( const HttpRequestParser & rhs 
 
 HttpRequestParser::~HttpRequestParser( void ) { return ; }
 
-HttpRequestParser::Request HttpRequestParser::parseRequest( const std::string & request )
+HttpRequestParser::Request HttpRequestParser::deserializedRequest( const std::string & request )
 {
     Request request_data;
 
@@ -37,10 +37,27 @@ HttpRequestParser::Request HttpRequestParser::parseRequest( const std::string & 
     
     request_data.method = HttpMethods::fromString( method );
     request_data.version = HttpVersion::fromString( version );
-    if ( request_data.version != HTTP_1_1 )
-        throw HttpVersionException( "Invalid HTTP version" );
+    // if ( request_data.version != HTTP_1_1 )
+    //     throw HttpVersionException( "Invalid HTTP version" );
     HttpRequestParser::parseUrl( request_data, url );
     request_data.isCGI = HttpRequestParser::parseIsCGI( request_data.url );
+
+    size_t headerEndPos = request.find("\r\n\r\n");
+    HttpRequestParser::parseHeaders( request_data, request, headerEndPos );
+    HttpRequestParser::parseBody( request_data, request, headerEndPos );
+
+
+}
+
+std::string HttpRequestParser::serializeRequest( const Request & request )
+{
+    std::string result = HttpMethods::toString( request.method ) + " " + request.url + " " + HttpVersion::toString( request.version ) + "\r\n";
+
+    result += HttpHeaders::serializeHeader( request.headers );
+
+    result += "\r\n" + request.body;
+
+    return ( result );
 }
 
 void    HttpRequestParser::parseUrl( Request & request, const std::string & line )
@@ -94,4 +111,48 @@ bool    HttpRequestParser::parseIsCGI( const std::string & url )
     if ( url.find( ".cgi" ) != std::string::npos || url.find( "/cgi-bin/" ) != std::string::npos )
         return ( true );
     return ( false );
+}
+
+void    HttpRequestParser::parseHeaders( Request & request_data, const std::string & request, size_t headerEndPos )
+{
+    if ( headerEndPos == std::string::npos )
+    {
+        LOG( ERROR ) << "Headers are not properly terminated in the request";
+        throw HttpHeadersException( "Headers are not properly terminated in the request" );
+    }
+
+    std::string headers = request.substr(0, headerEndPos);
+    request_data.headers = HttpHeaders::deserializeHeader( headers );
+
+    return ;
+}
+
+void    HttpRequestParser::parseBody( Request & request_data, const std::string & request, size_t headerEndPos )
+{
+    // Check if Content-Length header is present to determine body length
+    if ( request_data.headers.find("Content-Length") != request_data.headers.end() )
+    {
+        int contentLength = ft::stoi( request_data.headers["Content-Length"].second );
+        size_t bodyStartPos = headerEndPos + 4;
+
+        if ( request.size() < bodyStartPos + contentLength )
+        {
+            LOG( ERROR ) << "Invalid body";
+            throw HttpBodyException( "Invalid body" );
+        }
+
+        std::string body = request.substr( bodyStartPos, contentLength );
+        request_data.body = body;
+    }
+    else
+        request_data.body = "";
+
+    return ;
+}
+
+void    HttpRequestParser::parseCookie( Request & request_data )
+{
+    UNUSED( request_data );
+
+    return ;
 }
