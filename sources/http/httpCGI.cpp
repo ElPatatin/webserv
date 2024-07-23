@@ -3,99 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   httpCGI.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: pramos-m <pramos-m@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:32:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:46:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 17:03:35 by pramos-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 #include <sys/wait.h>
 #include <unistd.h>
+#include <map>
+#include <fstream>
 
-void Http::executeCGI( const std::string & scriptPath, const std::string & queryString, std::ostringstream & response_stream, Data & data, ConfigData & config, HttpData & http )
+/**
+ * @brief Execute a CGI script and send its output as the response
+ * 
+ * @param scriptPath Path to the CGI script
+ * @param queryString Query string to be passed to the CGI script
+ * @param response_stream Stream to store the response from the CGI script
+ * @param data Reference to the Data structure
+ * @param config Reference to the ConfigData structure
+ * @param http Reference to the HttpData structure
+ */
+void    Http::executeCGI( const std::string &scriptPath, const std::string &queryString, std::ostringstream &response_stream, Data &data, ConfigData &config, HttpData &http )
 {
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Executing CGI script" );
+    (void)http; // Suppress unused parameter warning
 
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Creating pipe" );
-    int pipe_fd[ 2 ];
-    if ( pipe( pipe_fd ) == -1 )
-        return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
+    // Temporary file for CGI output
+    std::string tmpFilePath = "/tmp/cgi_output.txt";
+    std::string command = scriptPath + " > " + tmpFilePath;
 
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Forking process" );
-    int pid = fork();
-    if ( pid == -1 )
-        return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
+    // Append query string if not empty
+    if  ( !queryString.empty() )
+        command += " " + queryString;
 
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Child process" );
-    if ( pid == 0 )
+    // Execute the command
+    int result = std::system( command.c_str() );
+    if  ( result == -1 )
     {
-        if ( close( pipe_fd[ 0 ] ) == -1 || dup2( pipe_fd[ 1 ], STDOUT_FILENO ) == -1 || close( pipe_fd[ 1 ] ) == -1 )
-            std::exit(EXIT_FAILURE);
-
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Setting environment variables" );
-        std::string query = "QUERY_STRING=" + queryString;
-        std::string contentLength = "CONTENT_LENGTH=" + http.headers[ "Content-Length" ].second;
-        std::string contentType = "CONTENT_TYPE=" + http.headers[ "Content-Type" ].second;
-
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Executing script" );
-        char *argv[] = { (char *)scriptPath.c_str(), NULL };
-        char *envp[] = { (char *)query.c_str(), (char *)contentLength.c_str(), (char *)contentType.c_str(), NULL };
-
-        LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Executing CGI script: " + scriptPath );
-        LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Arguments: " + query + ", " + contentLength + ", " + contentType );
-
-        execve( scriptPath.c_str(), argv, envp );
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to execute CGI script" );
-        std::exit( EXIT_FAILURE );
-    }
-    else
-    {
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Parent process" );
-
-        if ( close( pipe_fd[ 1 ] ) == -1)
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Reading from pipe" );
-        char buffer[ 4096 ];
-        int bytesRead;
-        while ( ( bytesRead = read( pipe_fd[ 0 ], buffer, sizeof( buffer ) ) ) > 0 )
-            response_stream.write( buffer, bytesRead );
-        LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Response from CGI script: " + response_stream.str() );
-
-        if ( bytesRead == -1 )
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-
-        if ( close( pipe_fd[ 0 ]) == -1 )
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Waiting for child process" );
-        int status;
-        if ( waitpid( pid, &status, 0 ) == -1 )
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-
-        LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Checking child process status" );
-        if ( WIFEXITED( status ) && WEXITSTATUS( status ) != 0 )
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-
-        if ( response_stream.str().empty() )
-        {
-            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "No response from CGI script" );
-            return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
-        }
-        else
-        {
-            LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "CGI script executed successfully" );
-            std::ostringstream header_stream;
-            header_stream << "HTTP/1.1 200 OK\r\n"
-                        << "Content-Length: " << response_stream.str().length() << "\r\n"
-                        << "Content-Type: text/html\r\n"
-                        << "\r\n"
-                        << response_stream.str();
-            data.response = header_stream.str();
-        }
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to execute CGI script using std::system" );
+        return HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config );
     }
 
-    return ;
+    // Open the temporary file to read the CGI output
+    std::ifstream tmpFile( tmpFilePath.c_str() );
+    if  ( !tmpFile.is_open() )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to open temporary file for CGI output" );
+        return HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config );
+    }
+
+    // Read the content of the temporary file line by line and add to the response stream
+    std::string line;
+    while ( std::getline( tmpFile, line ) )
+        response_stream << line << "\n";
+    tmpFile.close(); // Close the temporary file
+
+    // Save the response in the data structure
+    data.response = response_stream.str();
+    LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Response from CGI script: " + data.response );
 }
