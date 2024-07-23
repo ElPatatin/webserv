@@ -10,17 +10,13 @@ form = cgi.FieldStorage()
 folder_path = form.getvalue('path')
 
 # Print the Content-Type header
+print("HTTP/1.1 200 OK")
 print("Content-Type: text/plain")
 print()  # End the headers section
 
-# Debugging: print the form keys and received path
-print(f"Form keys: {list(form.keys())}")
-print(f"Received path: {folder_path}")
-
 # Check if the folder path is provided
 if not folder_path:
-    print("Error: No path provided.")
-    exit(1)
+    folder_path = "./html/"
 
 # Convert relative path to absolute path
 base_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
