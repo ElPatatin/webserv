@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   HttpResponses.cpp                                  :+:      :+:    :+:   */
+/*   HttpResponse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 16:11:22 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:32:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "HttpResponses.hpp"
+#include "HttpResponse.hpp"
 
 HttpResponse::HttpResponse( void )
 {

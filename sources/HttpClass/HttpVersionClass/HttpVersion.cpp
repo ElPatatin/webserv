@@ -6,34 +6,24 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:02:55 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 15:38:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:43:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpVersion.hpp"
 
 // Default constructor
-HttpVersion::HttpVersion( void )
-    : _type( HTTP_1_1 ) { return ; }
-
-// Parameterized constructor
-HttpVersion::HttpVersion( Type type )
-    : _type( type ) { return ; }
-
-// Parameterized constructor
-HttpVersion::HttpVersion( const std::string & version )
-    : _type( fromString( version ) ) { return ; }
+HttpVersion::HttpVersion( void ) { return ; }
 
 // Copy constructor
-HttpVersion::HttpVersion( const HttpVersion & src )
-    : _type( src._type ) { return ; }
+HttpVersion::HttpVersion( const HttpVersion & src ) { return ; }
 
 // Assignment operator
 HttpVersion &   HttpVersion::operator=( const HttpVersion & rhs )
 {
     if ( this != &rhs )
     {
-        _type = rhs._type;
+        
     }
     return ( *this );
 }
@@ -41,9 +31,9 @@ HttpVersion &   HttpVersion::operator=( const HttpVersion & rhs )
 // Destructor
 HttpVersion::~HttpVersion( void ) { return ; }
 
-std::string HttpVersion::toString( void ) const
+std::string HttpVersion::toString( const size_t & hash )
 {
-    switch ( _type )
+    switch ( hash )
     {
         case HTTP_1_0: return ( HTTP_VERSION_1_0 );
         case HTTP_1_1: return ( HTTP_VERSION_1_1 );
@@ -52,7 +42,7 @@ std::string HttpVersion::toString( void ) const
     }
 }
 
-HttpVersion::Type HttpVersion::fromString( const std::string & version )
+HttpVersion::Version HttpVersion::fromString( const std::string & version )
 {
 
     switch ( hash( version ) )

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 15:22:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 19:08:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:30:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,61 @@ class ForkException : public std::exception
         ForkException( std::string const & message )
             : msg( message ) { return ; }
         ~ForkException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class ExecveException : public std::exception
+{
+    public:
+        ExecveException( std::string const & message )
+            : msg( message ) { return ; }
+        ~ExecveException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpVersionException : public std::exception
+{
+    public:
+        HttpVersionException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpVersionException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpMethodsException : public std::exception
+{
+    public:
+        HttpMethodsException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpMethodsException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpUrlException : public std::exception
+{
+    public:
+        HttpUrlException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpUrlException() throw() { return ; }
+        const char* what() const throw() { return msg.c_str(); }
+    private:
+        std::string msg;
+};
+
+class HttpQueryException : public std::exception
+{
+    public:
+        HttpQueryException( std::string const & message )
+            : msg( message ) { return ; }
+        ~HttpQueryException() throw() { return ; }
         const char* what() const throw() { return msg.c_str(); }
     private:
         std::string msg;

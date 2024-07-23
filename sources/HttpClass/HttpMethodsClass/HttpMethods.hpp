@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:26 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:12:10 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:08:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ class HttpMethods
         
         typedef std::map< std::string, Method > Methods;
 
+        static std::string toString( Method method );
+        static Method fromString( const std::string & method );
+
+    private:
         HttpMethods( void );
         HttpMethods( const HttpMethods & src );
         HttpMethods & operator=( const HttpMethods & rhs );
         ~HttpMethods( void );
 
-        static std::string toString( Method method );
-        static Method methodFromString( const std::string & method );
-
-    private:
         static Methods createMethodMap( void );
 
         static Methods methodMap;

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:21:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:34:24 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ HttpHeaders& HttpHeaders::operator=( const HttpHeaders & rhs )
 HttpHeaders::~HttpHeaders( void ) { return ; }
 
 // Serialize headers to string
-std::string HttpHeaders::serializeHeader( const Headers & headers ) const
+std::string HttpHeaders::serializeHeader( const Headers & headers )
 {
     std::ostringstream header_stream;
 
@@ -47,7 +47,7 @@ std::string HttpHeaders::serializeHeader( const Headers & headers ) const
 }
 
 // Deserialize headers from string
-Headers HttpHeaders::deserializeHeader( const std::string & header ) const
+Headers HttpHeaders::deserializeHeader( const std::string & header )
 {
     Headers headers;
     Header  header_pair;

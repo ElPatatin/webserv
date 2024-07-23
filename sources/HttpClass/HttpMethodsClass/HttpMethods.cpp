@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:29 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:09:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 12:08:43 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ std::string HttpMethods::toString( Method method )
     }
 }
 
-HttpMethods::Method HttpMethods::methodFromString( const std::string & method )
+HttpMethods::Method HttpMethods::fromString( const std::string & method )
 {
     HttpMethods::Methods::const_iterator it = methodMap.find( method );
     if ( it != methodMap.end() )

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:00:56 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:17:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:34:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,14 @@ typedef std::map< std::string, Header >         Headers;
 class HttpHeaders
 {
     public:
+        static std::string serializeHeader( const Headers & headers );
+        static Headers deserializeHeader( const std::string & header );
+
+    private:
         HttpHeaders( void );
         HttpHeaders( const HttpHeaders & src );
         HttpHeaders& operator=( const HttpHeaders & rhs );
         ~HttpHeaders( void );
-
-        std::string serializeHeader( const Headers & headers ) const;
-        Headers deserializeHeader( const std::string & header ) const;
 };
 
 #endif // HTTPHEADERS_HPP

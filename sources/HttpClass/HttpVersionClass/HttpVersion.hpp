@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:02:53 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:11:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/23 11:43:00 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,17 @@ class HttpVersion
             HTTP_1_0,
             HTTP_1_1,
             HTTP_2_0
-        }   Type;
+        }   Version;
 
+        static std::string toString( const size_t & hash );
+        static Version fromString( const std::string & version );
+
+    private:
         HttpVersion( void );
-        HttpVersion( Type type );
-        HttpVersion( const std::string & version );
         HttpVersion( const HttpVersion & src );
         HttpVersion& operator=( const HttpVersion & rhs );
         ~HttpVersion( void );
 
-        std::string toString( void ) const;
-        static Type fromString( const std::string & version );
-
-    private:
-        Type _type;
         static unsigned int hash( const std::string & str );
 };
 

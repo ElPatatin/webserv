@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/20 17:34:39 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/23 11:32:31 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,7 +94,7 @@ WEB_DIR	:= $(SRC_DIR)webserver/
 HTP_DIR	:= $(SRC_DIR)HttpClass/
 HDR_DIR	:= $(HTP_DIR)HttpHeadersClass/
 MTD_DIR	:= $(HTP_DIR)HttpMethodsClass/
-RSP_DIR	:= $(HTP_DIR)HttpResponsesClass/
+RSP_DIR	:= $(HTP_DIR)HttpResponseClass/
 URL_DIR	:= $(HTP_DIR)HttpUrlClass/
 VRS_DIR	:= $(HTP_DIR)HttpVersionClass/
 
@@ -145,7 +145,7 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 # SRCS	+= $(HTP_DIR)Http.cpp \
 # 		$(HDR_DIR)HttpHeaders.cpp \
 # 		$(MTD_DIR)HttpMethods.cpp \
-# 		$(RSP_DIR)HttpResponses.cpp \
+# 		$(RSP_DIR)HttpResponse.cpp \
 # 		$(URL_DIR)HttpUrl.cpp \
 # 		$(VRS_DIR)HttpVersion.cpp
 
