@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:06:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 12:53:03 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:26:20 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ namespace Sockets
 
 namespace CommunicationSockets
 {
-    void    receiveConnection( Data & data, ConfigData & config );
+    std::string receiveConnection( const Data & data );
     bool    headersReceived( const std::string & request, int & content_length );
     void    sendConnection( Data & data );
+    bool    continueReceiving( std::string full_request, bool headers_received, int content_length, int total_bytes_read );
     int     waitTime( const Data & data, const bool & is_read );
 }
 

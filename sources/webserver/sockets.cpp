@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 12:54:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:59:56 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,8 @@ ssize_t Sockets::sendConnection( const Data & data, const char * buffer, size_t 
     ssize_t bytes_sent = send( data.conn_fd, buffer, size, 0 );
     if ( bytes_sent == -1 )
     {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: failed to send data" );
-        throw SocketException( "Error: send: failed to send data" );
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: failed to send data." + std::string( std::strerror( errno ) ) );
+        throw SocketException( "Error: send: failed to send data" + std::string( std::strerror( errno ) ) );
     }
 
     return ( bytes_sent );

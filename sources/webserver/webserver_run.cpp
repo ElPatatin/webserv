@@ -6,11 +6,12 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 12:25:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:48:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
+#include "http.hpp"
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
@@ -98,7 +99,18 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         LOG( INFO ) << "Connection event on port " << serverData->config->getPort();
 
         serverData->data.conn_fd = event_fd;
-        CommunicationSockets::receiveConnection( serverData->data, *serverData->config );
+        std::string request = CommunicationSockets::receiveConnection( serverData->data );
+        if ( request.empty() )
+        {
+            LOG( INFO ) << "Connection closed by client";
+            Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
+            connection_to_server_map.erase( connIt );
+            return ;
+        }
+
+        HttpData http = HttpRequests::parseRequest( request );
+        Http::httpRequest( http, serverData->data, *serverData->config );
+
         CommunicationSockets::sendConnection( serverData->data );
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
         connection_to_server_map.erase( connIt );

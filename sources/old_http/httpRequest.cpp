@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:48:46 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:25:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:40:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ HttpData    HttpRequests::parseRequest( std::string buffer )
     std::string method, path;
     request_stream >> method >> path;
 
+    LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Request received: " + request );
+    LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Method: " + method );
     http.method = HttpMethods::methodFromString1( method );
     http.version = HTTP_VERSION;
     http.headers = HttpHeaders::deserializeHeader( request );

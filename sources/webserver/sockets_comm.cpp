@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 13:01:21 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 17:43:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // ---------------------------------------------------------------------------
 
 // Receive connection from client and parse request
-void    CommunicationSockets::receiveConnection( Data & data, ConfigData & config )
+std::string    CommunicationSockets::receiveConnection( const Data & data )
 {
     char buffer[CHUNK_SIZE];
     std::memset(buffer, '\0', CHUNK_SIZE);
@@ -40,7 +40,6 @@ void    CommunicationSockets::receiveConnection( Data & data, ConfigData & confi
             continue ;
         }
 
-        // Socket is ready for reading, proceed with recv()
         ssize_t bytes_read = Sockets::receiveConnection( data, buffer, static_cast< size_t >( CHUNK_SIZE ) - 1 );
         if (bytes_read == 0) { LOG( INFO ) << "Finished reading."; break ; }
 
@@ -50,40 +49,54 @@ void    CommunicationSockets::receiveConnection( Data & data, ConfigData & confi
         if ( !headers_received )
             headers_received = headersReceived( full_request, content_length );
 
-        size_t header_end_pos = full_request.find("\r\n\r\n");
-        if (headers_received && header_end_pos != std::string::npos)
-        {
-            size_t body_start_pos = header_end_pos + 4;
-            size_t remaining_body_length = content_length - (total_bytes_read - body_start_pos);
-
-            if ( remaining_body_length <= 0 )
-                break ; // Fully received headers and body
-        }
+        if ( !continueReceiving( full_request, headers_received, content_length, total_bytes_read ) )
+            break ;
     }
 
-    HttpData http = HttpRequests::parseRequest( full_request );
-    Http::httpRequest( http, data, config );
-    return ;
+    return ( full_request );
 }
 
 bool CommunicationSockets::headersReceived(const std::string &request, int &content_length)
 {
-    size_t header_end_pos = request.find("\r\n\r\n");
+    size_t header_end_pos = request.find( "\r\n\r\n" );
     if (header_end_pos != std::string::npos)
     {
         // Extract headers and find Content-Length
-        std::string headers = request.substr(0, header_end_pos + 4);
-        HttpData temp_http = HttpRequests::parseRequest(headers);
+        std::string headers = request.substr( 0, header_end_pos + 4 );
+        LOG( WARNING ) << "Headers received: " << headers;
+        HttpData temp_http = HttpRequests::parseRequest( headers );
 
         if (temp_http.headers.find("Content-Length") != temp_http.headers.end())
             content_length = ft::stoi(temp_http.headers["Content-Length"].second);
 
-        return true;
+        return ( true );
     }
 
-    return false;
+    return ( false );
 }
 
+bool    CommunicationSockets::continueReceiving
+    (
+        std::string full_request,
+        bool headers_received,
+        int content_length,
+        int total_bytes_read
+    )
+{
+    size_t header_end_pos = full_request.find("\r\n\r\n");
+    if (headers_received && header_end_pos != std::string::npos)
+    {
+        size_t body_start_pos = header_end_pos + 4;
+        size_t remaining_body_length = content_length - (total_bytes_read - body_start_pos);
+
+        if ( remaining_body_length <= 0 )
+            return ( false );
+    }
+
+    return ( true );
+}
+
+// Send response to client, chunked if necessary and wait for client to read.
 void    CommunicationSockets::sendConnection( Data & data )
 {
     size_t total_length = data.response.length();
@@ -109,12 +122,19 @@ void    CommunicationSockets::sendConnection( Data & data )
 
         // Send data
         ssize_t result = Sockets::sendConnection( data, response_data + bytes_sent, chunkLength );
+        if ( result == 0 )
+        {
+            LOG( INFO ) << "Finished sending.";
+            break ;
+        }
+
         bytes_sent += result;
     }
 
     return ;
 }
 
+// Wait for socket to be ready for reading or writing
 int    CommunicationSockets::waitTime( const Data & data, const bool & is_read )
 {
     // Set up file descriptor set for select()
