@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:22:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 19:44:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/24 15:35:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,17 @@ bool ConfigLoad::config_load_client_max_body_size( std::string & line, ConfigDat
 
     config_data.setClientMaxBodySize( size );
     LOG( INFO ) << "Successfully parsed client max body size: " << config_data.getClientMaxBodySize();
+    return ( true );
+}
+
+bool    ConfigLoad::config_load_root( std::string line, ConfigData & config_data )
+{
+    ConfigLoad::config_load_line( &line, "'root' directive without path" );
+    if ( line.empty() )
+        return ( false );
+
+    config_data.setRoot( line );
+    LOG( INFO ) << "Successfully parsed root: " << line;
     return ( true );
 }
 

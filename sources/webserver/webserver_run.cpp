@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 11:38:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:25:30 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ void    WebServer::handle_new_connection( int event_fd, Servers & servers, Epoll
     {
         LOG( INFO ) << "New connection on port " << it->second.config->getPort();
 
-        ConectionSockets::acceptConnection( it->second.data );
-        ConectionSockets::setSocketBlockingMode( it->second.data.conn_sock, false );
+        Sockets::acceptConnection( it->second.data );
+        Sockets::setSocketBlockingMode( it->second.data.conn_sock, false );
         Epoll::add_epoll( epoll, it->second.data.conn_sock, EPOLLIN | EPOLLET | EPOLLHUP | EPOLLERR );
 
         // Track the new connection with the correct server
@@ -100,7 +100,7 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         serverData->data.conn_fd = event_fd;
         CommunicationSockets::receiveConnection( serverData->data, *serverData->config );
         CommunicationSockets::sendConnection( serverData->data );
-        ConectionSockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
+        Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
         connection_to_server_map.erase( connIt );
     } else {
         LOG( ERROR ) << "Unknown connection event";

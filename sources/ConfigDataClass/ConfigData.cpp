@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 00:56:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/24 15:32:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,9 @@ void ConfigData::setErrorPages( ErrorPages error_pages )
 
 size_t  ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
 void    ConfigData::setClientMaxBodySize( size_t client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }
+
+std::string ConfigData::getRoot( void ) const { return ( this->root ); }
+void ConfigData::setRoot( std::string root ) { this->root = root; return ; }
 
 Locations ConfigData::getLocations( void ) const { return ( this->locations ); }
 void ConfigData::setLocations( Locations locations )

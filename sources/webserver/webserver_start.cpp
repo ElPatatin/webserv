@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 11:37:44 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:25:31 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,17 @@ bool WebServer::start_server( ConfigData & config, Servers & servers )
     try
     {
         // AF_INET: IPv4, SOCK_STREAM: TCP
-        server_data.addrs = ConectionSockets::resolveHostToIp( AF_INET, SOCK_STREAM, config.getHost() );
+        server_data.addrs = Sockets::resolveHostToIp( AF_INET, SOCK_STREAM, config.getHost() );
 
-        server_data.data.listen_sock = ConectionSockets::createSocket( server_data.addrs.rp );
-        ConectionSockets::bindSocket( &server_data.data, config );
+        server_data.data.listen_sock = Sockets::createSocket( server_data.addrs.rp );
+        Sockets::bindSocket( &server_data.data, config );
 
         if ( !server_data.addrs.rp )
             throw ResolveHostException( "Error: failed to bind" );
 
         freeaddrinfo( server_data.addrs.result );
 
-        ConectionSockets::listenConnection( server_data.data, BACKLOG );
+        Sockets::listenConnection( server_data.data, BACKLOG );
 
         servers[ server_data.data.listen_sock ] = server_data;
     }

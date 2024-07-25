@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:36:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 11:39:28 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 12:25:31 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool WebServer::stop_server( Servers & servers )
     
     for ( Servers::iterator it = servers.begin(); it != servers.end(); ++it )
     {
-        ConectionSockets::closeConnection( it->second.data.listen_sock, __FUNCTION__, __LINE__ );
+        Sockets::closeConnection( it->second.data.listen_sock, __FUNCTION__, __LINE__ );
     }
 
     return ( true );

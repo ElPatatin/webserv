@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/23 11:32:31 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/25 12:26:43 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -138,7 +138,7 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)webserver_run.cpp \
 		$(WEB_DIR)webserver_stop.cpp \
 		$(WEB_DIR)sockets_comm.cpp \
-		$(WEB_DIR)sockets_conn.cpp \
+		$(WEB_DIR)sockets.cpp \
 		$(WEB_DIR)epoll.cpp
 
 # Http files
