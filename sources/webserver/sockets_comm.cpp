@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 17:43:11 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:01:49 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,14 +97,18 @@ bool    CommunicationSockets::continueReceiving
 }
 
 // Send response to client, chunked if necessary and wait for client to read.
-void    CommunicationSockets::sendConnection( Data & data )
+void    CommunicationSockets::sendConnection( const Data & data )
 {
     size_t total_length = data.response.length();
     const char* response_data = data.response.c_str();
     size_t bytes_sent = 0;
 
+    int retry_count = 0;
+    int max_retries = 10;
+
     while ( bytes_sent < total_length )
     {
+        usleep( 1000 );
         size_t remainingLength = total_length - bytes_sent;
         size_t chunkLength = ( remainingLength > CHUNK_SIZE ) ? CHUNK_SIZE : remainingLength;
 
@@ -117,18 +121,29 @@ void    CommunicationSockets::sendConnection( Data & data )
         else if (ret == 0)
         {
             LOG( WARNING ) << "select() timeout occurred, socket not ready for reading";
+            if (++retry_count >= max_retries)
+            {
+                LOG(ERROR) << "Maximum retries reached, aborting send operation.";
+                throw SocketException("Error: maximum retries reached, send operation aborted");
+            }
             continue ;
         }
 
-        // Send data
-        ssize_t result = Sockets::sendConnection( data, response_data + bytes_sent, chunkLength );
-        if ( result == 0 )
+        try
         {
-            LOG( INFO ) << "Finished sending.";
-            break ;
+            ssize_t result = Sockets::sendConnection( data, response_data + bytes_sent, chunkLength );
+            if ( result == 0 )
+            {
+                LOG( INFO ) << "Finished sending.";
+                break ;
+            }
+            bytes_sent += result;
         }
-
-        bytes_sent += result;
+        catch ( SocketException & e )
+        {
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() );
+            return ;
+        }
     }
 
     return ;

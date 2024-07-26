@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 17:48:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:38:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         if ( request.empty() )
         {
             LOG( INFO ) << "Connection closed by client";
+            HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
+            CommunicationSockets::sendConnection( serverData->data );
             Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
             connection_to_server_map.erase( connIt );
             return ;
@@ -114,9 +116,11 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         CommunicationSockets::sendConnection( serverData->data );
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
         connection_to_server_map.erase( connIt );
-    } else {
-        LOG( ERROR ) << "Unknown connection event";
     }
+    else
+        LOG( ERROR ) << "Unknown connection event";
+
+    return ;
 }
 
 void    WebServer::add_listening_sockets_to_epoll( Servers & servers, EpollData & epoll )

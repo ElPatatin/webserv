@@ -136,17 +136,18 @@ std::string& ft::rtrim( std::string & str )
 
 std::vector< std::string > ft::split( const std::string & str, std::string delimiter )
 {
-    std::vector<std::string> tokens;
+    std::vector< std::string > tokens;
     size_t start = 0;
-    size_t end = str.find(delimiter);
+    size_t end = str.find( delimiter );
 
-    while (end != std::string::npos) {
-        tokens.push_back(str.substr(start, end - start));
+    while ( end != std::string::npos )
+    {
+        tokens.push_back( str.substr( start, end - start ) );
         start = end + delimiter.length();
-        end = str.find(delimiter, start);
+        end = str.find( delimiter, start );
     }
 
-    tokens.push_back(str.substr(start, end - start));
+    tokens.push_back( str.substr( start, end - start ) );
     return tokens;
 }
 
