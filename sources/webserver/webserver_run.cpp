@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_run.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/26 19:38:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:58:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,14 +101,7 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         serverData->data.conn_fd = event_fd;
         std::string request = CommunicationSockets::receiveConnection( serverData->data );
         if ( request.empty() )
-        {
-            LOG( INFO ) << "Connection closed by client";
-            HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
-            CommunicationSockets::sendConnection( serverData->data );
-            Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
-            connection_to_server_map.erase( connIt );
-            return ;
-        }
+            return ( WebServer::handle_bad_request( serverData, connIt, connection_to_server_map ) );
 
         HttpData http = HttpRequests::parseRequest( request );
         Http::httpRequest( http, serverData->data, *serverData->config );
@@ -120,6 +113,21 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
     else
         LOG( ERROR ) << "Unknown connection event";
 
+    return ;
+}
+
+void    WebServer::handle_bad_request
+    (
+        ServerData * & serverData,
+        std::map< int, ServerData * >::iterator & connIt,
+        std::map < int, ServerData * > & connection_to_server_map
+    )
+{
+    LOG( INFO ) << "Connection closed by client";
+    HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
+    CommunicationSockets::sendConnection( serverData->data );
+    Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
+    connection_to_server_map.erase( connIt );
     return ;
 }
 

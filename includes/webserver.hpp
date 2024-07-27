@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:31:58 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/26 19:37:32 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/27 16:57:57 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ namespace WebServer
     bool    run_server_loop( Servers & servers, EpollData & epoll, std::map < int, ServerData * > & connection_to_server_map );
     void    handle_new_connection( int event_fd, Servers & servers, EpollData & epoll, std::map < int, ServerData * > & connection_to_server_map );
     void    handle_existing_connection( int event_fd, std::map < int, ServerData * > & connection_to_server_map );
+    void    handle_bad_request( ServerData * & serverData, std::map< int, ServerData * >::iterator & connIt, std::map < int, ServerData * > & connection_to_server_map );
     void    add_listening_sockets_to_epoll( Servers & servers, EpollData & epoll );
 }
 
