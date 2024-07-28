@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/17 17:22:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/24 15:35:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 12:56:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,17 +145,6 @@ bool ConfigLoad::config_load_client_max_body_size( std::string & line, ConfigDat
     return ( true );
 }
 
-bool    ConfigLoad::config_load_root( std::string line, ConfigData & config_data )
-{
-    ConfigLoad::config_load_line( &line, "'root' directive without path" );
-    if ( line.empty() )
-        return ( false );
-
-    config_data.setRoot( line );
-    LOG( INFO ) << "Successfully parsed root: " << line;
-    return ( true );
-}
-
 bool ConfigLoad::config_load_locations( const ConfigFile & config_file, std::string line, size_t line_num, ConfigData & config_data )
 {
     std::vector< std::string > location = ft::split( line, " " );
@@ -202,14 +191,17 @@ bool ConfigLoad::config_load_locations( const ConfigFile & config_file, std::str
             // delete the ';' at the end of the line
             content[content.size() - 1].erase( content[content.size() - 1].size() - 1 );
 
-            // Insert the content of the variables to a vector
-            std::vector< std::string > values;
-            for ( size_t j = 1; j < content.size(); ++j )
-                values.push_back( content[j] );
+            if ( content.size() != 2 )
+            {
+                std::cerr << "Error: 'location' directive with invalid number of arguments" << std::endl;
+                std::cerr << "Error: " << settings[i] << std::endl;
+                LOG( ERROR ) << "'location' directive with invalid number of arguments";
+                return ( false );
+            }
 
-            loc[content[0]] = values;            
+            loc.push_back( std::make_pair( content[0], content[1] ) );
         }
-        locations.insert( std::make_pair( endpoint, loc ) );
+        locations[endpoint] = loc;
         LOG( INFO ) << "Successfully parsed location: " << endpoint;
         config_data.setLocations( locations );
     }
@@ -238,36 +230,4 @@ bool    ConfigLoad::config_load_redirect( std::string endpoint, std::string line
     LOG( INFO ) << "Successfully parsed redirect: " << endpoint << " -> " << redirect[1] << " " << redirect[2];
     config_data.setRedirects( redirects );
     return ( true );
-}
-
-bool ConfigLoad::config_load_directory_listing( std::string line, ConfigData & config_data )
-{
-    // static volatile bool already_parsed = false;
-
-    // if ( already_parsed )
-    // {
-    //     std::cerr << "Error: 'directory_listing' directive already parsed" << std::endl;
-    //     LOG( ERROR ) << "'directory_listing' directive already parsed";
-    //     return ( false );
-    // }
-
-    ConfigLoad::config_load_line( &line, "'directory_listing' directive without 'on' or 'off'" );
-    if ( line.empty() )
-        return ( false );
-
-    if ( line == "on" )
-        config_data.setIsDirectoryListing( true );
-    else if ( line == "off" )
-        config_data.setIsDirectoryListing( false );
-    else
-    {
-        std::cerr << "Error: Invalid argument for 'directory_listing' directive: " << line << std::endl;
-        LOG( ERROR ) << "Invalid argument for 'directory_listing' directive: " << line;
-        return ( false );
-    }
-
-    // already_parsed = true;
-    LOG( INFO ) << "Successfully parsed directory listing: " << ( config_data.getIsDirectoryListing() ? "on" : "off" );
-    return ( true );
-
 }

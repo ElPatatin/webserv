@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 12:10:24 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 11:20:46 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:17:07 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void Http::httpRequest( HttpData & http, Data & data, ConfigData & config )
             if ( info.st_mode & S_IFDIR )           // Handle Directory listing
                 return ( Http::httpDirectoryListing( path, fullPath, data, config ) );
             else if ( info.st_mode & S_IFREG )      // Handle file serving
-                return ( Http::httpFileServing( path, fullPath, data, config ) );
+                return ( Http::httpFileServing1( path, fullPath, data, config ) );
             else                                     // Internal server error
                 return ( HttpErrors::sendError( data, INTERNAL_SERVER_ERROR, config ) );
 

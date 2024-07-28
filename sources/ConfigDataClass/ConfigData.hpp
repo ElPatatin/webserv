@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 20:23:15 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/24 15:31:43 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 14:52:29 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ typedef struct s_cluster
 }                   Cluster;
 
 typedef unsigned short Port;
-typedef std::vector< std::string > ServerNames;
 typedef std::map< int, std::string > ErrorPages;
-typedef std::map< std::string, std::vector< std::string > > Location;
+typedef std::vector< std::pair< std::string, std::string > > Location;
 typedef std::map< std::string, Location > Locations;
 typedef std::map< std::string, std::pair< unsigned short, std::string > > Redirects;
 typedef std::vector< ConfigData > VirtualServers;
+typedef std::vector< std::string > ServerNames;
 
 
 /**
@@ -54,11 +54,9 @@ class ConfigData
         ServerNames     server_names;
         ErrorPages      error_pages;
         size_t          client_max_body_size;
-        std::string     root;
         Locations       locations;              // Each location is a vector of settings
         Redirects       redirects;              // Each redirect is a map of settings
         VirtualServers  virtual_servers;        // Each virtual server is a vector of settings
-        bool            is_directory_listing;   // If directory listing is enabled
 
     public:
         // CONSTRUCTORS AND DESTRUCTOR
@@ -95,8 +93,8 @@ class ConfigData
         size_t          getClientMaxBodySize( void ) const;
         void            setClientMaxBodySize( size_t client_max_body_size );
 
-        std::string     getRoot( void ) const;
-        void            setRoot( std::string root );
+        Location        getLocation( std::string endpoint ) const;
+        void            setLocation( std::string endpoint, Location location );
 
         Locations       getLocations( void ) const;
         void            setLocations( Locations );
@@ -106,9 +104,6 @@ class ConfigData
 
         VirtualServers  getVirtualServers( void ) const;
         void            setVirtualServers( VirtualServers virtual_servers );
-
-        bool            getIsDirectoryListing( void ) const;
-        void            setIsDirectoryListing( bool is_directory_listing );
 };
 
 #endif

@@ -6,38 +6,15 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:34:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 16:09:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:26:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "http.hpp"
 
-std::string createSetCookieHeader(const std::string &name, const std::string &value,
-                                  const std::string &expires = "", const std::string &path = "/",
-                                  const std::string &domain = "", bool secure = false, bool httpOnly = true) {
-    std::stringstream ss;
-    ss << "Set-Cookie: " << name << "=" << value;
-    if (!expires.empty()) {
-        ss << "; Expires=" << expires;
-    }
-    if (!path.empty()) {
-        ss << "; Path=" << path;
-    }
-    if (!domain.empty()) {
-        ss << "; Domain=" << domain;
-    }
-    if (secure) {
-        ss << "; Secure";
-    }
-    if (httpOnly) {
-        ss << "; HttpOnly";
-    }
-    return ss.str();
-}
-
 static  std::string getContentType( const std::string & fullPath );
 
-void    Http::httpFileServing( std::string path, std::string fullPath, Data & data, ConfigData & config )
+void    Http::httpFileServing1( std::string path, std::string fullPath, Data & data, ConfigData & config )
 {
     LOG(INFO) << ft::prettyPrint(__FUNCTION__, __LINE__, "Serving file");
 
@@ -60,12 +37,10 @@ void    Http::httpFileServing( std::string path, std::string fullPath, Data & da
     std::string content = std::string( ( std::istreambuf_iterator< char >( *file ) ), std::istreambuf_iterator< char >() );
 
 
-    std::string cookie = createSetCookieHeader("username", "cacadevaca");
     std::ostringstream response_stream;
     response_stream << "HTTP/1.1 200 OK\r\n";
     response_stream << "Content-Length: " << content.size() << "\r\n";
     response_stream << "Content-Type: " << getContentType( fullPath ) << "\r\n";
-    // response_stream << cookie << "\r\n";
     response_stream << "\r\n";
     response_stream << content;
 

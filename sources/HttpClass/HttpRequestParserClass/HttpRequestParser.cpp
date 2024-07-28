@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 17:26:19 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:49:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 HttpRequestParser::HttpRequestParser( void ) { return ; }
 
-HttpRequestParser::HttpRequestParser( const HttpRequestParser & src ) { *this = src; return ; }
+HttpRequestParser::HttpRequestParser( const HttpRequestParser & src ) : HttpHeaders( src ), HttpMethods( src ), HttpResponse( src ), HttpUrl( src ), HttpVersion( src ) { return ; }
 
 HttpRequestParser & HttpRequestParser::operator=( const HttpRequestParser & rhs )
 {
@@ -34,8 +34,10 @@ HttpRequestParser::Request HttpRequestParser::deserializedRequest( const std::st
     std::istringstream request_stream( request );
     std::string method, url, version, line;
     request_stream >> method >> url >> version;
-    
-    request_data.method = HttpMethods::fromString( method );
+
+    try { request_data.method = HttpMethods::fromString( method ); }
+    catch ( const std::exception & e ) { LOG( ERROR ) << e.what(); }
+
     request_data.version = HttpVersion::fromString( version );
     // if ( request_data.version != HTTP_1_1 )
     //     throw HttpVersionException( "Invalid HTTP version" );
@@ -46,7 +48,7 @@ HttpRequestParser::Request HttpRequestParser::deserializedRequest( const std::st
     HttpRequestParser::parseHeaders( request_data, request, headerEndPos );
     HttpRequestParser::parseBody( request_data, request, headerEndPos );
 
-
+    return ( request_data );
 }
 
 std::string HttpRequestParser::serializeRequest( const Request & request )

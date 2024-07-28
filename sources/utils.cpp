@@ -13,7 +13,7 @@
 #include "utils.hpp"
 #include "Exceptions.hpp"
 
-std::fstream *  ft::openFile( std::string file_path, std::ios::openmode _mode )
+std::fstream *  ft::openFile( const std::string & file_path, std::ios::openmode _mode )
 {
     std::fstream * config_file = NULL;
     try
@@ -178,8 +178,7 @@ int    ft::stoi( std::string str )
     return ( i );
 }
 
-template< typename T >
-std::string ft::itos( const T & value )
+std::string ft::itos( const int & value )
 {
     std::ostringstream oss;
     oss << value;

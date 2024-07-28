@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:26 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 15:38:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 15:19:59 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Exceptions.hpp"
 
 # include <map>
+# include <bitset>
 
 class HttpMethods
 {
@@ -26,8 +27,8 @@ class HttpMethods
         {
             GET,
             POST,
-            PUT,
             DELETE,
+            PUT,
             HEAD,
             OPTIONS,
             TRACE,
@@ -39,6 +40,7 @@ class HttpMethods
 
         static std::string toString( Method method );
         static Method fromString( const std::string & method );
+        static std::bitset<9> getMethodBitMap( const std::string & allow_methods );
 
     protected:
         HttpMethods( void );

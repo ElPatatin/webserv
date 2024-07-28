@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:02:55 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 15:59:45 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 19:49:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 HttpVersion::HttpVersion( void ) { return ; }
 
 // Copy constructor
-HttpVersion::HttpVersion( const HttpVersion & src ) { return ; }
+HttpVersion::HttpVersion( const HttpVersion & src ) { *this = src; return ; }
 
 // Assignment operator
 HttpVersion &   HttpVersion::operator=( const HttpVersion & rhs )

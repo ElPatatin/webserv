@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/25 12:26:43 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/28 19:39:24 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -92,6 +92,8 @@ WEB_DIR	:= $(SRC_DIR)webserver/
 
 # Htpp directories
 HTP_DIR	:= $(SRC_DIR)HttpClass/
+HFS_DIR	:= $(HTP_DIR)HttpFileServingClass/
+HRP_DIR	:= $(HTP_DIR)HttpRequestParserClass/
 HDR_DIR	:= $(HTP_DIR)HttpHeadersClass/
 MTD_DIR	:= $(HTP_DIR)HttpMethodsClass/
 RSP_DIR	:= $(HTP_DIR)HttpResponseClass/
@@ -109,7 +111,7 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR) -I$(HTP_DIR) -I$(HDR_DIR) -I$(MTD_DIR) -I$(RSP_DIR) -I$(URL_DIR) -I$(VRS_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR) -I$(HTP_DIR) -I$(HFS_DIR) -I$(HRP_DIR) -I$(HDR_DIR) -I$(MTD_DIR) -I$(RSP_DIR) -I$(URL_DIR) -I$(VRS_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
@@ -141,24 +143,26 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)sockets.cpp \
 		$(WEB_DIR)epoll.cpp
 
-# Http files
-# SRCS	+= $(HTP_DIR)Http.cpp \
-# 		$(HDR_DIR)HttpHeaders.cpp \
-# 		$(MTD_DIR)HttpMethods.cpp \
-# 		$(RSP_DIR)HttpResponse.cpp \
-# 		$(URL_DIR)HttpUrl.cpp \
-# 		$(VRS_DIR)HttpVersion.cpp
+SRCS	+= $(HTP_DIR)Http.cpp \
+		$(HFS_DIR)HttpFileServing.cpp \
+		$(HFS_DIR)HttpDirListing.cpp \
+		$(HRP_DIR)HttpRequestParser.cpp \
+		$(HDR_DIR)HttpHeaders.cpp \
+		$(MTD_DIR)HttpMethods.cpp \
+		$(RSP_DIR)HttpResponse.cpp \
+		$(URL_DIR)HttpUrl.cpp \
+		$(VRS_DIR)HttpVersion.cpp
 
-SRCS	+= $(OHT_DIR)httpRequest.cpp \
-		$(OHT_DIR)httpResponse.cpp \
-		$(OHT_DIR)httpHeaders.cpp \
-		$(OHT_DIR)httpMethods2.cpp \
+# SRCS	+= $(OHT_DIR)httpRequest.cpp \
+# 		$(OHT_DIR)httpResponse.cpp \
+# 		$(OHT_DIR)httpHeaders.cpp \
+# 		$(OHT_DIR)httpMethods2.cpp \
 		$(OHT_DIR)httpErrors.cpp \
-		$(OHT_DIR)httpDirectoryListing.cpp \
-		$(OHT_DIR)httpFileServing.cpp \
-		$(OHT_DIR)http.cpp \
-		$(OHT_DIR)httpUrl.cpp \
-		$(OHT_DIR)httpCGI.cpp
+# 		$(OHT_DIR)httpDirectoryListing.cpp \
+# 		$(OHT_DIR)httpFileServing.cpp \
+# 		$(OHT_DIR)http.cpp \
+# 		$(OHT_DIR)httpUrl.cpp \
+# 		$(OHT_DIR)httpCGI.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 

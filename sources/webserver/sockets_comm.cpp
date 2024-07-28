@@ -6,12 +6,12 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/26 19:01:49 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:56:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sockets.hpp"
-#include "http.hpp"
+#include "Http.hpp"
 
 // ---------------------------------------------------------------------------
 
@@ -63,8 +63,8 @@ bool CommunicationSockets::headersReceived(const std::string &request, int &cont
     {
         // Extract headers and find Content-Length
         std::string headers = request.substr( 0, header_end_pos + 4 );
-        LOG( WARNING ) << "Headers received: " << headers;
-        HttpData temp_http = HttpRequests::parseRequest( headers );
+        // LOG( WARNING ) << "Headers received: " << headers;
+        Http::Request temp_http = Http::parseRequest( request );
 
         if (temp_http.headers.find("Content-Length") != temp_http.headers.end())
             content_length = ft::stoi(temp_http.headers["Content-Length"].second);

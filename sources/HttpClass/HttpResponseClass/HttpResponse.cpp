@@ -6,33 +6,24 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 13:01:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/23 11:32:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:51:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "HttpResponse.hpp"
 
-HttpResponse::HttpResponse( void )
-{
-    this->statusCodeMap = this->createStatusCodeMap();
-    this->statusMessageMap = this->createStatusMessageMap();
+StatusCodes     HttpResponse::statusCodeMap = HttpResponse::createStatusCodeMap();
+StatusMessages  HttpResponse::statusMessageMap = HttpResponse::createStatusMessageMap();
 
-    return ;
-}
+HttpResponse::HttpResponse( void ) { return ; }
 
-HttpResponse::HttpResponse( const HttpResponse& src )
-{
-    *this = src;
-
-    return ;
-}
+HttpResponse::HttpResponse( const HttpResponse& src ) { *this = src; return ; }
 
 HttpResponse & HttpResponse::operator=( const HttpResponse & rhs )
 {
     if (this != &rhs)
     {
-        this->statusCodeMap = rhs.statusCodeMap;
-        this->statusMessageMap = rhs.statusMessageMap;
+        // some code
     }
 
     return ( *this );
@@ -46,7 +37,7 @@ std::string HttpResponse::toString( int status_code )
 
     if ( it != statusCodeMap.end() )
         return ( it->second );
-    return ( NULL );
+    return ( "" );
 }
 
 int HttpResponse::fromString( const std::string & status_message )

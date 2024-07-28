@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 12:53:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/20 17:33:20 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:10:43 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ namespace Http
 {
     void    httpRequest( HttpData & http, Data & data, ConfigData & config );
     void    httpDirectoryListing( std::string path, std::string fullPath, Data & data, ConfigData & config );
-    void    httpFileServing( std::string path, std::string fullPath, Data & data, ConfigData & config );
+    void    httpFileServing1( std::string path, std::string fullPath, Data & data, ConfigData & config );
     void    executeCGI(const std::string &scriptPath, const std::string &queryString, std::ostringstream &response_stream, Data &data, ConfigData &config, HttpData & http );
 }
 

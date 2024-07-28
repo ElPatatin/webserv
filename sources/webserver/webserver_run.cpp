@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_run.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/27 16:58:50 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:36:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
-#include "http.hpp"
+#include "Http.hpp"
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
@@ -103,8 +103,11 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         if ( request.empty() )
             return ( WebServer::handle_bad_request( serverData, connIt, connection_to_server_map ) );
 
-        HttpData http = HttpRequests::parseRequest( request );
-        Http::httpRequest( http, serverData->data, *serverData->config );
+
+        Http::Request request_data = Http::parseRequest( request );
+        Http::handleRequest( request, *serverData->config, serverData->data );
+        // HttpData http = HttpRequests::parseRequest( request );
+        // Http::httpRequest( http, serverData->data, *serverData->config );
 
         CommunicationSockets::sendConnection( serverData->data );
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
@@ -124,7 +127,7 @@ void    WebServer::handle_bad_request
     )
 {
     LOG( INFO ) << "Connection closed by client";
-    HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
+    // HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
     CommunicationSockets::sendConnection( serverData->data );
     Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
     connection_to_server_map.erase( connIt );

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/14 16:19:04 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:23:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 
 # include "common.hpp"
 
+typedef unsigned short Port;
+
 namespace ft
 {
-    std::fstream *  openFile( std::string file_path, std::ios::openmode _mode );
+    std::fstream *  openFile( const std::string & file_path, std::ios::openmode _mode );
     void            closeFile( std::fstream * _file );
     std::fstream *  deleteOpenFile( std::fstream * _file );
     void            trim( std::string& str );
@@ -26,8 +28,7 @@ namespace ft
     std::string     prettyPrint( std::string function, int line, std::string message );
     void            welcome( void );
     int             stoi( std::string str );
-    template < typename T >
-    std::string     itos( const T & value );
+    std::string     itos( const int & value );
 };
 
 #endif
