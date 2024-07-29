@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:01:06 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/28 19:54:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:43:30 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class HttpFileServing
         static void httpFileServing( Data & data, const ConfigData & config, const HttpRequestParser::Request & Request, const int & response_code, const std::string & full_path );
         static void httpErrorServing( Data & data, const HttpRequestParser::Request & request, const int & response_code, const ConfigData & config );
         static void httpDirectoryListing( Data & data, const ConfigData & config, const HttpRequestParser::Request & request, const std::string & full_path );
+        static void httpRedirect( Data & data, const HttpRequestParser::Request & request, const unsigned short & response_code, const std::string & location );
 
     private:
                     HttpFileServing( void );

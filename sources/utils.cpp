@@ -184,3 +184,18 @@ std::string ft::itos( const int & value )
     oss << value;
     return ( oss.str() );
 }
+
+std::string ft::join( const std::vector< std::string > & vec, const std::string & delimiter )
+{
+    std::string result = "";
+
+    for ( size_t i = 0; i < vec.size(); ++i )
+    {
+        if ( vec.size() - 1 == i )
+            result += vec[ i ];
+        else
+            result += vec[ i ] + delimiter;
+    }
+
+    return ( result );
+}

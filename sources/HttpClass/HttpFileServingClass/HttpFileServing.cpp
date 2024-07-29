@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:01:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/28 20:17:56 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/29 19:04:34 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void    HttpFileServing::httpFileServing
 )
 {
     LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Serving file" );
+
     std::fstream * file = ft::openFile( full_path, std::ios::in | std::ios::binary );
     if ( !file || !file->is_open() )
         return ( HttpFileServing::httpErrorServing( data, request, NOT_FOUND, config ) );
@@ -70,6 +71,7 @@ void    HttpFileServing::httpErrorServing
         }
     }
 
+    const_cast< HttpRequestParser::Request & >( request ).url = error_page;
     std::fstream * file = ft::openFile( error_file, std::ios::in | std::ios::binary );
     if ( !file || !file->is_open() )
     {
@@ -84,6 +86,26 @@ void    HttpFileServing::httpErrorServing
     ft::closeFile( file );
 
     return ( HttpFileServing::httpDataServing( data, request, response_code, content ) );
+}
+
+void    HttpFileServing::httpRedirect(  Data & data, const HttpRequestParser::Request & request, const unsigned short & response_code, const std::string & location )
+{
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Redirecting" );
+
+    std::string page = "<html><head><title>Redirecting</title></head><body><h1>Redirecting</h1><a href=\"" + location + "\">" + location + "</a></body></html>";
+    std::ostringstream response_stream;
+
+    response_stream << HttpVersion::toString( request.version ) << " " << response_code << " " << HttpResponse::toString( response_code ) << "\r\n";
+    response_stream << "Content-Length: " << page.size() << "\r\n";
+    response_stream << "Content-Type: text/html\r\n";
+    response_stream << "Location: " << location << "\r\n";
+    response_stream << "\r\n";
+    response_stream << page;
+
+
+    // Store response in data
+    data.response = response_stream.str();
+    return ;
 }
 
 void    HttpFileServing::httpDataServing( Data & data, const HttpRequestParser::Request & request, const int & response_code, const std::string & content )

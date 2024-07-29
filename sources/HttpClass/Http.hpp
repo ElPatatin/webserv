@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:07 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/28 19:18:55 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:42:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ class Http : public HttpRequestParser
         static std::string getFullUrl( const std::string & root, const std::string & url );
         static std::string getEndpoint( const std::string & url );
         static std::string locationFinder( const Location & location, const std::string & key );
+        static bool         checkErrorFile( const std::string & full_path, ErrorPages & error_pages, int * response_code );
+        static std::pair< unsigned short, std::string >    getRedirect( const std::string & endpoint, const Redirects & redirects );
         
 };
 

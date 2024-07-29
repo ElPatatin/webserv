@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 16:12:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/28 17:23:37 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/29 11:50:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ namespace ft
     void            welcome( void );
     int             stoi( std::string str );
     std::string     itos( const int & value );
+    std::string     join( const std::vector< std::string > & vec, const std::string & delimiter );
 };
 
 #endif
