@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:01:06 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/29 15:43:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 13:29:32 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ class HttpFileServing
         static void httpErrorServing( Data & data, const HttpRequestParser::Request & request, const int & response_code, const ConfigData & config );
         static void httpDirectoryListing( Data & data, const ConfigData & config, const HttpRequestParser::Request & request, const std::string & full_path );
         static void httpRedirect( Data & data, const HttpRequestParser::Request & request, const unsigned short & response_code, const std::string & location );
-
+        static void httpDataServing( Data & data, const HttpRequestParser::Request & Request, const int & response_code, const std::string & content );
+        static void httpSaveFile( Data & data, const HttpRequestParser::Request & request, const std::string & full_path, const std::string & root );
     private:
                     HttpFileServing( void );
                     HttpFileServing( const HttpFileServing & src );
                     HttpFileServing & operator=( const HttpFileServing & rhs );
                     ~HttpFileServing( void );
 
-        static void httpDataServing( Data & data, const HttpRequestParser::Request & Request, const int & response_code, const std::string & content );
         static void generateDirectoryPage( std::ostringstream & response_stream, DIR * dir, const std::string & path, const std::string & fullPath, const std::string & root );
 
         static std::string getContentType( const std::string & fullPath );

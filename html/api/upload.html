@@ -214,7 +214,7 @@
                 formData.append('files[]', files[i]);
             }
 
-            fetch('./html/uploads', {
+            fetch('./uploads', {
                 method: 'POST',
                 body: formData
             })
@@ -238,7 +238,7 @@
 
         async function fetchFiles() {
             try {
-                const path = 'html/uploads';  // Adjust this path as needed
+                const path = 'html/api/uploads';  // Adjust this path as needed
                 const response = await fetch(`/cgi-bin/list-files.py?path=${encodeURIComponent(path)}`);
                 
                 if (!response.ok) {
@@ -282,7 +282,7 @@
             files.forEach(file => {
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
-                link.href = `/uploads/${file}`;
+                link.href = `/api/uploads/${file}`;
                 link.textContent = file;
 
                 // Add emoji

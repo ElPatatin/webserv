@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:07 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/29 15:42:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 13:03:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class Http : public HttpRequestParser
     public:
         static Http::Request parseRequest( const std::string & request );
         static void handleRequest( const std::string & request, const ConfigData & config_data, const Data & data );
-        static bool handleCGI( const std::string & request, const ConfigData & config_data, const Data & data );
+        static bool    handleCGI( const Request & request, const ConfigData & config_data, const Data & data, std::string & full_url );
 
     private:
         Http( void );
