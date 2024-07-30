@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 13:08:00 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:11:16 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ HttpRequestParser::Request HttpRequestParser::deserializedRequest( const std::st
     size_t headerEndPos = request.find("\r\n\r\n");
     HttpRequestParser::parseHeaders( request_data, request, headerEndPos );
     HttpRequestParser::parseBody( request_data, request, headerEndPos );
+    HttpRequestParser::parseCookie( request_data );
 
     return ( request_data );
 }
@@ -154,7 +155,56 @@ void    HttpRequestParser::parseBody( Request & request_data, const std::string 
 
 void    HttpRequestParser::parseCookie( Request & request_data )
 {
-    UNUSED( request_data );
+    if ( request_data.headers.find( "Cookie" ) != request_data.headers.end() )
+        request_data.cookies = request_data.headers[ "Cookie" ].second;
+    else
+        request_data.cookies = HttpRequestParser::createSetCookieHeader( "session", HttpRequestParser::generateToken( 32 ), "", "/", "", false, true );
 
     return ;
+}
+
+std::string HttpRequestParser::generateToken( size_t length )
+{
+    const std::string characters = 
+        "0123456789"
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz";
+    std::string random_string;
+    random_string.reserve(length);
+
+    // unsigned seed = static_cast< unsigned >( std::time( 0 ) ) * static_cast< unsigned >( getpid() );
+    std::srand( static_cast< unsigned int>( std::time( 0 ) ) );
+    usleep(1000);
+
+    for ( size_t i = 0; i < length; ++i )
+        random_string += characters[ std::rand() % characters.size() ];
+    
+    return random_string;
+}
+
+std::string HttpRequestParser::createSetCookieHeader
+(
+    const std::string &name,
+    const std::string &value,
+    const std::string &expires = "",
+    const std::string &path = "/",
+    const std::string &domain = "",
+    bool secure = false,
+    bool httpOnly = true
+)
+{
+    std::stringstream ss;
+    ss << "Set-Cookie: " << name << "=" << value;
+    if ( !expires.empty() )
+        ss << "; Expires=" << expires;
+    if ( !path.empty() )
+        ss << "; Path=" << path;
+    if ( !domain.empty() )
+        ss << "; Domain=" << domain;
+    if ( secure )
+        ss << "; Secure";
+    if ( httpOnly )
+        ss << "; HttpOnly";
+
+    return ( ss.str() );
 }

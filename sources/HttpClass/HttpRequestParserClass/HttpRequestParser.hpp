@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/24 15:51:09 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:09:11 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ class HttpRequestParser : public HttpHeaders, public HttpMethods, public HttpRes
             Headers     headers;
             std::string body;
             std::string response;
+            std::string cookies;
+            bool        cookies_found;
         }   Request;
 
         static Request parseRequest( const std::string & request );
@@ -52,7 +54,9 @@ class HttpRequestParser : public HttpHeaders, public HttpMethods, public HttpRes
         static void parseHeaders( Request & request_data, const std::string & request, size_t headerEndPos );
         static void parseBody( Request & request_data, const std::string & request, size_t headerEndPos );
         static void parseCookie( Request & request_data );
-
+        static std::string  generateToken( size_t length );
+        static std::string  createSetCookieHeader( const std::string & name, const std::string & value, const std::string & expires, const std::string & path, const std::string & domain, bool secure, bool httpOnly );
+        
 };
 
 #endif

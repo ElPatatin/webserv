@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:01:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/29 19:04:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:00:04 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void    HttpFileServing::httpDataServing( Data & data, const HttpRequestParser::
     response_stream << HttpVersion::toString( request.version ) << " " << response_code << " " << HttpResponse::toString( response_code ) << "\r\n";
     response_stream << "Content-Length: " << content.size() << "\r\n";
     response_stream << "Content-Type: " << HttpFileServing::getContentType( request.url ) << "\r\n";
+    response_stream << "Set-Cookie: " << request.cookies << "\r\n";
     response_stream << "\r\n";
     response_stream << content;
 

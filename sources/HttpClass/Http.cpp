@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 14:53:04 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 20:00:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,228 +27,90 @@ Http & Http::operator=( const Http & rhs )
 
 Http::~Http( void ) { return ; }
 
-Http::Request Http::parseRequest( const std::string & request )
-{
-    Request request_data = HttpRequestParser::deserializedRequest( request );
-    return ( request_data );
-}
 
+// Takes the request and the config data and handles the request
+// If the request is a redirection, it will redirect the request
+// Else if the request is a CGI request, it will handle the CGI request
+// Else, it will handle the request as the request method
 void Http::handleRequest( const std::string & request, const ConfigData & config_data, const Data & data )
 {
     LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Handling request" );
 
     try
     {
-        Request request_data = HttpRequestParser::deserializedRequest( request );
+        Request request_data = Http::parseRequest( request );
 
-        Redirects redirects;
-        std::pair< unsigned short, std::string > redirect;
-        // Check if the requested path is a redirection
-        redirects = config_data.getRedirects();
-        if ( redirects.find( request_data.url ) != redirects.end() )
-        {
-            redirect = Http::getRedirect( request_data.url, redirects );
-            HttpFileServing::httpRedirect( const_cast< Data & >( data ), request_data, redirect.first, redirect.second );
+        if ( Http::handleRedirect( request_data, config_data, data ) )
             return ;
-        }
 
-        std::string endpoint = Http::getEndpoint( request_data.url );
-        std::cout << "Endpoint: " << endpoint << std::endl;
-
-        Location location = config_data.getLocation( endpoint );
-        if ( location.empty() )
-            return ;
-        std::cout << "Location found" << std::endl;
-
-        // std::string allow_methods = Http::locationFinder( location, "allow_methods" );
-        // std::bitset< 9 > allowed_method = HttpMethods::getMethodBitMap( allow_methods );
-        // if ( ( allowed_method.operator&=( 1 << request_data.method ) ) == 0 )
-        //     return ;
-
-        std::string root = Http::locationFinder( location, "root" );
-        std::cout << "Root: " << root << std::endl;
-        std::string full_url = Http::getFullUrl( root, request_data.url );
-        std::cout << "Full url: " << full_url << std::endl;
+        Http_t http_data = Http::getHttpData( request_data, config_data );
 
         if ( request_data.isCGI )
-        {
-            if ( Http::handleCGI( request_data, config_data, data, full_url ) )
-                return ;
-        }
+            return ( Http::handleCGI( request_data, config_data, data, http_data.full_path ) );
 
-        struct stat info;
-        bool is_directory = Http::locationFinder( location, "directory_listing" ) == "on" ? true : false;
-        switch ( request_data.method )
-        {
-            case GET:
-                LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "GET request" );
-
-                std::cout << "GET request" << std::endl;
-                if ( stat( full_url.c_str(), &info ) != 0 && access( full_url.c_str(), F_OK ) == -1 )
-                    HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, NOT_FOUND, config_data );
-            
-                
-                if ( info.st_mode & S_IFDIR && is_directory )
-                {
-                    std::cout << "Sending directory listing" << std::endl;
-                    HttpFileServing::httpDirectoryListing( const_cast< Data & >( data ), config_data, request_data, full_url );
-                }
-                else if ( info.st_mode & S_IFDIR && !is_directory )
-                {
-                    std::cout << "Unauthorized request, directory listing is off for " << endpoint << std::endl;
-                    HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, UNAUTHORIZED, config_data );
-                }
-                else if ( info.st_mode & S_IFREG )
-                {
-                    int response_code = 0;
-                    ErrorPages error_pages = config_data.getErrorPages();
-                    if ( Http::checkErrorFile( full_url, error_pages, &response_code ) )
-                    {
-                        std::cout << "Sending error file" << std::endl;
-                        HttpFileServing::httpFileServing( const_cast< Data & >( data ), config_data, request_data, response_code, full_url );
-                    }
-                    else
-                    {
-                        std::cout << "Sending file" << std::endl;
-                        HttpFileServing::httpFileServing( const_cast< Data & >( data ), config_data, request_data, OK, full_url );
-                    }
-                }
-                else
-                {
-                    std::cout << "Internal server error" << std::endl;
-                    HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
-                }
-
-                break;
-            case POST:
-                LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "POST request" );
-                std::cout << "POST request" << std::endl;
-
-                if ( stat( full_url.c_str(), &info ) != 0 )
-                {
-                    HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, NOT_FOUND, config_data );
-                    return ;
-                }
-
-                HttpFileServing::httpSaveFile( const_cast< Data & >( data ), request_data, full_url, root );
-                return ;
-
-                break;
-            case DELETE:
-                LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "DELETE request" );
-                std::cout << "DELETE request" << std::endl;
-
-                if ( stat( full_url.c_str(), &info ) != 0 && access( full_url.c_str(), F_OK ) == -1 )
-                    HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, NOT_FOUND, config_data );
-                
-                //  if its a file, try to delete it
-                if ( info.st_mode & S_IFREG )
-                {
-                    if ( std::remove( full_url.c_str() ) != 0 )
-                        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
-                    else
-                        HttpFileServing::httpDataServing( const_cast< Data & >( data ), request_data, OK, "" );
-                    return ;
-                }
-                else if ( info.st_mode & S_IFDIR )
-                {
-                    // if the folder have no permissions, return 403
-                    if ( access( full_url.c_str(), W_OK ) == -1 )
-                    {
-                        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, FORBIDDEN, config_data );
-                        return ;
-                    }
-                    // if url ends with /, remove the contents of the directory
-                    if ( full_url[ full_url.size() - 1 ] == '/' )
-                    {
-                        std::string command = "rm -fr " + full_url + "*";
-                        if ( std::system( command.c_str() ) != 0 )
-                            HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
-                        else
-                            HttpFileServing::httpDataServing( const_cast< Data & >( data ), request_data, OK, "" );
-                        return ;
-                    }
-                    // if url does not end with /, remove the directory
-                    if ( std::remove( full_url.c_str() ) != 0 )
-                        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
-                    else
-                        HttpFileServing::httpDataServing( const_cast< Data & >( data ), request_data, OK, "" );
-                }
-
-                HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
-                return ;
-
-                break;
-            default:
-                LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Method not allowed" );
-                std::cout << "Method not allowed" << std::endl;
-                break;
-        }
+        Http::handleMethod( request_data, config_data, data, http_data );
     }
     catch ( HttpException & e ) { LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() ); }
     catch ( std::exception & e ) { LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() ); }
-
     return ;
 }
 
-bool    Http::checkErrorFile( const std::string & full_path, ErrorPages & error_pages, int * response_code )
+Http::Request Http::parseRequest( const std::string & request )
 {
-    std::string file = ft::split( full_path, "/" ).back();
-    std::string error = file.substr( 0, file.find( '.' ) );
-    *response_code = ft::stoi( error );
-    std::string error_page = error_pages[ *response_code ];
-    if ( error_page.empty() )
-        return ( false );
-    return ( true );
+    Request request_data = HttpRequestParser::deserializedRequest( request );
+    return ( request_data );
 }
 
-std::string Http::getFullUrl( const std::string & root, const std::string & url )
+Http::Http_t    Http::getHttpData( const Http::Request & request, const ConfigData & config_data )
 {
-    if ( root.empty() || access( root.c_str(), F_OK ) == -1 )
-        throw std::runtime_error( "Error: root path is not valid" );
+    Http_t http_data;
 
-    std::vector< std::string > url_parts = ft::split( url, "/" );
-    std::vector< std::string > root_parts = ft::split( root, "/" );
+    http_data.endpoint = Http::getEndpoint( request.url );
+    http_data.location = config_data.getLocation( http_data.endpoint );
+    if ( http_data.location.empty() )
+        throw HttpException( "Error: location not found" );
 
-    std::cout << "Root parts: " << root_parts.back() << " URL: " << url_parts[ 1 ] << std::endl;
-    if ( root_parts.back() == url_parts[ 1 ] )
-        url_parts.erase( url_parts.begin() + 1 );
-    
-    std::string full_url = root + ft::join( url_parts, "/" );
-    return ( full_url );
+    http_data.root = Http::locationFinder( http_data.location, "root" );
+    if ( http_data.root.empty() )
+        throw HttpException( "Error: root path not found" );
+
+    http_data.full_path = Http::getFullUrl( http_data.root, request.url );
+    if ( http_data.full_path.empty() )
+        throw HttpException( "Error: full path not found" );
+
+    http_data.dir_list = Http::locationFinder( http_data.location, "directory_listing" ) == "on" ? true : false;
+
+    http_data.autoindex = Http::locationFinder( http_data.location, "autoindex" ) == "on" ? true : false;
+    http_data.index_page = Http::locationFinder( http_data.location, "index" );
+
+    return ( http_data );
 }
 
-std::string Http::getEndpoint( const std::string & url )
+bool    Http::handleRedirect( const Request & request, const ConfigData & config_data, const Data & data )
 {
-    size_t count = 0;
-    std::string endpoint = "";
-
-    for ( std::string::const_iterator it = url.begin(); it != url.end(); ++it )
+    Redirects redirects = config_data.getRedirects();
+    if ( redirects.find( request.url ) != redirects.end() )
     {
-        if ( *it == '/' )
-            count++;
+        std::pair< unsigned short, std::string > redirect = Http::getRedirect( request.url, redirects );
+        HttpFileServing::httpRedirect( const_cast< Data & >( data ), request, redirect.first, redirect.second );
+        return ( true );
     }
-
-    if ( count == 1 )
-        endpoint = "/";
-    else
-        endpoint = url.substr( 0, url.find( '/', 1 ) );
-
-    return ( endpoint );
+    return ( false );
 }
 
-std::string Http::locationFinder( const Location & location, const std::string & key )
+void    Http::handleMethod( const Request & request_data, const ConfigData & config_data, const Data & data, const Http::Http_t & http_data )
 {
-    for ( size_t i = 0; i < location.size(); ++i )
-    {
-        if ( location[ i ].first == key )
-            return ( location[ i ].second );
-    }
-    return ( "" );
-}
+    std::string allow_methods = Http::locationFinder( http_data.location, "allow_methods" );
+    std::bitset< 9 > allowed_method = HttpMethods::getMethodBitMap( allow_methods );
+    if ( ( allowed_method.operator&=( 1 << request_data.method ) ) == 0 )
+        return ;
 
-std::pair< unsigned short, std::string > Http::getRedirect( const std::string & endpoint, const Redirects & redirects )
-{
-    std::pair< unsigned short, std::string > redirect = redirects.at( endpoint );
-    return ( redirect );
+    // Build a funcion table pointer
+    void ( *method_table[ 3 ] )( const Request &, const ConfigData &, const Data &, const Http::Http_t & ) = {
+        Http::handleGet,
+        Http::handlePost,
+        Http::handleDelete
+    };
+
+    method_table[ request_data.method ]( request_data, config_data, data, http_data );
 }
