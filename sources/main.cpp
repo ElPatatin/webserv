@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 18:26:50 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 16:41:13 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:23:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int main(int ac, char **av)
         Cluster cluster;
         config_parser( ac, av, cluster );
 
-        // // ft::welcome();
+        ft::welcome();
         webserver( cluster );
         return ( 0 );
     }

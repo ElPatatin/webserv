@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 23:59:37 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:38:36 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,18 +69,36 @@ Http::Http_t    Http::getHttpData( const Http::Request & request, const ConfigDa
     http_data.endpoint = Http::getEndpoint( request.url );
     http_data.location = config_data.getLocation( http_data.endpoint );
     if ( http_data.location.empty() )
-        throw HttpException( "Error: location not found" );
+    {
+        VirtualServers virtual_servers = config_data.getVirtualServers();
+        for ( VirtualServers::iterator it = virtual_servers.begin(); it != virtual_servers.end(); it++ )
+        {
+            http_data.location = it->getLocation( http_data.endpoint );
+            if ( http_data.location.empty() )
+                break ;
+        }
+        if ( http_data.location.empty() )
+        {
+            LOG( DEBUG ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Error: location not found" );
+            throw HttpException( "Error: location not found" );
+        }
+    }
 
     http_data.root = Http::locationFinder( http_data.location, "root" );
     if ( http_data.root.empty() )
-        throw HttpException( "Error: root path not found" );
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Error: root not found" );
+        throw HttpException( "Error: root not found" );
+    }
 
     http_data.full_path = Http::getFullUrl( http_data.root, request.url );
     if ( http_data.full_path.empty() )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Error: full path not found" );
         throw HttpException( "Error: full path not found" );
+    }
 
     http_data.dir_list = Http::locationFinder( http_data.location, "directory_listing" ) == "on" ? true : false;
-
     http_data.autoindex = Http::locationFinder( http_data.location, "autoindex" ) == "on" ? true : false;
     http_data.index_page = Http::locationFinder( http_data.location, "index" );
 
@@ -90,6 +108,15 @@ Http::Http_t    Http::getHttpData( const Http::Request & request, const ConfigDa
 bool    Http::handleRedirect( const Request & request, const ConfigData & config_data, const Data & data )
 {
     Redirects redirects = config_data.getRedirects();
+    VirtualServers virtual_servers = config_data.getVirtualServers();
+    for ( VirtualServers::iterator it = virtual_servers.begin(); it != virtual_servers.end(); it++ )
+    {
+        Redirects virtual_server_redirects = it->getRedirects();
+        redirects.insert( virtual_server_redirects.begin(), virtual_server_redirects.end() );
+    }
+    if ( redirects.empty() )
+        return ( false );
+
     if ( redirects.find( request.url ) != redirects.end() )
     {
         std::pair< unsigned short, std::string > redirect = Http::getRedirect( request.url, redirects );

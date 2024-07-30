@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpGet.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:36:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 19:36:33 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:35:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,19 @@ void Http::handleGet( const Request & request, const ConfigData & config_data, c
     {
         int response_code = 0;
         ErrorPages error_pages = config_data.getErrorPages();
+        if ( error_pages.empty() )
+        {
+            VirtualServers virtual_server = config_data.getVirtualServers();
+            for ( VirtualServers::iterator it = virtual_server.begin(); it != virtual_server.end(); it++ )
+            {
+                if ( it->getErrorPages().empty() )
+                    continue ;
+                error_pages = it->getErrorPages();
+                break ;
+            }
+            if ( error_pages.empty() )
+                return ( HttpFileServing::httpFileServing( const_cast< Data & >( data ), config_data, request, OK, http_data.full_path ) );
+        }
         if ( Http::checkErrorFile( http_data.full_path, error_pages, &response_code ) )
             return ( HttpFileServing::httpFileServing( const_cast< Data & >( data ), config_data, request, response_code, http_data.full_path ) );
         return ( HttpFileServing::httpFileServing( const_cast< Data & >( data ), config_data, request, OK, http_data.full_path ) );

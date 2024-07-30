@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_parse.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/15 16:11:55 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/17 19:16:43 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:27:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@ void    config_parser( int ac, char **av, Cluster & cluster )
         throw ConfigFileException( "Error: no servers found in config file." );
     cluster.config_data = new ConfigData[ cluster.n_servers ];
     config_load( config, cluster.config_data, cluster.n_servers );
-    if ( !config_load_validate( cluster.config_data ) )
+    if ( !config_load_validate( *cluster.config_data ) )
         throw ConfigFileException( "Error: config data is bad." );
+    LOG( INFO ) << "Config file loaded successfully";
     return ;
 }
 
