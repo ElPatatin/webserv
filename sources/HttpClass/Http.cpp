@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Http.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 20:00:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 23:59:37 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void Http::handleRequest( const std::string & request, const ConfigData & config
     }
     catch ( HttpException & e ) { LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() ); }
     catch ( std::exception & e ) { LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() ); }
+
     return ;
 }
 
@@ -95,6 +96,7 @@ bool    Http::handleRedirect( const Request & request, const ConfigData & config
         HttpFileServing::httpRedirect( const_cast< Data & >( data ), request, redirect.first, redirect.second );
         return ( true );
     }
+
     return ( false );
 }
 
@@ -113,4 +115,6 @@ void    Http::handleMethod( const Request & request_data, const ConfigData & con
     };
 
     method_table[ request_data.method ]( request_data, config_data, data, http_data );
+
+    return ;
 }

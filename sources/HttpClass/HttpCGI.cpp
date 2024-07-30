@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpCGI.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 14:44:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 17:40:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 23:52:50 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ void    Http::handleCGI( const Request & request, const ConfigData & config_data
 
     if  ( !request.query.empty() )
         command += " " + request.query;
-    std::cout << command << std::endl;
 
     int result = std::system( command.c_str() );
-    std::cout << result << std::endl;
     if  ( result != 0 )
     {
         LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to execute CGI script using std::system" );
@@ -71,9 +69,7 @@ void    Http::handleCGI( const Request & request, const ConfigData & config_data
         response_stream << "\r\n";
     }
 
-    std::cout << response_stream.str() << std::endl;
     const_cast< Data & >( data ).response = response_stream.str();
-
     std::remove( tmp_file_path.c_str() );
     return ;
 }
