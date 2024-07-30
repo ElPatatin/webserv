@@ -6,7 +6,7 @@
 #    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/30 12:21:51 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/30 14:47:35 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -144,6 +144,7 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)epoll.cpp
 
 SRCS	+= $(HTP_DIR)Http.cpp \
+		$(HTP_DIR)HttpCGI.cpp \
 		$(HFS_DIR)HttpFileServing.cpp \
 		$(HFS_DIR)HttpDirListing.cpp \
 		$(HFS_DIR)HttpSaveFile.cpp \

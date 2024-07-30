@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 13:29:48 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/30 14:53:04 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,7 @@ void Http::handleRequest( const std::string & request, const ConfigData & config
                     // if url ends with /, remove the contents of the directory
                     if ( full_url[ full_url.size() - 1 ] == '/' )
                     {
-                        std::string command = "rm -rf " + full_url + "*";
+                        std::string command = "rm -fr " + full_url + "*";
                         if ( std::system( command.c_str() ) != 0 )
                             HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request_data, INTERNAL_SERVER_ERROR, config_data );
                         else
@@ -199,49 +199,6 @@ bool    Http::checkErrorFile( const std::string & full_path, ErrorPages & error_
     std::string error_page = error_pages[ *response_code ];
     if ( error_page.empty() )
         return ( false );
-    return ( true );
-}
-
-bool    Http::handleCGI( const Request & request, const ConfigData & config_data, const Data & data, std::string & full_url )
-{
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Handling CGI" );
-
-    // Temporary file for CGI output
-    std::string tmpFilePath = "/tmp/cgi_output.txt";
-    std::string command = full_url + " > " + tmpFilePath;
-
-    // Append query string if not empty
-    if  ( !request.query.empty() )
-        command += " " + request.query;
-    std::cout << command << std::endl;
-
-    // Execute the command
-    int result = std::system( command.c_str() );
-    if  ( result == -1 )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to execute CGI script using std::system" );
-        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, INTERNAL_SERVER_ERROR, config_data );
-        return ( true );
-    }
-
-    // Open the temporary file to read the CGI output
-    std::ifstream tmpFile( tmpFilePath.c_str() );
-    if  ( !tmpFile.is_open() )
-    {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to open temporary file for CGI output" );
-        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, INTERNAL_SERVER_ERROR, config_data );
-        return ( true );
-    }
-
-    // Read the content of the temporary file line by line and add to the response stream
-    std::stringstream response_stream;
-    std::string line;
-    while ( std::getline( tmpFile, line ) )
-        response_stream << line << "\n";
-    tmpFile.close(); // Close the temporary file
-
-    // Save the response in the data structure
-    const_cast< Data & >( data ).response = response_stream.str();
     return ( true );
 }
 
