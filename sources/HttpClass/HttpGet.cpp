@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpGet.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:36:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 00:35:27 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:25:09 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void Http::handleGet( const Request & request, const ConfigData & config_data, c
 
     if ( stat( http_data.full_path.c_str(), &info ) != 0 && access( http_data.full_path.c_str(), F_OK ) == -1 )
         return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, NOT_FOUND, config_data ) );
+    if ( access( http_data.full_path.c_str(), R_OK ) == -1 )
+        return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, FORBIDDEN, config_data ) );
 
     if ( info.st_mode & S_IFDIR )
     {

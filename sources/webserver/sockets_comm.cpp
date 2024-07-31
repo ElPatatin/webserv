@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 13:10:34 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:05:35 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ std::string    CommunicationSockets::receiveConnection( const Data & data )
         int ret = CommunicationSockets::waitTime( data, true );
         if (ret == -1)
         {
-            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: " + std::string( std::strerror( errno ) ) );
-            throw SocketException( "Error: select: " + std::string( std::strerror( errno ) ) );
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: failed to wait for socket to be ready for reading" );
+            throw SocketException( "Error: select: failed to wait for socket to be ready for reading" );
         }
         else if (ret == 0)
         {
@@ -124,8 +124,8 @@ void    CommunicationSockets::sendConnection( const Data & data )
         int ret = CommunicationSockets::waitTime( data, false );
         if (ret == -1)
         {
-            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: " + std::string( std::strerror( errno ) ) );
-            throw SocketException( "Error: select: " + std::string( std::strerror( errno ) ) );
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: failed to wait for socket to be ready for writing" );
+            throw SocketException( "Error: select: failed to wait for socket to be ready for writing" );
         }
         else if (ret == 0)
         {

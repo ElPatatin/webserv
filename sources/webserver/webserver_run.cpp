@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 13:09:02 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:06:18 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ void    WebServer::handle_existing_connection( int event_fd, std::map < int, Ser
         if ( request.empty() )
             return ( WebServer::handle_bad_request( serverData, connIt, connection_to_server_map ) );
 
-        Http::Request request_data = Http::parseRequest( request );
         Http::handleRequest( request, *serverData->config, serverData->data );
 
         CommunicationSockets::sendConnection( serverData->data );

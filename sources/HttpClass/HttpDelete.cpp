@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:36:37 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 19:14:45 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:26:17 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,10 @@ void Http::handleDelete( const Request & request, const ConfigData & config_data
     struct stat info;
 
     if ( stat( http_data.full_path.c_str(), &info ) != 0 && access( http_data.full_path.c_str(), F_OK ) == -1 )
-        HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, NOT_FOUND, config_data );
-    
+        return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, NOT_FOUND, config_data ) );
+    if ( access( http_data.full_path.c_str(), R_OK ) == -1 )
+        return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, FORBIDDEN, config_data ) );
+
     if ( info.st_mode & S_IFREG )
     {
         if ( std::remove( http_data.full_path.c_str() ) != 0 )
@@ -40,7 +42,7 @@ void Http::handleDelete( const Request & request, const ConfigData & config_data
             else
                 return ( HttpFileServing::httpDataServing( const_cast< Data & >( data ), request, OK, "" ) );
         }
-        
+
         if ( std::remove( http_data.full_path.c_str() ) != 0 )
             return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, INTERNAL_SERVER_ERROR, config_data ) );
         else

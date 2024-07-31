@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 18:36:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 19:14:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:22:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void Http::handlePost( const Request & request, const ConfigData & config_data, 
 
     if ( stat( http_data.full_path.c_str(), &info ) != 0 )
         return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, NOT_FOUND, config_data ) );
+    if ( access( http_data.full_path.c_str(), W_OK ) == -1 )
+        return ( HttpFileServing::httpErrorServing( const_cast< Data & >( data ), request, FORBIDDEN, config_data ) );
 
     return ( HttpFileServing::httpSaveFile( const_cast< Data & >( data ), request, http_data.full_path, http_data.root ) );
 }

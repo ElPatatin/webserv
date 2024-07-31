@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:08:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 13:35:14 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:28:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
 
         // Construct file path
         std::string path_file = root + "/" + request.url.substr( request.url.find_last_of( "/" ) + 1 ) + "/" + filename;
-        std::cout << "path_file: " << path_file << std::endl;
 
         // Save file content
         std::fstream *file = ft::openFile( path_file, std::ios::out | std::ios::binary );

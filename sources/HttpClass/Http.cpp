@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Http.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 00:38:36 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:26:52 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,12 @@ void Http::handleRequest( const std::string & request, const ConfigData & config
     try
     {
         Request request_data = Http::parseRequest( request );
+        size_t content_length = ft::stoi ( request_data.headers[ "Content-Length" ].second );
+        if ( content_length > config_data.getClientMaxBodySize() )
+        {
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Error: content length too large" );
+            throw HttpException( "Error: content length too large" );
+        }
 
         if ( Http::handleRedirect( request_data, config_data, data ) )
             return ;
