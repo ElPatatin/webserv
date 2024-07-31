@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:01:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 20:00:04 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:49:42 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void    HttpFileServing::httpFileServing
         return ( HttpFileServing::httpErrorServing( data, request, NOT_FOUND, config ) );
     
     std::string content = std::string( ( std::istreambuf_iterator< char >( *file ) ), std::istreambuf_iterator< char >() );
+    ft::closeFile( file );
 
     HttpFileServing::httpDataServing( data, request, response_code, content );
     return ;
