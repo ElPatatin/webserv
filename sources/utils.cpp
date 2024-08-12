@@ -13,7 +13,7 @@
 #include "utils.hpp"
 #include "Exceptions.hpp"
 
-std::fstream *  ft::openFile( std::string file_path, std::ios::openmode _mode )
+std::fstream *  ft::openFile( const std::string & file_path, std::ios::openmode _mode )
 {
     std::fstream * config_file = NULL;
     try
@@ -136,17 +136,18 @@ std::string& ft::rtrim( std::string & str )
 
 std::vector< std::string > ft::split( const std::string & str, std::string delimiter )
 {
-    std::vector<std::string> tokens;
+    std::vector< std::string > tokens;
     size_t start = 0;
-    size_t end = str.find(delimiter);
+    size_t end = str.find( delimiter );
 
-    while (end != std::string::npos) {
-        tokens.push_back(str.substr(start, end - start));
+    while ( end != std::string::npos )
+    {
+        tokens.push_back( str.substr( start, end - start ) );
         start = end + delimiter.length();
-        end = str.find(delimiter, start);
+        end = str.find( delimiter, start );
     }
 
-    tokens.push_back(str.substr(start, end - start));
+    tokens.push_back( str.substr( start, end - start ) );
     return tokens;
 }
 
@@ -177,10 +178,24 @@ int    ft::stoi( std::string str )
     return ( i );
 }
 
-template< typename T >
-std::string ft::itos( const T & value )
+std::string ft::itos( const int & value )
 {
     std::ostringstream oss;
     oss << value;
     return ( oss.str() );
+}
+
+std::string ft::join( const std::vector< std::string > & vec, const std::string & delimiter )
+{
+    std::string result = "";
+
+    for ( size_t i = 0; i < vec.size(); ++i )
+    {
+        if ( vec.size() - 1 == i )
+            result += vec[ i ];
+        else
+            result += vec[ i ] + delimiter;
+    }
+
+    return ( result );
 }

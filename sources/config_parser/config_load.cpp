@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:57:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 12:54:29 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/28 10:54:00 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,12 +156,6 @@ static void config_checking( std::string line, ConfigData & current_config, size
     {
         if ( !ConfigLoad::config_load_locations( config, line, i, current_config ) )
             throw ConfigFileException( "Error: could not load locations." );
-    }
-
-    if ( line.find( "directory_listing" ) != std::string::npos )
-    {
-        if ( !ConfigLoad::config_load_directory_listing( line, current_config ) )
-            throw ConfigFileException( "Error: could not load directory listing." );
     }
 
     return ;

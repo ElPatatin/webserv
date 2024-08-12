@@ -1,21 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httpUrl.cpp                                        :+:      :+:    :+:   */
+/*   HttpUrl.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/10 13:22:01 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:58:54 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/07/20 13:02:59 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/07/20 15:51:27 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http.hpp"
+#include "HttpUrl.hpp"
 
-// Function to URL decode a string
-std::string Url::decode( const std::string & url )
+HttpUrl::HttpUrl( void ) { return; }
+
+HttpUrl::HttpUrl( const HttpUrl & src ) { *this = src; return ; }
+
+HttpUrl &   HttpUrl::operator=( const HttpUrl & rhs )
 {
-    std::ostringstream unescaped;
+    if ( this != &rhs )
+    {
+        // No member variables to assign
+    }
+    return ( *this );
+}
+
+HttpUrl::~HttpUrl( void ) { return ; }
+
+std::string HttpUrl::decode( const std::string & url )
+{
+    std::ostringstream  unescaped;
 
     for ( std::string::const_iterator i = url.begin(), n = url.end(); i != n; ++i )
     {
@@ -23,7 +37,7 @@ std::string Url::decode( const std::string & url )
 
         if ( c == '%' )
         {
-            if ( std::distance( i, url.end() ) >= 3 && isxdigit( *( i + 1 ) ) && isxdigit( * ( i + 2 ) ) )
+            if ( std::distance( i, url.end() ) >= 3 && isxdigit( *( i + 1 ) ) && isxdigit( *( i + 2 ) ) )
             {
                 std::string hex = std::string( i + 1, i + 3 );
                 std::istringstream iss( hex );
@@ -36,7 +50,7 @@ std::string Url::decode( const std::string & url )
             else
                 unescaped << c;
         }
-        else if (c == '+')
+        else if ( c == '+' )
             unescaped << ' ';
         else
             unescaped << c;
@@ -45,10 +59,9 @@ std::string Url::decode( const std::string & url )
     return ( unescaped.str() );
 }
 
-// Function to URL encode a string
-std::string Url::encode( const std::string & url )
+std::string HttpUrl::encode(const std::string& url)
 {
-    std::ostringstream  escaped;
+    std::ostringstream escaped;
     escaped.fill( '0' );
     escaped << std::hex;
 
@@ -65,7 +78,7 @@ std::string Url::encode( const std::string & url )
 
         // Any other characters are percent-encoded
         escaped << std::uppercase;
-        escaped << '%' << std::setw(2) << int( ( unsigned char )c );
+        escaped << '%' << std::setw( 2 ) << int( ( unsigned char ) c );
         escaped << std::nouppercase;
     }
 

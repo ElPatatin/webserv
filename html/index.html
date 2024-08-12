@@ -40,7 +40,7 @@
             color: black;
         }
         .hero {
-            background: url('./resources/main-hero.jpg') center/cover no-repeat;
+            background: url('/resources/main-hero.jpg') center/cover no-repeat;
             height: 300px;
             display: flex;
             justify-content: center;
@@ -107,9 +107,10 @@
         <h1>Welcome to Our Web Server</h1>
     </div>
     <div class="nav">
-        <a href="./index.html">Home</a>
-        <a href="./about.html">About</a>
-        <a href="./contact.html">Contact</a>
+        <a href="#">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/codes.html">Codes</a>
+        <a href="/api/upload.html">Upload</a>
     </div>
     <div class="hero">
         <h1>Delivering Excellence</h1>
@@ -143,19 +144,7 @@
         <div class="box">
             <h2>Upload Files</h2>
             <div class="form-group">
-                <button onclick="window.location.href = './upload.html'">Upload Files</button>
-            </div>
-        </div>
-        <div class="box">
-            <h2>Test Response Codes</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = './codes.html'">View Codes</button>
-            </div>
-        </div>
-        <div class="box">
-            <h2>Test Methods</h2>
-            <div class="form-group">
-                <button onclick="window.location.href = './methods.html'">View Methods</button>
+                <button onclick="window.location.href = '/api/upload.html'">Upload Files</button>
             </div>
         </div>
     </div>

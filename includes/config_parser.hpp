@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_parser.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:22:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 18:04:23 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 00:25:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ size_t config_server_count( ConfigFile config );
 
 void    config_load( const ConfigFile & config, ConfigData * config_data, size_t n_servers );
 
-bool    config_load_validate( ConfigData * & config_data );
+bool    config_load_validate( const ConfigData & config_data );
 
 namespace ConfigLoad
 {
@@ -55,7 +55,6 @@ namespace ConfigLoad
     bool config_load_client_max_body_size( std::string & line, ConfigData & config_data );
     bool config_load_locations( const ConfigFile & config_file, std::string line, size_t line_num, ConfigData & config_data );
     bool config_load_redirect( std::string endpoint, std::string line, ConfigData & config_data );
-    bool config_load_directory_listing( std::string line, ConfigData & config_data );
 }
 
 #endif

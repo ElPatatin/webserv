@@ -44,7 +44,9 @@ def list_files(directory):
 
 try:
     files = list_files(absolute_path)
-    files_text = "\n".join(files)
-    print(files_text)
+    files_text = "\n".join(files)  # Join items with newline character
+    print(files_text)  # Output file names separated by newline
+    exit(0)
 except Exception as e:
     print(f"Error: Unable to read the directory. {str(e)}")
+    exit(1)

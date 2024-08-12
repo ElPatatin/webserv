@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sockets_conn.cpp                                   :+:      :+:    :+:   */
+/*   sockets.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:40:47 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 19:41:42 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 10:49:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sockets.hpp"
 
-Addrs    ConectionSockets::resolveHostToIp( int domain, int type, std::string host )
+Addrs    Sockets::resolveHostToIp( int domain, int type, std::string host )
 {
     AddrInfo    hints;
     Addrs       addrs;
@@ -32,7 +32,7 @@ Addrs    ConectionSockets::resolveHostToIp( int domain, int type, std::string ho
     return ( addrs );
 }
 
-int ConectionSockets::createSocket( AddrInfo *rp )
+int Sockets::createSocket( AddrInfo *rp )
 {
     int conn_fd;
 
@@ -52,7 +52,7 @@ int ConectionSockets::createSocket( AddrInfo *rp )
     return ( conn_fd );
 }
 
-void    ConectionSockets::bindSocket( Data *data, ConfigData & config )
+void    Sockets::bindSocket( Data *data, ConfigData & config )
 {
     data->addr_len = sizeof( data->addr );
     data->addr.sin_family = AF_INET;
@@ -70,7 +70,7 @@ void    ConectionSockets::bindSocket( Data *data, ConfigData & config )
     return ;
 }
 
-void    ConectionSockets::listenConnection( Data & data, int backlog )
+void    Sockets::listenConnection( Data & data, int backlog )
 {
     // Marks the socket referred to by conn_fd as a passive socket, that is,
     // as a socket that will be used to accept incoming connection requests using accept.
@@ -83,7 +83,7 @@ void    ConectionSockets::listenConnection( Data & data, int backlog )
     return ;
 }
 
-void    ConectionSockets::acceptConnection( Data & data )
+void    Sockets::acceptConnection( Data & data )
 {
     LOG( INFO ) << "Accepting connection";
     // It extracts the first connection request on the queue of pending connections for
@@ -100,7 +100,31 @@ void    ConectionSockets::acceptConnection( Data & data )
     return ;
 }
 
-void    ConectionSockets::setSocketBlockingMode( int sockfd, bool blocking )
+ssize_t Sockets::receiveConnection( const Data & data, char * buffer, size_t size )
+{
+    ssize_t bytes_read = recv( data.conn_fd, buffer, size, 0 );
+    if ( bytes_read == -1 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "recv: failed to read data" );
+        throw SocketException( "Error: recv: failed to read data" );
+    }
+    
+    return ( bytes_read );
+}
+
+ssize_t Sockets::sendConnection( const Data & data, const char * buffer, size_t size )
+{
+    ssize_t bytes_sent = send( data.conn_fd, buffer, size, 0 );
+    if ( bytes_sent < 0 )
+    {
+        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "send: failed to send data." );
+        throw SocketException( "Error: send: failed to send data" );
+    }
+
+    return ( bytes_sent );
+}
+
+void    Sockets::setSocketBlockingMode( int sockfd, bool blocking )
 {
     int flags = fcntl( sockfd, F_GETFL, 0 );
     if ( flags == -1 )
@@ -123,7 +147,7 @@ void    ConectionSockets::setSocketBlockingMode( int sockfd, bool blocking )
     return ;
 }
 
-void    ConectionSockets::closeConnection( int fd , std::string function, int line )
+void    Sockets::closeConnection( int fd , std::string function, int line )
 {
     if ( close( fd ) == -1 )
     {

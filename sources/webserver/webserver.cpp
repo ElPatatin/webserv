@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 20:04:46 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:58:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void    webserver( Cluster & cluster )
 
     std::signal( SIGINT, signalHandler );
     std::signal( SIGQUIT, signalHandler );
+    std::signal( SIGTERM, signalHandler );
+    std::signal( SIGPIPE, SIG_IGN );
 
     for ( size_t i = 0; i < cluster.n_servers; ++i )
     {

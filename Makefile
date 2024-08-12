@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/19 20:04:11 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/07/30 19:14:26 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,11 +89,18 @@ CNP_DIR	:= $(SRC_DIR)config_parser/
 
 # Webserver directories
 WEB_DIR	:= $(SRC_DIR)webserver/
-SCK_DIR	:= $(WEB_DIR)sockets/
-EPM_DIR	:= $(WEB_DIR)epollManager/
 
 # Htpp directories
-HTP_DIR	:= $(SRC_DIR)http/
+HTP_DIR	:= $(SRC_DIR)HttpClass/
+HFS_DIR	:= $(HTP_DIR)HttpFileServingClass/
+HRP_DIR	:= $(HTP_DIR)HttpRequestParserClass/
+HDR_DIR	:= $(HTP_DIR)HttpHeadersClass/
+MTD_DIR	:= $(HTP_DIR)HttpMethodsClass/
+RSP_DIR	:= $(HTP_DIR)HttpResponseClass/
+URL_DIR	:= $(HTP_DIR)HttpUrlClass/
+VRS_DIR	:= $(HTP_DIR)HttpVersionClass/
+
+OHT_DIR	:= $(SRC_DIR)old_http/
 
 # -=-=-=-=-	FILE -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
@@ -104,7 +111,7 @@ ifeq ($(LANG), C++)
 	EXT	:= .cpp
 endif
 
-INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR)
+INCLUDE	:= -I$(INC_DIR) -I$(CNF_DIR) -I$(LOG_DIR) -I$(CNP_DIR) -I$(HTP_DIR) -I$(HFS_DIR) -I$(HRP_DIR) -I$(HDR_DIR) -I$(MTD_DIR) -I$(RSP_DIR) -I$(URL_DIR) -I$(VRS_DIR)
 
 # -----------------------------  SOURCE FILES  -------------------------------- #
 
@@ -129,22 +136,39 @@ SRCS	+= $(CNP_DIR)config_parse.cpp \
 # Webserver files
 SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)signals.cpp \
-		$(WEB_DIR)server.cpp \
+		$(WEB_DIR)webserver_start.cpp \
+		$(WEB_DIR)webserver_run.cpp \
+		$(WEB_DIR)webserver_stop.cpp \
 		$(WEB_DIR)sockets_comm.cpp \
-		$(WEB_DIR)sockets_conn.cpp \
+		$(WEB_DIR)sockets.cpp \
 		$(WEB_DIR)epoll.cpp
 
-# Http files
-SRCS	+= $(HTP_DIR)httpRequest.cpp \
-		$(HTP_DIR)httpResponse.cpp \
-		$(HTP_DIR)httpHeaders.cpp \
-		$(HTP_DIR)httpMethods.cpp \
-		$(HTP_DIR)httpErrors.cpp \
-		$(HTP_DIR)httpDirectoryListing.cpp \
-		$(HTP_DIR)httpFileServing.cpp \
-		$(HTP_DIR)http.cpp \
-		$(HTP_DIR)httpUrl.cpp \
-		$(HTP_DIR)httpCGI.cpp
+SRCS	+= $(HTP_DIR)Http.cpp \
+		$(HTP_DIR)HttpUtils.cpp \
+		$(HTP_DIR)HttpCGI.cpp \
+		$(HTP_DIR)HttpGet.cpp \
+		$(HTP_DIR)HttpPost.cpp \
+		$(HTP_DIR)HttpDelete.cpp \
+		$(HFS_DIR)HttpFileServing.cpp \
+		$(HFS_DIR)HttpDirListing.cpp \
+		$(HFS_DIR)HttpSaveFile.cpp \
+		$(HRP_DIR)HttpRequestParser.cpp \
+		$(HDR_DIR)HttpHeaders.cpp \
+		$(MTD_DIR)HttpMethods.cpp \
+		$(RSP_DIR)HttpResponse.cpp \
+		$(URL_DIR)HttpUrl.cpp \
+		$(VRS_DIR)HttpVersion.cpp
+
+# SRCS	+= $(OHT_DIR)httpRequest.cpp \
+# 		$(OHT_DIR)httpResponse.cpp \
+# 		$(OHT_DIR)httpHeaders.cpp \
+# 		$(OHT_DIR)httpMethods2.cpp \
+		$(OHT_DIR)httpErrors.cpp \
+# 		$(OHT_DIR)httpDirectoryListing.cpp \
+# 		$(OHT_DIR)httpFileServing.cpp \
+# 		$(OHT_DIR)http.cpp \
+# 		$(OHT_DIR)httpUrl.cpp \
+# 		$(OHT_DIR)httpCGI.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 
@@ -181,7 +205,7 @@ re:
 
 $(OBJ_DIR)%.o: %$(EXT) $(MKFL)
 	@$(MK) $(dir $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
-	@printf "\r$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)                                                                                                            \r"
+	@printf "$(GREEN)\tCompiling: $(YELLOW)$< $(DEF_CLR)\n"
 	@$(CC) $(CFLAGS) $(DFLAGS) $(INCLUDE) -c $< -o $@
 	@mv $(patsubst %.o, %.d, $@) $(dir $(subst $(OBJ_DIR), $(DEP_DIR), $@))
 

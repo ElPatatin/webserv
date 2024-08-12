@@ -1,39 +1,60 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httpHeaders.cpp                                    :+:      :+:    :+:   */
+/*   HttpHeaders.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 12:13:42 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/04 16:06:26 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/07/20 13:01:04 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/07/31 11:13:41 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http.hpp"
+#include "HttpHeaders.hpp"
 
-std::string HttpHeaders::serializeHeader( Headers headers )
+// Default constructor
+HttpHeaders::HttpHeaders( void ) { return ; }
+
+// Copy constructor
+HttpHeaders::HttpHeaders( const HttpHeaders & src ) { *this = src; return ; }
+
+// Assignment operator
+HttpHeaders& HttpHeaders::operator=( const HttpHeaders & rhs )
+{
+    if (this != &rhs)
+    {
+        // No member variables to assign
+    }
+
+    return ( *this );
+}
+
+// Destructor
+HttpHeaders::~HttpHeaders( void ) { return ; }
+
+// Serialize headers to string
+std::string HttpHeaders::serializeHeader( const Headers & headers )
 {
     std::ostringstream header_stream;
 
-    Header header;
-    for ( Headers::iterator it = headers.begin(); it != headers.end(); it++ )
+    for ( Headers::const_iterator it = headers.begin(); it != headers.end(); ++it )
     {
-        header = it->second;
+        const Header & header = it->second;
         header_stream << header.first << ": " << header.second << LINE_END;
     }
 
     return ( header_stream.str() );
 }
 
-Headers HttpHeaders::deserializeHeader( std::string header )
+// Deserialize headers from string
+Headers HttpHeaders::deserializeHeader( const std::string & header )
 {
     Headers headers;
     Header  header_pair;
 
     std::istringstream header_stream( header );
     std::string line;
-    while ( std::getline( header_stream, line ) )
+    while ( std::getline(header_stream, line ) )
     {
         // Skip first line
         if ( line.find( "HTTP" ) != std::string::npos )

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConfigData.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/21 22:52:21 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/18 00:56:41 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/29 15:26:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ ConfigData::ConfigData( )
     this->server_names.clear();
     this->error_pages.clear();
     this->client_max_body_size = 0;
-    this->is_directory_listing = false;
     this->locations.clear();
     this->redirects.clear();
     this->virtual_servers.clear();
@@ -48,7 +47,6 @@ ConfigData & ConfigData::operator=( ConfigData const & rhs )
         this->server_names = rhs.server_names;
         this->error_pages = rhs.error_pages;
         this->client_max_body_size = rhs.client_max_body_size;
-        this->is_directory_listing = rhs.is_directory_listing;
         this->redirects = rhs.redirects;
         this->locations = rhs.locations;
         this->virtual_servers = rhs.virtual_servers;
@@ -95,7 +93,6 @@ std::string ConfigData::toString( void ) const
     oss << std::endl;
 
     oss << BLUE << "Client Max Body Size: " << RESET << this->client_max_body_size << std::endl;
-    oss << BLUE << "Directory Listing: " << RESET << ( this->is_directory_listing ? "enabled" : "disabled" ) << std::endl;
 
     oss << BLUE << "Locations: " << RESET << this->locations.size();
     for ( Locations::const_iterator it = locations.begin(); it != locations.end(); ++it )
@@ -134,7 +131,7 @@ std::string ConfigData::toString( void ) const
 
 bool ConfigData::isEmpty( void ) const
 {
-    return ( this->port == 0 && this->host.empty() && this->server_names.empty() && this->error_pages.empty() && this->client_max_body_size == 0 && this->locations.empty() && this->redirects.empty() && this->virtual_servers.empty() && this->is_directory_listing == false );
+    return ( this->port == 0 && this->host.empty() && this->server_names.empty() && this->error_pages.empty() && this->client_max_body_size == 0 && this->locations.empty() && this->redirects.empty() && this->virtual_servers.empty() );
 }
 
 // ACCESSORS
@@ -168,10 +165,27 @@ void ConfigData::setErrorPages( ErrorPages error_pages )
 size_t  ConfigData::getClientMaxBodySize( void ) const { return ( this->client_max_body_size ); }
 void    ConfigData::setClientMaxBodySize( size_t client_max_body_size ) { this->client_max_body_size = client_max_body_size; return ; }
 
+
+
+Location ConfigData::getLocation( std::string endpoint ) const
+{
+    if ( this->locations.empty() )
+        return ( Location() );
+    Locations::const_iterator it = this->locations.find( endpoint );
+    if ( it == this->locations.end() )
+        return ( Location() );
+    return ( it->second );
+}
+void ConfigData::setLocation( std::string endpoint, Location location )
+{
+    this->locations.insert( std::make_pair( endpoint, location ) );
+    return ;
+}
+
 Locations ConfigData::getLocations( void ) const { return ( this->locations ); }
 void ConfigData::setLocations( Locations locations )
 {
-    this->locations.insert( std::make_pair( locations.begin()->first, locations.begin()->second ) );
+    this->locations.insert( locations.begin(), locations.end() );
     return ;
 }
 
@@ -194,6 +208,3 @@ void ConfigData::setVirtualServers( VirtualServers virtual_servers )
     // this->virtual_servers.push_back( virtual_servers );
     return ;
 }
-
-bool ConfigData::getIsDirectoryListing( void ) const { return ( this->is_directory_listing ); }
-void ConfigData::setIsDirectoryListing( bool is_directory_listing ) { this->is_directory_listing = is_directory_listing; return ; }

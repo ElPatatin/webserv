@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <title>Upload Files - Our Server</title>
     <style>
         body {
@@ -154,9 +154,10 @@
         <h1>Welcome to Our Web Server</h1>
     </div>
     <div class="nav">
-        <a href="./index.html">Home</a>
-        <a href="./about.html">About</a>
-        <a href="./contact.html">Contact</a>
+        <a href="/index.html">Home</a>
+        <a href="/about.html">About</a>
+        <a href="/codes.html">Codes</a>
+        <a href="#">Upload</a>
     </div>
     <div class="content">
         <div class="box upload-box" id="uploadBox">
@@ -214,7 +215,7 @@
                 formData.append('files[]', files[i]);
             }
 
-            fetch('./html/uploads', {
+            fetch('./uploads', {
                 method: 'POST',
                 body: formData
             })
@@ -238,7 +239,7 @@
 
         async function fetchFiles() {
             try {
-                const path = 'html/uploads';  // Adjust this path as needed
+                const path = 'html/api/uploads';  // Adjust this path as needed
                 const response = await fetch(`/cgi-bin/list-files.py?path=${encodeURIComponent(path)}`);
                 
                 if (!response.ok) {
@@ -278,11 +279,13 @@
         function displayFiles(files) {
             const fileList = document.getElementById('fileList');
             fileList.innerHTML = ''; // Clear previous list
+            console.log('Files:', files);
             
             files.forEach(file => {
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
-                link.href = `/uploads/${file}`;
+                console.log('File:', file);
+                link.href = `/api/uploads/${file}`;
                 link.textContent = file;
 
                 // Add emoji

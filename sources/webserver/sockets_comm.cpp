@@ -3,153 +3,177 @@
 /*                                                        :::      ::::::::   */
 /*   sockets_comm.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:37:57 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/19 19:41:54 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/07/31 11:05:35 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "sockets.hpp"
-#include "http.hpp"
+#include "Http.hpp"
 
-void    CommunicationSockets::receiveConnection( Data & data, ConfigData & config )
+// ---------------------------------------------------------------------------
+
+// Receive connection from client and parse request
+std::string    CommunicationSockets::receiveConnection( const Data & data )
 {
-    const int buffer_size = 8192;
-    char buffer[buffer_size];
-    std::memset(buffer, '\0', buffer_size);
+    char buffer[CHUNK_SIZE];
+    std::memset(buffer, '\0', CHUNK_SIZE);
 
     std::string full_request;
     int content_length = 0;
     bool headers_received = false;
     int total_bytes_read = 0;
-
+ 
     while (true)
     {
-        // Set up file descriptor set for select()
-        fd_set readfds;
-        FD_ZERO(&readfds);
-        FD_SET(data.conn_fd, &readfds);
-
-        // Set up a timeout (e.g., 1 second)
-        struct timeval timeout;
-        timeout.tv_sec = 1;
-        timeout.tv_usec = 0;
-
-        // Wait until the socket is ready for reading
-        int ret = select(data.conn_fd + 1, &readfds, NULL, NULL, &timeout);
-
+        int ret = CommunicationSockets::waitTime( data, true );
         if (ret == -1)
         {
-            LOG(ERROR) << ft::prettyPrint(__FUNCTION__, __LINE__, "select: " + std::string(std::strerror(errno)));
-            throw SocketException("Error: select: " + std::string(std::strerror(errno)));
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: failed to wait for socket to be ready for reading" );
+            throw SocketException( "Error: select: failed to wait for socket to be ready for reading" );
         }
         else if (ret == 0)
         {
-            // Timeout occurred; handle as needed
-            LOG(WARNING) << "select() timeout occurred, socket not ready for reading";
-            continue; // Retry or handle timeout
+            LOG( WARNING ) << "select() timeout occurred, socket not ready for reading";
+            continue ;
         }
 
-        // Socket is ready for reading, proceed with recv()
-        int bytes_read = recv(data.conn_fd, buffer, buffer_size - 1, 0);
-        if (bytes_read > 0)
-        {
-            buffer[bytes_read] = '\0';
-            full_request.append(buffer, bytes_read);
-            total_bytes_read += bytes_read;
+        ssize_t bytes_read = Sockets::receiveConnection( data, buffer, static_cast< size_t >( CHUNK_SIZE ) - 1 );
+        if (bytes_read == 0) { LOG( INFO ) << "Finished reading."; break ; }
 
-            if (!headers_received)
-                headers_received = headersReceived(full_request, content_length);
+        full_request.append( buffer, bytes_read );
+        total_bytes_read += bytes_read;
 
-            size_t header_end_pos = full_request.find("\r\n\r\n");
-            if (headers_received && header_end_pos != std::string::npos)
-            {
-                size_t body_start_pos = header_end_pos + 4;
-                size_t remaining_body_length = content_length - (total_bytes_read - body_start_pos);
+        if ( !headers_received )
+            headers_received = headersReceived( full_request, content_length );
 
-                if (remaining_body_length <= 0)
-                    break; // Fully received headers and body
-            }
-        }
-        else if (bytes_read == 0)
-        {
-            // Connection closed
-            break;
-        }
-        else
-        {
-            LOG(ERROR) << ft::prettyPrint(__FUNCTION__, __LINE__, "recv: " + std::string(std::strerror(errno)));
-            throw SocketException("Error: recv: " + std::string(std::strerror(errno)));
-        }
+        if ( !continueReceiving( full_request, headers_received, content_length, total_bytes_read ) )
+            break ;
     }
 
-    HttpData http = HttpRequests::parseRequest(full_request);
-    Http::httpRequest(http, data, config);
-    return;
+    return ( full_request );
 }
 
 bool CommunicationSockets::headersReceived(const std::string &request, int &content_length)
 {
-    size_t header_end_pos = request.find("\r\n\r\n");
+    size_t header_end_pos = request.find( "\r\n\r\n" );
     if (header_end_pos != std::string::npos)
     {
         // Extract headers and find Content-Length
-        std::string headers = request.substr(0, header_end_pos + 4);
-        HttpData temp_http = HttpRequests::parseRequest(headers);
+        std::string headers = request.substr( 0, header_end_pos + 4 );
+        // LOG( WARNING ) << "Headers received: " << headers;
+        Http::Request temp_http;
+        try
+        {
+            temp_http = Http::parseRequest( request );
+        }
+        catch (std::exception & e)
+        {
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() );
+            return ( false );
+        }
 
         if (temp_http.headers.find("Content-Length") != temp_http.headers.end())
             content_length = ft::stoi(temp_http.headers["Content-Length"].second);
 
-        return true;
+        return ( true );
     }
 
-    return false;
+    return ( false );
 }
 
-void    CommunicationSockets::sendConnection( Data & data )
+bool    CommunicationSockets::continueReceiving
+    (
+        std::string full_request,
+        bool headers_received,
+        int content_length,
+        int total_bytes_read
+    )
 {
-  const size_t CHUNK_SIZE = 4096; // Define the chunk size (e.g., 4 KB)
-    size_t totalLength = data.response.length();
-    const char* responseData = data.response.c_str();
-    size_t bytesSent = 0;
-
-    while (bytesSent < totalLength)
+    size_t header_end_pos = full_request.find("\r\n\r\n");
+    if (headers_received && header_end_pos != std::string::npos)
     {
-        size_t remainingLength = totalLength - bytesSent;
-        size_t chunkLength = (remainingLength > CHUNK_SIZE) ? CHUNK_SIZE : remainingLength;
+        size_t body_start_pos = header_end_pos + 4;
+        size_t remaining_body_length = content_length - (total_bytes_read - body_start_pos);
 
-        fd_set writefds;
-        FD_ZERO(&writefds);
-        FD_SET(data.conn_fd, &writefds);
+        if ( remaining_body_length <= 0 )
+            return ( false );
+    }
 
-        // Set up a timeout (e.g., 1 second)
-        struct timeval timeout;
-        timeout.tv_sec = 1;
-        timeout.tv_usec = 0;
+    return ( true );
+}
 
-        int ret = select(data.conn_fd + 1, NULL, &writefds, NULL, &timeout);
+// Send response to client, chunked if necessary and wait for client to read.
+void    CommunicationSockets::sendConnection( const Data & data )
+{
+    size_t total_length = data.response.length();
+    const char* response_data = data.response.c_str();
+    size_t bytes_sent = 0;
 
+    int retry_count = 0;
+    int max_retries = 10;
+
+    while ( bytes_sent < total_length )
+    {
+        usleep( 1000 );
+        size_t remainingLength = total_length - bytes_sent;
+        size_t chunkLength = ( remainingLength > CHUNK_SIZE ) ? CHUNK_SIZE : remainingLength;
+
+        int ret = CommunicationSockets::waitTime( data, false );
         if (ret == -1)
         {
-            LOG(ERROR) << ft::prettyPrint(__FUNCTION__, __LINE__, "select: " + std::string(std::strerror(errno)));
-            throw SocketException("Error: select: " + std::string(std::strerror(errno)));
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "select: failed to wait for socket to be ready for writing" );
+            throw SocketException( "Error: select: failed to wait for socket to be ready for writing" );
         }
         else if (ret == 0)
         {
-            // Timeout occurred; handle as needed
-            LOG(WARNING) << "select() timeout occurred, socket not ready for writing";
-            continue; // Retry or handle timeout
+            LOG( WARNING ) << "select() timeout occurred, socket not ready for reading";
+            if (++retry_count >= max_retries)
+            {
+                LOG(ERROR) << "Maximum retries reached, aborting send operation.";
+                throw SocketException("Error: maximum retries reached, send operation aborted");
+            }
+            continue ;
         }
 
-        // Send data
-        ssize_t result = send(data.conn_fd, responseData + bytesSent, chunkLength, 0);
-        if (result == -1)
+        try
         {
-            LOG(ERROR) << ft::prettyPrint(__FUNCTION__, __LINE__, "send: " + std::string(std::strerror(errno)));
-            throw SocketException("Error: send: " + std::string(std::strerror(errno)));
+            ssize_t result = Sockets::sendConnection( data, response_data + bytes_sent, chunkLength );
+            if ( result == 0 )
+            {
+                LOG( INFO ) << "Finished sending.";
+                break ;
+            }
+            bytes_sent += result;
         }
-        
-        bytesSent += result;
+        catch ( SocketException & e )
+        {
+            LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, e.what() );
+            return ;
+        }
     }
+
+    return ;
+}
+
+// Wait for socket to be ready for reading or writing
+int    CommunicationSockets::waitTime( const Data & data, const bool & is_read )
+{
+    // Set up file descriptor set for select()
+    fd_set waitfds;
+    FD_ZERO( &waitfds );
+    FD_SET( data.conn_fd, &waitfds );
+
+    // Set up a timeout (e.g., 1 second)
+    struct timeval  timeout;
+    timeout.tv_sec = 1;
+    timeout.tv_usec = 0;
+
+    // Wait until the socket is ready for reading
+    if ( is_read )
+        return ( select( data.conn_fd + 1, &waitfds, NULL, NULL, &timeout ) );
+    else
+        return ( select( data.conn_fd + 1, NULL, &waitfds, NULL, &timeout ) );
 }

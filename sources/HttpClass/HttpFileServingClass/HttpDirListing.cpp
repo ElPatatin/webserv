@@ -1,60 +1,55 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   httpDirectoryListing.cpp                           :+:      :+:    :+:   */
+/*   HttpDirListing.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/07 17:46:22 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/12 14:54:28 by cpeset-c         ###   ########.fr       */
+/*   Created: 2024/07/28 19:15:11 by cpeset-c          #+#    #+#             */
+/*   Updated: 2024/07/29 19:06:03 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "http.hpp"
+#include "HttpFileServing.hpp"
 
-#include <dirent.h> // For directory handling
-#include <sstream>  // For string streams
-#include <fstream>  // For file handling
-#include <sys/stat.h> // For file info
-
-
-void generateDirectoryPage( std::ostringstream & response_stream, DIR * dir, const std::string & path, const std::string & fullPath );
-
-void Http::httpDirectoryListing(std::string path, std::string fullPath, Data &data, ConfigData &config )
+void    HttpFileServing::httpDirectoryListing( Data & data, const ConfigData & config, const HttpRequestParser::Request & request, const std::string & full_path )
 {
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Directory listing requested" );
+    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Serving directory listing" );
 
-    if ( !config.getIsDirectoryListing() )
-        return ( HttpErrors::sendError( data, FORBIDDEN, config ) );
-
-    DIR *dir = opendir( fullPath.c_str() );
+    DIR *dir = opendir( full_path.c_str() );
     if ( !dir )
-        return ( HttpErrors::sendError( data, NOT_FOUND, config ) );
+        return ( HttpFileServing::httpErrorServing( data, request, NOT_FOUND, config ) );
 
-    std::ostringstream response_stream;
-    generateDirectoryPage( response_stream, dir, path, fullPath );
-
-    if ( closedir( dir ) == -1 )
+    std::ostringstream response;
+    Location location = config.getLocation( "/" );
+    std::string root;
+    for ( size_t i = 0; i < location.size(); ++i )
     {
-        LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "closedir: " + std::string( std::strerror( errno ) ) );
-        throw std::runtime_error("Error: closedir: " + std::string( std::strerror( errno ) ) );
+        if ( location[ i ].first == "root" )
+            root = location[ i ].second;
     }
 
-    std::string content = response_stream.str();
+    HttpFileServing::generateDirectoryPage( response, dir, request.url, full_path, root );
 
-    std::ostringstream header_stream;
-    header_stream << "HTTP/1.1 200 OK\r\n"
-                  << "Content-Length: " << content.length() << "\r\n"
-                  << "Content-Type: text/html\r\n"
-                  << "\r\n"
-                  << content;
+    if ( closedir( dir ) == -1 )
+        return ( HttpFileServing::httpErrorServing( data, request, INTERNAL_SERVER_ERROR, config ) );
 
-    LOG( INFO ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Sending directory listing response" );
-    data.response = header_stream.str();
+    std::string content = response.str();
+    
+    std::ostringstream response_stream;
+
+    response_stream << HttpVersion::toString( request.version ) << " " << OK << " " << HttpResponse::toString( OK ) << "\r\n";
+    response_stream << "Content-Length: " << content.size() << "\r\n";
+    response_stream << "Content-Type: " << "text/html" << "\r\n";
+    response_stream << "\r\n";
+    response_stream << content;
+
+    // Store response in data
+    data.response = response_stream.str();
     return ;
 }
 
-void generateDirectoryPage( std::ostringstream & response_stream, DIR * dir, const std::string & path, const std::string & fullPath )
+void HttpFileServing::generateDirectoryPage( std::ostringstream & response_stream, DIR * dir, const std::string & path, const std::string & fullPath, const std::string & root )
 {
     struct dirent *ent;
     struct stat st;
@@ -62,7 +57,8 @@ void generateDirectoryPage( std::ostringstream & response_stream, DIR * dir, con
     int line_number = 0;
     bool file_opened;
 
-    std::fstream *file = ft::openFile( "./html/directory.html", std::ios::in );
+
+    std::fstream *file = ft::openFile( root + "/directory.html", std::ios::in | std::ios::binary );
     if ( !file || !file->is_open() )
     {
         file_opened = false;
