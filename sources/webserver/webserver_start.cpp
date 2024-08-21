@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_start.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:04 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 12:25:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:28:13 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ bool WebServer::start_server( ConfigData & config, Servers & servers )
 {
     LOG( INFO ) << "Starting server";
     std::cout << "Starting server" << std::endl;
+
     ServerData server_data;
     server_data.config = &config;
 

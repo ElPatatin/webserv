@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 16:39:28 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 19:55:22 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:32:49 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void    webserver( Cluster & cluster )
 
     std::signal( SIGINT, signalHandler );
     std::signal( SIGQUIT, signalHandler );
-    std::signal( SIGTERM, signalHandler );
 
     for ( size_t i = 0; i < cluster.n_servers; ++i )
     {

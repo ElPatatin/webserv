@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 21:40:56 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:32:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool    WebServer::run_server_loop( Servers & servers, EpollData & epoll, std::m
         if ( epoll.nfds == -1 )
         {
             std::cout << "Timeout occurred, no events happened" << std::endl;
-            continue;
+            continue ;
         }
 
         for ( int i = 0; i < epoll.nfds; ++i )

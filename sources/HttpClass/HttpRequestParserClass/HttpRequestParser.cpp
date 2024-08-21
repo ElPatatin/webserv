@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 21:32:47 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:57:59 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,9 @@ void    HttpRequestParser::parseHeaders( Request & request_data, const std::stri
 void    HttpRequestParser::parseBody( Request & request_data, const std::string & request, size_t headerEndPos )
 {
     // Check if Content-Length header is present to determine body length
-    if ( request_data.headers.find( "Content-Length" ) != request_data.headers.end() )
+    if ( request_data.headers.find("Content-Length") != request_data.headers.end() )
     {
-        int contentLength = ft::stoi( request_data.headers[ "Content-Length" ].second );
+        int contentLength = ft::stoi( request_data.headers["Content-Length"].second );
         size_t bodyStartPos = headerEndPos + 4;
 
         if ( request.size() < bodyStartPos + contentLength )
@@ -172,13 +172,19 @@ std::string HttpRequestParser::generateToken( size_t length )
     std::string random_string;
     random_string.reserve(length);
 
-    // unsigned seed = static_cast< unsigned >( std::time( 0 ) ) * static_cast< unsigned >( getpid() );
-    std::srand( static_cast< unsigned int>( std::time( 0 ) ) );
-    usleep(1000);
+    for (size_t i = 0; i < length; ++i)
+    {
+        int random_number = rand() % 62;
+        char random_char;
+        if (random_number < 10)
+            random_char = '0' + random_number;
+        else if (random_number < 36)
+            random_char = 'A' + random_number - 10;
+        else
+            random_char = 'a' + random_number - 36;
+        random_string += random_char;
+    }
 
-    for ( size_t i = 0; i < length; ++i )
-        random_string += characters[ std::rand() % characters.size() ];
-    
     return random_string;
 }
 

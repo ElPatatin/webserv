@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:06:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 19:41:31 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:28:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # endif
 
 # ifndef CHUNK_SIZE
-#  define CHUNK_SIZE 4096
+#  define CHUNK_SIZE 8192
 # endif
 
 namespace Sockets

@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 20:11:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 22:02:38 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:32:39 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,46 +23,40 @@ void    WebServer::handle_reading_request
 {
     char buffer[ CHUNK_SIZE ];
     ssize_t bytes_read = Sockets::receiveConnection( serverData->data, buffer, CHUNK_SIZE );
-    if ( bytes_read == 0 )
+    if (bytes_read == 0)
     {
-        LOG( INFO ) << "Connection closed by client";
+        LOG(INFO) << "Connection closed by client";
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
         connection_to_server_map.erase( connIt );
         WebServer::resetConnection( serverData );
         return ;
     }
-    else if ( bytes_read > 0 )
-    {
-        serverData->request_buffer.append( buffer, bytes_read );
-        if ( serverData->request_buffer.size() > serverData->config->getClientMaxBodySize() )
-        {
-            LOG( INFO ) << "Request too large, closing connection";
-            Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
-            connection_to_server_map.erase( connIt );
-            WebServer::resetConnection( serverData );
-            return ;
-        }
 
-        if ( bytes_read == CHUNK_SIZE )
+    serverData->request_buffer += std::string( buffer, bytes_read );
+
+    int content_length = 0;
+    if ( WebServer::headersReceived( serverData->request_buffer, content_length ) )
+    {
+        // Check if the full request has been received
+        if ( !WebServer::continueReceiving( serverData->request_buffer, content_length, serverData->request_buffer.size() ) )
         {
-            // More data to read
-            Epoll::update_epoll( epoll, serverData->data.conn_fd, EPOLLIN | EPOLLET | EPOLLHUP | EPOLLERR );
-            serverData->state = READING_REQUEST;
+            serverData->state = PROCESSING_REQUEST;
             return ;
         }
-        serverData->state = PROCESSING_REQUEST;
     }
 
+    // Update epoll event to continue reading
+    Epoll::update_epoll( epoll, serverData->data.conn_fd, EPOLLIN | EPOLLET | EPOLLHUP | EPOLLERR );
+    serverData->state = READING_REQUEST;
     return ;
 }
 
 void    WebServer::process_request( int event_fd, EpollData & epoll, ServerData * serverData )
 {
     // Process the request
-    // std::cout << "Request: " << serverData->request_buffer << std::endl;
     Http::handleRequest( serverData->request_buffer, *serverData->config, serverData->data );
     serverData->response_buffer = serverData->data.response;
-    // std::cout << "Response: " << serverData->response_buffer << std::endl;
+
     // Transition to sending state
     serverData->state = SENDING_RESPONSE;
     Epoll::update_epoll( epoll, event_fd, EPOLLOUT | EPOLLET | EPOLLHUP | EPOLLERR );
@@ -77,14 +71,13 @@ void    WebServer::handle_sending_response
     std::map< int, ServerData * >::iterator & connIt
 )
 {
-    UNUSED( epoll );
     // Send the response by chunks of CHUNK_SIZE
     size_t bytes_to_send = serverData->response_buffer.size() - serverData->bytes_sent;
     if ( bytes_to_send > CHUNK_SIZE )
         bytes_to_send = CHUNK_SIZE;
 
     ssize_t bytes_sent = Sockets::sendConnection( serverData->data, serverData->response_buffer.c_str() + serverData->bytes_sent, bytes_to_send );
-    if ( bytes_sent == -1 )
+    if ( bytes_sent == 0 )
     {
         LOG( ERROR ) << "Failed to send response";
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
@@ -99,13 +92,9 @@ void    WebServer::handle_sending_response
         serverData->state = CLOSING;
         return ;
     }
-    else
-    {
-        Epoll::update_epoll( epoll, serverData->data.conn_fd, EPOLLOUT | EPOLLET | EPOLLHUP | EPOLLERR );
-        serverData->state = SENDING_RESPONSE;
-    }
 
-
+    Epoll::update_epoll( epoll, serverData->data.conn_fd, EPOLLOUT | EPOLLET | EPOLLHUP | EPOLLERR );
+    serverData->state = SENDING_RESPONSE;
     return ;
 }
 

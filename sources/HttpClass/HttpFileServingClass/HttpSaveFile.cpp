@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:08:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 21:20:40 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:08:23 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,18 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
 
     // Extract boundary from Content-Type header
     std::string contentType = const_cast< HttpRequestParser::Request & >( request ).headers[ "Content-Type" ].second;
-    std::string boundary = contentType.substr( contentType.find( "boundary=" ) + 9 );
+    std::string boundary = "--" + contentType.substr( contentType.find( "boundary=" ) + 9 );
+    // delete \r\n at the end of boundary
+    boundary = boundary.substr( 0, boundary.size() - 1 );
 
-    // Separate body parts using the boundary
-    std::vector< std::string > parts = ft::split( request.body, "--" + boundary );
+    std::vector< std::string > parts = ft::split( request.body, boundary );
 
     for ( std::size_t i = 0; i < parts.size(); ++i )
     {
         std::string part = parts[ i ];
 
         // Skip empty parts
-        if ( part.empty() ) continue;
+        if ( part.empty() || part == "--" ) continue;
 
         // Split headers and content
         std::size_t headerEnd = part.find( "\r\n\r\n" );
@@ -39,11 +40,6 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
         std::string headers = part.substr( 0, headerEnd );
         std::string content = part.substr( headerEnd + 4, part.size() - headerEnd - 6 );  // Remove trailing \r\n
 
-        // Find end of content
-        std::size_t contentEnd = content.find( "\r\n" );
-        if ( contentEnd != std::string::npos )
-            content = content.substr( 0, contentEnd );
-            
         // Find filename in headers
         std::size_t filenamePos = headers.find( "filename=\"" );
         if ( filenamePos == std::string::npos ) continue;
@@ -66,7 +62,6 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
         else
             LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to save file: " + filepath );
     }
-
     HttpFileServing::httpDataServing( data, request, 200, "File saved: " + filepath );
     return ;
 }
