@@ -6,7 +6,7 @@
 /*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/08/21 22:57:59 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 01:41:14 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,18 +172,10 @@ std::string HttpRequestParser::generateToken( size_t length )
     std::string random_string;
     random_string.reserve(length);
 
-    for (size_t i = 0; i < length; ++i)
-    {
-        int random_number = rand() % 62;
-        char random_char;
-        if (random_number < 10)
-            random_char = '0' + random_number;
-        else if (random_number < 36)
-            random_char = 'A' + random_number - 10;
-        else
-            random_char = 'a' + random_number - 36;
-        random_string += random_char;
-    }
+    std::srand( static_cast< unsigned int >( std::time( 0 ) ) );
+
+    for ( size_t i = 0; i < length; ++i )
+        random_string += characters[ rand() % characters.size() ];
 
     return random_string;
 }
