@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+         #
+#    By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/28 12:37:08 by cpeset-c          #+#    #+#              #
-#    Updated: 2024/07/30 19:14:26 by cpeset-c         ###   ########.fr        #
+#    Updated: 2024/08/21 20:12:21 by cpeset-c         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -139,7 +139,7 @@ SRCS	+= $(WEB_DIR)webserver.cpp \
 		$(WEB_DIR)webserver_start.cpp \
 		$(WEB_DIR)webserver_run.cpp \
 		$(WEB_DIR)webserver_stop.cpp \
-		$(WEB_DIR)sockets_comm.cpp \
+		$(WEB_DIR)webserver_utils.cpp \
 		$(WEB_DIR)sockets.cpp \
 		$(WEB_DIR)epoll.cpp
 
@@ -158,17 +158,6 @@ SRCS	+= $(HTP_DIR)Http.cpp \
 		$(RSP_DIR)HttpResponse.cpp \
 		$(URL_DIR)HttpUrl.cpp \
 		$(VRS_DIR)HttpVersion.cpp
-
-# SRCS	+= $(OHT_DIR)httpRequest.cpp \
-# 		$(OHT_DIR)httpResponse.cpp \
-# 		$(OHT_DIR)httpHeaders.cpp \
-# 		$(OHT_DIR)httpMethods2.cpp \
-		$(OHT_DIR)httpErrors.cpp \
-# 		$(OHT_DIR)httpDirectoryListing.cpp \
-# 		$(OHT_DIR)httpFileServing.cpp \
-# 		$(OHT_DIR)http.cpp \
-# 		$(OHT_DIR)httpUrl.cpp \
-# 		$(OHT_DIR)httpCGI.cpp
 
 # -----------------------------  MAIN FILES  ---------------------------------- #
 

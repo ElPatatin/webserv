@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpSaveFile.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:08:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 11:28:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 21:20:40 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
 
     // Separate body parts using the boundary
     std::vector< std::string > parts = ft::split( request.body, "--" + boundary );
+
     for ( std::size_t i = 0; i < parts.size(); ++i )
     {
         std::string part = parts[ i ];
 
-        // Skip empty parts or the last boundary part
-        if ( part.empty() || part == "--\r\n" ) continue;
+        // Skip empty parts
+        if ( part.empty() ) continue;
 
         // Split headers and content
         std::size_t headerEnd = part.find( "\r\n\r\n" );
@@ -38,6 +39,11 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
         std::string headers = part.substr( 0, headerEnd );
         std::string content = part.substr( headerEnd + 4, part.size() - headerEnd - 6 );  // Remove trailing \r\n
 
+        // Find end of content
+        std::size_t contentEnd = content.find( "\r\n" );
+        if ( contentEnd != std::string::npos )
+            content = content.substr( 0, contentEnd );
+            
         // Find filename in headers
         std::size_t filenamePos = headers.find( "filename=\"" );
         if ( filenamePos == std::string::npos ) continue;

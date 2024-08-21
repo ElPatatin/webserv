@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequestParser.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 20:11:16 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 21:32:47 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,9 +133,9 @@ void    HttpRequestParser::parseHeaders( Request & request_data, const std::stri
 void    HttpRequestParser::parseBody( Request & request_data, const std::string & request, size_t headerEndPos )
 {
     // Check if Content-Length header is present to determine body length
-    if ( request_data.headers.find("Content-Length") != request_data.headers.end() )
+    if ( request_data.headers.find( "Content-Length" ) != request_data.headers.end() )
     {
-        int contentLength = ft::stoi( request_data.headers["Content-Length"].second );
+        int contentLength = ft::stoi( request_data.headers[ "Content-Length" ].second );
         size_t bodyStartPos = headerEndPos + 4;
 
         if ( request.size() < bodyStartPos + contentLength )

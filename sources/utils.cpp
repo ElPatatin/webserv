@@ -147,8 +147,10 @@ std::vector< std::string > ft::split( const std::string & str, std::string delim
         end = str.find( delimiter, start );
     }
 
-    tokens.push_back( str.substr( start, end - start ) );
-    return tokens;
+    if ( start < str.length() )
+        tokens.push_back( str.substr( start, end - start ) );
+
+    return ( tokens );
 }
 
 std::string ft::prettyPrint( std::string function, int line, std::string message )
