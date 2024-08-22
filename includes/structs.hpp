@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/25 11:13:13 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/25 11:15:30 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:57:58 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ typedef struct s_addrs
     AddrInfo    *rp;
 }   Addrs;
 
-
 typedef struct s_data
 {
     int         listen_sock;
@@ -35,6 +34,7 @@ typedef struct s_data
     SockAddrIn  addr;
     size_t      addr_len;
     std::string response;
+    size_t      bytes_sent;
 }   Data;
 
 #endif

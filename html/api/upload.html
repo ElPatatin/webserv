@@ -239,7 +239,7 @@
 
         async function fetchFiles() {
             try {
-                const path = 'html/api/uploads';  // Adjust this path as needed
+                const path = 'html/api/uploads/';  // Adjust this path as needed
                 const response = await fetch(`/cgi-bin/list-files.py?path=${encodeURIComponent(path)}`);
                 
                 if (!response.ok) {
@@ -248,8 +248,14 @@
                 
                 const rawText = await response.text(); // Get raw response text
                 console.log('Raw Text from Server:', rawText); // Debug: Log raw response text
-                
+
                 const files = rawText.split("\n").filter(Boolean); // Split raw text by newline and filter out empty strings
+                if (files.length === 0) {
+                    throw new Error('No files found');
+                }
+                if (files[0].startsWith('Error:')) {
+                    throw new Error(files[0]);
+                }
                 
                 displayFiles(files); // Display parsed files
             } catch (error) {
@@ -282,6 +288,9 @@
             console.log('Files:', files);
             
             files.forEach(file => {
+                if (file === '\r') {
+                    return;
+                }
                 const listItem = document.createElement('li');
                 const link = document.createElement('a');
                 console.log('File:', file);

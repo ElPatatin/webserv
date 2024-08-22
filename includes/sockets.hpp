@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sockets.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/19 19:06:48 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/26 18:54:06 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:28:45 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Exceptions.hpp"
 # include "Log.hpp"
 # include "structs.hpp"
+# include "epoll.hpp"
 
 # include <sys/socket.h>
 # include <arpa/inet.h>
@@ -26,8 +27,13 @@
 # include <sys/socket.h>
 # include <netdb.h>
 
-# define BACKLOG 10
-# define CHUNK_SIZE 4096
+# ifndef BACKLOG
+#  define BACKLOG 10
+# endif
+
+# ifndef CHUNK_SIZE
+#  define CHUNK_SIZE 8192
+# endif
 
 namespace Sockets
 {
@@ -40,15 +46,6 @@ namespace Sockets
     ssize_t sendConnection( const Data & data, const char * buffer, size_t size );
     void    closeConnection( int fd, std::string function, int line );
     void    setSocketBlockingMode( int sockfd, bool blocking );
-}
-
-namespace CommunicationSockets
-{
-    std::string receiveConnection( const Data & data );
-    bool    headersReceived( const std::string & request, int & content_length );
-    void    sendConnection( const Data & data );
-    bool    continueReceiving( std::string full_request, bool headers_received, int content_length, int total_bytes_read );
-    int     waitTime( const Data & data, const bool & is_read );
 }
 
 #endif

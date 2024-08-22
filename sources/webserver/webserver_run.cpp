@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_run.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 11:37:02 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 11:06:18 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:32:46 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "webserver.hpp"
-#include "Http.hpp"
 
 namespace g_signal { volatile sig_atomic_t g_signal_status = true; }
 
@@ -49,93 +48,91 @@ bool    WebServer::run_server_loop( Servers & servers, EpollData & epoll, std::m
         if ( epoll.nfds == -1 )
         {
             std::cout << "Timeout occurred, no events happened" << std::endl;
-            continue;
+            continue ;
         }
 
         for ( int i = 0; i < epoll.nfds; ++i )
         {
             int event_fd = epoll.events[ i ].data.fd;
+            uint32_t events = epoll.events[ i ].events;
 
             Servers::iterator it = servers.find( event_fd );
             if ( it != servers.end() )
                 WebServer::handle_new_connection( event_fd, servers, epoll, connection_to_server_map );
             else
-                WebServer::handle_existing_connection( event_fd, connection_to_server_map );
+                WebServer::handle_existing_connection( event_fd, events, epoll, connection_to_server_map );
         }
     }
 
     return ( true );
 }
 
-void    WebServer::handle_new_connection( int event_fd, Servers & servers, EpollData & epoll, std::map < int, ServerData * > & connection_to_server_map )
+void    WebServer::handle_new_connection
+(
+    int event_fd,
+    Servers & servers,
+    EpollData & epoll,
+    std::map < int, ServerData * > & connection_to_server_map
+)
 {
     // New connection on listening socket
     Servers::iterator it = servers.find( event_fd );
-
-    if ( it != servers.end() )
+    if ( it == servers.end() )
     {
-        LOG( INFO ) << "New connection on port " << it->second.config->getPort();
-
-        Sockets::acceptConnection( it->second.data );
-        Sockets::setSocketBlockingMode( it->second.data.conn_sock, false );
-        Epoll::add_epoll( epoll, it->second.data.conn_sock, EPOLLIN | EPOLLET | EPOLLHUP | EPOLLERR );
-
-        // Track the new connection with the correct server
-        connection_to_server_map[ it->second.data.conn_sock ] = &it->second;
-    } else
         LOG( ERROR ) << "Unknown listening socket event";
+        return ;
+    }
+
+    LOG( INFO ) << "New connection on port " << it->second.config->getPort();
+    Sockets::acceptConnection( it->second.data );
+    Sockets::setSocketBlockingMode( it->second.data.conn_sock, false );
+    Epoll::add_epoll( epoll, it->second.data.conn_sock, EPOLLIN | EPOLLET | EPOLLHUP | EPOLLERR );
+
+    // Track the new connection with the correct servers
+    connection_to_server_map[ it->second.data.conn_sock ] = &it->second;
 
     return ;
 }
 
-void    WebServer::handle_existing_connection( int event_fd, std::map < int, ServerData * > & connection_to_server_map )
+void    WebServer::handle_existing_connection
+(
+    int event_fd,
+    uint32_t events,
+    EpollData & epoll,
+    std::map < int, ServerData * > & connection_to_server_map
+)
 {
     std::map< int, ServerData * >::iterator connIt = connection_to_server_map.find( event_fd );
-
-    // Connection event on a previously accepted socket
-    if ( connIt != connection_to_server_map.end() )
+    if ( connIt == connection_to_server_map.end() )
     {
-        ServerData *serverData = connIt->second;
-        LOG( INFO ) << "Connection event on port " << serverData->config->getPort();
+        LOG( ERROR ) << "Unknown connection event";
+        return ;
+    }
 
-        serverData->data.conn_fd = event_fd;
-        std::string request = CommunicationSockets::receiveConnection( serverData->data );
-        if ( request.empty() )
-            return ( WebServer::handle_bad_request( serverData, connIt, connection_to_server_map ) );
-
-        Http::handleRequest( request, *serverData->config, serverData->data );
-
-        CommunicationSockets::sendConnection( serverData->data );
+    ServerData *serverData = connIt->second;
+    serverData->data.conn_fd = event_fd;
+    LOG( INFO ) << "Connection event on port " << serverData->config->getPort();
+    
+    if ( events & ( EPOLLERR | EPOLLHUP ) )
+    {
+        LOG( INFO ) << "An error ocrrured on connection or client closed connection";
         Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
         connection_to_server_map.erase( connIt );
+        WebServer::resetConnection( serverData );
+        return ;
     }
-    else
-        LOG( ERROR ) << "Unknown connection event";
+
+    if ( serverData->state == READING_REQUEST && events & EPOLLIN )
+        WebServer::handle_reading_request( epoll, serverData, connection_to_server_map, connIt );
+
+    if ( serverData->state == PROCESSING_REQUEST )
+        WebServer::process_request( event_fd, epoll, serverData );
+
+    if ( serverData->state == SENDING_RESPONSE && events & EPOLLOUT )
+        WebServer::handle_sending_response( epoll, serverData, connection_to_server_map, connIt );
+
+    if (serverData->state == CLOSING)
+        WebServer::close_connection( event_fd, connection_to_server_map, connIt, serverData );
 
     return ;
-}
-
-void    WebServer::handle_bad_request
-    (
-        ServerData * & serverData,
-        std::map< int, ServerData * >::iterator & connIt,
-        std::map < int, ServerData * > & connection_to_server_map
-    )
-{
-    LOG( INFO ) << "Connection closed by client";
-    // HttpErrors::sendError(  serverData->data, BAD_REQUEST, *serverData->config );
-    CommunicationSockets::sendConnection( serverData->data );
-    Sockets::closeConnection( serverData->data.conn_fd, __FUNCTION__, __LINE__ );
-    connection_to_server_map.erase( connIt );
-    return ;
-}
-
-void    WebServer::add_listening_sockets_to_epoll( Servers & servers, EpollData & epoll )
-{
-    // Add all listening sockets to epoll
-    for ( Servers::iterator it = servers.begin(); it != servers.end(); ++it )
-    {
-        LOG( INFO ) << "Server listening on port " << it->second.config->getPort();
-        Epoll::add_epoll( epoll, it->second.data.listen_sock, EPOLLIN );
-    }
 }

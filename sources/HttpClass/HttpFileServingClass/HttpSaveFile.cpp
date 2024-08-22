@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpSaveFile.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/30 12:08:41 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 11:28:15 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:08:23 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,18 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
 
     // Extract boundary from Content-Type header
     std::string contentType = const_cast< HttpRequestParser::Request & >( request ).headers[ "Content-Type" ].second;
-    std::string boundary = contentType.substr( contentType.find( "boundary=" ) + 9 );
+    std::string boundary = "--" + contentType.substr( contentType.find( "boundary=" ) + 9 );
+    // delete \r\n at the end of boundary
+    boundary = boundary.substr( 0, boundary.size() - 1 );
 
-    // Separate body parts using the boundary
-    std::vector< std::string > parts = ft::split( request.body, "--" + boundary );
+    std::vector< std::string > parts = ft::split( request.body, boundary );
+
     for ( std::size_t i = 0; i < parts.size(); ++i )
     {
         std::string part = parts[ i ];
 
-        // Skip empty parts or the last boundary part
-        if ( part.empty() || part == "--\r\n" ) continue;
+        // Skip empty parts
+        if ( part.empty() || part == "--" ) continue;
 
         // Split headers and content
         std::size_t headerEnd = part.find( "\r\n\r\n" );
@@ -60,7 +62,6 @@ void HttpFileServing::httpSaveFile( Data & data, const HttpRequestParser::Reques
         else
             LOG( ERROR ) << ft::prettyPrint( __FUNCTION__, __LINE__, "Failed to save file: " + filepath );
     }
-
     HttpFileServing::httpDataServing( data, request, 200, "File saved: " + filepath );
     return ;
 }

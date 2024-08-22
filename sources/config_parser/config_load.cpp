@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   config_load.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:57:44 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/28 10:54:00 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:24:54 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,6 @@ void    config_load( const ConfigFile & config, ConfigData * config_data, size_t
     for ( size_t i = 0; i < n_servers; ++i )
     {
         config_setup_servers( config, servers, line_num );
-        // print current server read
-        // std::cout << "Server " << i << std::endl;
-        // for ( size_t j = 0; j < servers[ i ].size(); ++j )
-        //     std::cout << servers[ i ][ j ] << std::endl;
-        // std::cout << std::endl;
-
         config_select_server_load( servers[i], &config_data[ i ] );
     }
 

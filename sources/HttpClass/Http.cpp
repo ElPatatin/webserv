@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Http.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/20 17:22:05 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/31 11:26:52 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 00:34:15 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,13 @@ Http::Http_t    Http::getHttpData( const Http::Request & request, const ConfigDa
     http_data.dir_list = Http::locationFinder( http_data.location, "directory_listing" ) == "on" ? true : false;
     http_data.autoindex = Http::locationFinder( http_data.location, "autoindex" ) == "on" ? true : false;
     http_data.index_page = Http::locationFinder( http_data.location, "index" );
+
+
+    if ( http_data.autoindex && request.url[ request.url.size() - 1 ] == '/' )
+    {
+        const_cast< Request & >( request ).url += http_data.index_page;
+        http_data.full_path += "/" + http_data.index_page;
+    }
 
     return ( http_data );
 }

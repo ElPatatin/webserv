@@ -11,6 +11,9 @@
             font-family: 'Arial', sans-serif;
             background-color: #f5f5f5;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         .header {
             background-color: #4CAF50;
@@ -67,6 +70,26 @@
             line-height: 1.6;
             margin: 10px 0;
         }
+        
+        .content-top {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+
+        }
+        .content-top h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .content-top p {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+    
         .box {
             background-color: white;
             border: 1px solid #ddd;
@@ -76,15 +99,27 @@
             flex: 1 1 300px;
             box-sizing: border-box;
         }
+        .box-img-text {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .box-img-text img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .box-content {
+            flex: 1;
+        }
         .footer {
             background-color: #333;
             color: white;
             padding: 10px 0;
             text-align: center;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
             border-top: 5px solid #222;
+            width: 100%;
         }
     </style>
 </head>
@@ -101,7 +136,7 @@
     <div class="hero">
         <h1>Our Story</h1>
     </div>
-    <div class="content">
+    <div class="content-top">
         <div class="box">
             <h2>Who We Are</h2>
             <p>
@@ -126,6 +161,30 @@
                 Integrity, innovation, and customer satisfaction are at the core of everything we do. We believe in building long-term relationships with our clients based on trust and excellence.
             </p>
         </div>
+    </div>
+    <div class="content">
+        <div class="box box-img-text">
+            <img src="./resources/cpeset-c-min.png" alt="Cristóbal Peset Cruella" loading="lazy">
+            <div class="box-content">
+                <h2>Cristóbal "cpeset-c" Peset Cruella</h2>
+                <p>Cristóbal is a software engineer.</p>
+            </div>
+        </div>
+        <div class="box box-img-text">
+            <img src="./resources/alajara-.jpg" alt="Albert Lajara Remón" loading="lazy">
+            <div class="box-content">
+                <h2>Albert "alajara-" Lajara Remón</h2>
+                <p>Albert is a software engineer.</p>
+            </div>
+        </div>
+        <div class="box box-img-text">
+            <img src="./resources/pramos-m-min.png" alt="Pol Ramos Martí" loading="lazy">
+            <div class="box-content">
+                <h2>Pol "pramos-m" Ramos Martí</h2>
+                <p>Pol is a software engineer.</p>
+            </div>
+        </div>
+
     </div>
     <div class="footer">
         <p>&copy; 2024 Our Web Server. All rights reserved.</p>

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   HttpRequestParser.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cpeset-c <cpeset-c@student.42barcel.com>   +#+  +:+       +#+        */
+/*   By: cpeset-c <cpeset-c@student.42barce.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/23 11:26:49 by cpeset-c          #+#    #+#             */
-/*   Updated: 2024/07/30 20:11:16 by cpeset-c         ###   ########.fr       */
+/*   Updated: 2024/08/22 01:41:14 by cpeset-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,13 +172,11 @@ std::string HttpRequestParser::generateToken( size_t length )
     std::string random_string;
     random_string.reserve(length);
 
-    // unsigned seed = static_cast< unsigned >( std::time( 0 ) ) * static_cast< unsigned >( getpid() );
-    std::srand( static_cast< unsigned int>( std::time( 0 ) ) );
-    usleep(1000);
+    std::srand( static_cast< unsigned int >( std::time( 0 ) ) );
 
     for ( size_t i = 0; i < length; ++i )
-        random_string += characters[ std::rand() % characters.size() ];
-    
+        random_string += characters[ rand() % characters.size() ];
+
     return random_string;
 }
 

@@ -9,11 +9,17 @@ In [computer networks](https://en.wikipedia.org/wiki/Computer_network "Computer 
 
 AF_INET = address family, internet
 
-# [[Allowed Functions]]
-
-# [[Requirements]]
-
 # [Demultiplexing](https://www.geeksforgeeks.org/multiplexing-and-demultiplexing-in-transport-layer/)
-Delivering received segments at the receiver side to the correct app layer processes is called demultiplexing. 
+aka I/O Multiplexing, delivering received segments at the receiver side to the correct app layer processes is called demultiplexing. 
 
-Uniform Resource Locator (URL)
+# [Allowed Functions](./Allowed%20Functions.md)
+
+# [Requirements](./Requirements.md)
+
+# [Configuration File](./Configuration%20FiIe.md)
+
+# [Status Codes](./StatusCodes.md)
+
+# [Cookies](./Cookies.md)
+
+# [Resources](./Resources.md)
