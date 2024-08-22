@@ -95,7 +95,7 @@ Example:
 siege --benchmark --time=30s http://localhost:8080
 ```
 
-## 6. **Contributing**
+## Contributing
 Encourage collaboration by outlining how others can contribute to the project.
 
 > ## Contributing
