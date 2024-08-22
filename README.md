@@ -88,11 +88,11 @@ The WebServer has been optimized for performance:
 
 - **Asynchronous I/O:** The server uses non-blocking I/O operations to handle multiple requests concurrently.
 - **Memory Management:** Efficient memory allocation and deallocation to avoid leaks and minimize overhead.
-- **Benchmarking:** The server has been tested under various loads using tools like `ab` (Apache Benchmark) and `wrk`.
+- **Benchmarking:** The server has been tested under `siege` utility.
 
 Example:
 ```bash
-ab -n 1000 -c 10 http://localhost:8080/index.html
+siege --benchmark --time=30s http://localhost:8080
 ```
 
 ## 6. **Contributing**
