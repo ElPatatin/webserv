@@ -1,6 +1,6 @@
 # WebServer Project
 
-The webserv project is a very simple, fast and light weight web server made in c++. By [@cpeset-c](https://github.com/ElPatatin) & [@alajara-](https://github.com/LAG-jara) & [pramos-m](https://github.com/pramos-m)
+The webserv project is a very simple, fast and light weight web server made in c++. By [@cpeset-c](https://github.com/ElPatatin) & [@alajara-](https://github.com/LAG-jara) & [@pramos-m](https://github.com/pramos-m)
 
 ## Table of Contents
 
